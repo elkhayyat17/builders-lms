@@ -47,7 +47,7 @@ const $dialog = createDialog
 const appName = computed(() =>
 	branding.data?.app_name && branding.data.app_name != 'Frappe'
 		? branding.data.app_name
-		: 'Builders | بيلدرز'
+		: 'Handastech | هندسة تك'
 )
 
 const currentLanguage = computed(() => {

@@ -44,13 +44,34 @@ def get_categories_with_count():
 
 
 def update_website_context(context):
-    """Inject builders-specific variables into website context."""
+    """Inject handastech-specific variables into website context."""
     context.builders_brand = {
-        "name": "Builders",
-        "tagline_ar": "ابنِ مسيرتك المهنية في الهندسة المدنية",
-        "tagline_en": "Build Your Civil Engineering Career",
-        "primary_color": "#1B4D7A",
-        "accent_color": "#D4A843",
+        "name": "Handastech",
+        "name_ar": "هندسة تك",
+        "tagline_ar": "حلول تقنية وهندسية متقدمة",
+        "tagline_en": "Tech Solutions for Engineering",
+        "logo_url": "/assets/builders/images/handastech-logo.png",
+        "icon_url": "/assets/builders/images/handastech-icon.png",
+        "primary_color": "#0066CC",
+        "accent_color": "#0099FF",
+        "dark_color": "#1E2530",
+    }
+
+
+@frappe.whitelist(allow_guest=True)
+def get_branding():
+    """Return public branding settings for Handastech."""
+    return {
+        "app_name": "Handastech | هندسة تك",
+        "app_title": "Handastech",
+        "name_ar": "هندسة تك",
+        "tagline_ar": "حلول تقنية وهندسية متقدمة",
+        "tagline_en": "Tech Solutions for Engineering",
+        "logo_url": "/assets/builders/images/handastech-logo.png",
+        "icon_url": "/assets/builders/images/handastech-icon.png",
+        "favicon": "/assets/builders/images/favicon.png",
+        "primary_color": "#0066CC",
+        "dark_color": "#1E2530",
     }
 
 

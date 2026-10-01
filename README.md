@@ -1,68 +1,71 @@
-# Builders LMS (منصة بيلدرز للهندسة المدنية)
+# Handastech LMS (منصة هندسة تك)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Frappe: v15](https://img.shields.io/badge/Frappe-v15-blue.svg)](https://frappeframework.com/)
-[![Docker: Ready](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://docker.com)
-[![Status: Production Ready](https://img.shields.io/badge/Status-Production%20Ready-success.svg)]()
+<p align="center">
+  <img src="builders/builders/public/images/handastech-logo.png" alt="Handastech Logo" width="380" />
+</p>
 
-> **The Gulf Region's Specialized Learning Management System for Civil Engineers**  
-> **المنصة الأولى المتخصصة في تدريب وتأهيل المهندسين المدنيين في المملكة العربية السعودية والخليج العربي**
+<p align="center">
+  <strong>Tech Solutions for Engineering | حلول تقنية وتدريب هندسي احترافي</strong>
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
+  <a href="https://frappeframework.com/"><img src="https://img.shields.io/badge/Frappe-v15-0066CC.svg" alt="Frappe: v15" /></a>
+  <a href="https://docker.com"><img src="https://img.shields.io/badge/Docker-Ready-2496ED.svg" alt="Docker: Ready" /></a>
+  <img src="https://img.shields.io/badge/Status-Production%20Ready-success.svg" alt="Status: Production Ready" />
+</p>
 
 ---
 
 ## 🏗️ Project Overview (نظرة عامة)
 
-**Builders LMS** is a specialized, production-ready enterprise learning management system tailored for the civil engineering industry in Saudi Arabia and the GCC. Built on top of **Frappe Framework v15** and **Frappe LMS**, extended with the custom **Builders App** (`builders`), the platform delivers:
+**Handastech LMS** is an enterprise-grade specialized learning management and technical training platform tailored for the civil engineering industry in Saudi Arabia and the GCC region. Built upon **Frappe Framework v15** and **Frappe LMS**, extended with the custom app `builders`, the platform provides:
 
-- 🏛️ **Full Civil Engineering Taxonomy**: 5 core departments (Structural, Construction Management, Codes & Standards, Software Modeling, Quantity Surveying).
+- 🏛️ **Comprehensive Engineering Taxonomy**: 5 core departments (Structural Engineering, Construction Management, Codes & Standards SBC, Software Modeling ETABS/SAFE, and Quantity Surveying).
 - 🌐 **Arabic-First Localization**: Native Right-to-Left (RTL) experience with dynamic English/Arabic switching.
+- 🎨 **Modern Tech Branding**: Handastech identity featuring Architectural Slate Charcoal (`#1E2530`) and Vibrant Tech Blue (`#0066CC`).
 - 🔐 **Zero-Cost Anti-Piracy Video Protection**: Transcoding via FFmpeg HLS AES-128, Frappe token-gated key delivery, memory-blob playback, and dynamic forensic watermarking with DOM tamper-proofing.
-- ⚡ **Production Architecture**: Containerized multi-service deployment with MariaDB 10.8, Redis Cache, Redis Queue, Frappe Bench, and Nginx reverse proxy with SSL automation.
+- ⚡ **Production Architecture**: Multi-container Docker deployment with MariaDB 10.8, Redis Cache, Redis Queue, Frappe Bench, and Nginx reverse proxy with SSL automation.
 
 ---
 
 ## 📂 Directory Layout (هيكل المشروع)
 
 ```text
-LMS civil/
-├── builders/               # Custom Frappe App (Civil models, fixtures, branding, APIs)
+Handastech LMS/
+├── builders/               # تطبيق المنصة المخصص (الأقسام الهندسية، الهوية، واجهات API)
 │   ├── builders/           # Python modules, hooks, custom utilities
-│   │   ├── fixtures/       # LMS category seed data
-│   │   ├── public/         # Arabic font stylesheets, RTL CSS, language toggle JS
-│   │   ├── utils.py        # Frappe whitelisted APIs (email status, secure keys)
-│   │   └── seed_curriculum.py # Automated curriculum & lesson generator
-│   └── setup.py            # Frappe app setup
-├── lms/                    # Customized Frappe LMS upstream application
-│   ├── docker/             # Container init scripts and self-healing UI patches
-│   ├── frontend/           # Vue 3 / Vite SPA frontend
-│   └── lms/                # Core LMS Python backend doctypes
-├── nginx/                  # Production Nginx reverse proxy & SSL config
-│   ├── conf.d/             # Virtual host configuration (rate limiting, caching)
-│   └── ssl/                # TLS/SSL certificates
-├── scripts/                # Maintenance, seeding, and automated test suite
-│   ├── test_all_screens.py # 36-point full E2E automated testing suite
-│   ├── test_enrollment.py  # Live enrollment verification script
-│   ├── configure_email.py  # SMTP email configuration helper
-│   └── seed_courses.py     # Database seeding runner
-├── docs/                   # Documentation and executive presentations
-│   └── presentation/       # Builders interactive executive deck & showcase
-├── docker-compose.prod.yml # Production multi-container orchestration
-├── .env.production.example # Production environment configuration template
-├── deploy.sh               # One-click server deployment script
-├── README.md               # Project documentation
-└── .gitignore              # Git ignore rules (includes .worktrees/)
+│   │   ├── fixtures/       # بيانات تصنيفات الدورات الهندسية
+│   │   ├── public/         # الخطوط العربية، شعارات Handastech، أنماط RTL
+│   │   │   └── images/     # شعارات وأيقونات Handastech الرسمية
+│   │   ├── utils.py        # واجهات Frappe Whitelisted APIs (الهوية، البريد، الحماية)
+│   │   └── seed_curriculum.py # مولد المناهج والدروس الهندسية التفاعلية
+│   └── setup.py            # ملف إعداد التطبيق
+├── lms/                    # تطبيق Frappe LMS الأساسي المُعدل
+│   ├── docker/             # سكربتات التهيئة وترقيعات الواجهة الذاتية
+│   ├── frontend/           # واجهة SPA الحديثة (Vue 3 / Vite)
+│   └── lms/                # نماذج الدورات والدروس والشهادات
+├── nginx/                  # خادم Nginx العكسي وإعدادات الحماية والـ SSL
+│   ├── conf.d/             # ضبط النطاقات وتحديد معدل الطلبات (Rate Limiting)
+│   └── ssl/                # شهادات التشفير والتأمين
+├── scripts/                # أدوات الصيانة والاختبار المؤتمت:
+│   ├── test_all_screens.py # فحص الـ 36 شاشة ونقطة نهاية (100% نجاح)
+│   ├── test_enrollment.py  # فحص عمليات التسجيل الفوري في الدورات
+│   ├── configure_email.py  # معالج إعداد خوادم SMTP والبريد
+│   └── seed_courses.py     # سكربت زراعة بيانات المناهج والدورات
+├── docs/                   # التوثيق والعروض التقديمية:
+│   └── presentation/       # العرض التقديمي التنفيذي وواجهات المعاينة التفاعلية
+├── docker-compose.prod.yml # الأوركسترا لبيئة الإنتاج الكاملة
+├── .env.production.example # قالب المتغيرات البيئية
+├── deploy.sh               # سكربت النشر بنقرة واحدة
+├── README.md               # التوثيق الشامل
+└── .gitignore              # حماية الأسرار ومجلدات العمل المعزولة
 ```
 
 ---
 
 ## 🚀 Quick Start (التشغيل السريع)
 
-### 1. Requirements
-- Docker & Docker Compose v2+
-- Python 3.10+
-- Git
-
-### 2. Local Development (Docker)
 ```bash
 # Clone the repository
 git clone https://github.com/elkhayyat17/builders-lms.git
@@ -78,6 +81,7 @@ docker ps
 The platform will be live at:
 - **LMS Portal**: [http://localhost:8000/lms](http://localhost:8000/lms)
 - **Frappe Desk**: [http://localhost:8000/app](http://localhost:8000/app)
+- **Showcase / Presentation**: [http://localhost:3000](http://localhost:3000)
 
 ---
 
@@ -94,8 +98,6 @@ The platform will be live at:
 
 ## 🧪 Automated Testing Suite (الاختبارات المؤتمتة)
 
-Run the full end-to-end verification covering all 22 screens, REST APIs, static assets, and SPA routes:
-
 ```bash
 # Run comprehensive 36-point test suite
 python scripts/test_all_screens.py
@@ -103,16 +105,6 @@ python scripts/test_all_screens.py
 # Verify live course enrollment
 python scripts/test_enrollment.py
 ```
-
----
-
-## 🔒 Security Architecture (الحماية ومكافحة القرصنة)
-
-Builders LMS includes an in-house anti-piracy video pipeline:
-1. **FFmpeg AES-128 HLS Transcoding**: Videos are fragmented into `.ts` chunks encrypted with 128-bit AES keys.
-2. **Frappe Dynamic Token Verification**: Decryption keys are NEVER stored publicly; fetched via authenticated whitelisted Frappe API with short-lived session tokens.
-3. **In-Memory Blob Playback**: HLS manifest decrypted and bound to video player in memory via `hls.js` without exposing source video links.
-4. **Anti-Tamper Forensic Watermark**: Floating translucent watermark displaying student name, email, IP, and timestamp with active `MutationObserver` preventing DOM deletion.
 
 ---
 

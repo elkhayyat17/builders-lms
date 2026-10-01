@@ -5,21 +5,21 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Primary Engineering Blue */
-  --builders-primary: #1B4D7A;
-  --builders-primary-light: #2E7ABF;
-  --builders-primary-dark: #133A5C;
+  /* Primary Engineering & Tech Blue */
+  --builders-primary: #0066CC;
+  --builders-primary-light: #258CF4;
+  --builders-primary-dark: #1E2530;
 
-  /* Accent Gold / Sand */
-  --builders-accent: #D4A843;
-  --builders-accent-light: #E5C36B;
-  --builders-accent-dark: #B8912E;
+  /* Accent Tech Cyan */
+  --builders-accent: #0099FF;
+  --builders-accent-light: #38BDF8;
+  --builders-accent-dark: #0369A1;
 
   /* Surfaces & Ink */
-  --builders-surface: #F8F6F2;
+  --builders-surface: #F8FAFC;
   --builders-surface-card: #FFFFFF;
-  --builders-text-primary: #1A1A2E;
-  --builders-text-secondary: #6B7280;
+  --builders-text-primary: #0F172A;
+  --builders-text-secondary: #475569;
 
   /* Semantics */
   --builders-success: #059669;

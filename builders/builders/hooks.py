@@ -3,12 +3,12 @@ import frappe
 from . import __version__ as app_version
 
 app_name = "builders"
-app_title = "Builders"
-app_publisher = "Builders Team"
-app_description = "Civil Engineering LMS for the Gulf Region"
+app_title = "Handastech"
+app_publisher = "Handastech Team"
+app_description = "Handastech - Engineering & Tech Solutions LMS Platform"
 app_icon = "octicon octicon-tools"
-app_color = "#1B4D7A"
-app_email = "info@builders.com"
+app_color = "#0066CC"
+app_email = "info@handastech.sa"
 app_license = "MIT"
 required_apps = ["lms"]
 

@@ -2,34 +2,35 @@
 <html lang="ar" dir="rtl" id="app-root">
 <head>
   <meta charset="UTF-8">
-  <title>Builders | بيلدرز - منصة دورات الهندسة المدنية</title>
+  <title>Handastech | هندسة تك - حلول تقنية وتدريب هندسي</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="icon" type="image/png" href="/favicon.png">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
     
     :root {
-      --primary: #1B4D7A;
-      --primary-dark: #133A5C;
-      --primary-light: #2E7ABF;
-      --accent: #D4A843;
-      --accent-dark: #B8912E;
-      --surface-warm: #F8F6F2;
+      --primary: #0066CC;
+      --primary-dark: #1E2530;
+      --primary-light: #258CF4;
+      --accent: #0099FF;
+      --accent-dark: #0369A1;
+      --surface-warm: #F8FAFC;
     }
     
     [dir="rtl"] { font-family: 'IBM Plex Sans Arabic', sans-serif; text-align: right; }
     [dir="ltr"] { font-family: 'IBM Plex Sans', sans-serif; text-align: left; }
     
     .builders-header-gradient {
-      background: linear-gradient(135deg, #133A5C 0%, #1B4D7A 60%, #2E7ABF 100%);
+      background: linear-gradient(135deg, #1E2530 0%, #0066CC 60%, #258CF4 100%);
     }
 
     .badge-gold {
-      background: linear-gradient(135deg, #D4A843 0%, #B8912E 100%);
+      background: linear-gradient(135deg, #0099FF 0%, #0369A1 100%);
       color: #FFFFFF;
     }
   </style>
 </head>
-<body class="bg-[#F8F6F2] text-slate-800 min-h-screen flex flex-col transition-all duration-200">
+<body class="bg-[#F8FAFC] text-slate-800 min-h-screen flex flex-col transition-all duration-200">
 
   <!-- TOP NAVIGATION BAR -->
   <header class="builders-header-gradient text-white shadow-md sticky top-0 z-50">
@@ -37,14 +38,11 @@
       
       <!-- Brand Logo & Name -->
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center shadow-inner">
-          <svg class="w-6 h-6 text-[#D4A843]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M3 21h18M5 21V7l7-4 7 4v14M9 10a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm6 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm-6 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm6 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>
-          </svg>
-        </div>
-        <div>
-          <span class="text-xl font-bold tracking-tight text-white block leading-tight">BUILDERS</span>
-          <span class="text-xs text-amber-300 font-medium tracking-wide" id="txt-subbrand">منصة الهندسة المدنية للخليج</span>
+        <a href="/" class="flex items-center gap-2">
+          <img src="/handastech-logo.png" alt="Handastech Logo" class="h-10 object-contain brightness-0 invert drop-shadow" />
+        </a>
+        <div class="hidden sm:block border-s border-white/20 ps-3">
+          <span class="text-xs text-sky-200 font-medium tracking-wide block" id="txt-subbrand">حلول تقنية وتدريب هندسي احترافي</span>
         </div>
       </div>
 
@@ -399,17 +397,17 @@
   </div>
 
   <!-- FOOTER -->
-  <footer class="bg-[#133A5C] text-slate-300 py-8 px-4 sm:px-6 lg:px-8 border-t border-white/10 mt-auto">
+  <footer class="bg-[#1E2530] text-slate-300 py-8 px-4 sm:px-6 lg:px-8 border-t border-white/10 mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
       <div class="flex items-center gap-2">
-        <span class="font-bold text-white text-sm">BUILDERS</span>
-        <span class="text-slate-400">| منصة تدريب المهندسين المدنيين (منطقة الخليج العربي)</span>
+        <span class="font-bold text-white text-sm tracking-wider">HANDASTECH</span>
+        <span class="text-slate-400">| هندسة تك - حلول تقنية وتدريب هندسي احترافي</span>
       </div>
       <div>
         <span>نظام إدارة التعلم مبني ومُخصص على إطار Frappe Framework مفتوح المصدر</span>
       </div>
-      <div class="text-amber-400 font-semibold">
-        © 2026 Builders LMS. All rights reserved.
+      <div class="text-sky-400 font-semibold">
+        © 2026 Handastech. All rights reserved.
       </div>
     </div>
   </footer>

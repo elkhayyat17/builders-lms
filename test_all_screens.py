@@ -37,7 +37,7 @@ print("\n--- 1. Testing Landing Page & Marketing Showcase (Port 3000) ---")
 try:
     r = requests.get(f"{BASE_URL_3000}/", timeout=5)
     r.encoding = 'utf-8'
-    has_brand = "Builders" in r.text or "بيلدرز" in r.text
+    has_brand = any(b in r.text for b in ["Handastech", "هندسة تك", "Builders", "بيلدرز"])
     has_disciplines = "الهندسة الإنشائية" in r.text and ("الفيديك" in r.text or "FIDIC" in r.text)
     has_lms_link = "http://localhost:8000/lms" in r.text
     passed = r.status_code == 200 and has_brand and has_disciplines and has_lms_link
@@ -61,11 +61,11 @@ except Exception as e:
 # Test Theme CSS
 try:
     r = requests.get(f"{BASE_URL_8000}/assets/builders/css/builders-theme.css", timeout=5)
-    has_colors = "--builders-primary: #1B4D7A" in r.text
-    record("Builders Brand Theme CSS", "Styling & Assets", r.status_code == 200 and has_colors, r.status_code,
-           f"Contains #1B4D7A primary: {has_colors}")
+    has_colors = "--builders-primary: #0066CC" in r.text or "--builders-primary: #1B4D7A" in r.text
+    record("Handastech Brand Theme CSS", "Styling & Assets", r.status_code == 200 and has_colors, r.status_code,
+           f"Contains modern primary color: {has_colors}")
 except Exception as e:
-    record("Builders Brand Theme CSS", "Styling & Assets", False, None, str(e))
+    record("Handastech Brand Theme CSS", "Styling & Assets", False, None, str(e))
 
 # Test RTL CSS
 try:

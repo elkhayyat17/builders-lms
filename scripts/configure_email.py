@@ -2,7 +2,7 @@ import frappe
 import sys
 
 def setup_email_account(
-    email_id="noreply@builders.sa",
+    email_id="noreply@handastech.sa",
     password="",
     smtp_server="smtp.sendgrid.net",
     smtp_port=587,
@@ -14,7 +14,7 @@ def setup_email_account(
     frappe.init(site="lms.localhost", sites_path="/home/frappe/frappe-bench/sites")
     frappe.connect()
 
-    account_name = "Builders Notifications"
+    account_name = "Handastech Notifications"
     
     if frappe.db.exists("Email Account", account_name):
         doc = frappe.get_doc("Email Account", account_name)
@@ -45,13 +45,14 @@ def send_test_email(recipient):
     frappe.init(site="lms.localhost", sites_path="/home/frappe/frappe-bench/sites")
     frappe.connect()
 
-    subject = "Builders LMS - تجربة نظام إرسال الإيميلات"
+    subject = "Handastech LMS - تجربة نظام إرسال الإيميلات"
     message = """
-    <div dir="rtl" style="font-family: Arial, sans-serif; padding: 20px; color: #1B4D7A;">
-        <h2>مرحباً بك في منصة بيلدرز (Builders LMS)</h2>
+    <div dir="rtl" style="font-family: Arial, sans-serif; padding: 20px; color: #0066CC;">
+        <img src="http://localhost:8000/assets/builders/images/handastech-logo.png" style="height: 50px; margin-bottom: 15px;" alt="Handastech" />
+        <h2>مرحباً بك في منصة هندسة تك (Handastech LMS)</h2>
         <p>هذا إيميل تجريبي يؤكد أن نظام إرسال الإيميلات في المنصة يعمل بكفاءة وجاهز لبيئة الإنتاج.</p>
-        <hr style="border: none; border-top: 1px solid #D4A843; margin: 20px 0;">
-        <p style="color: #666; font-size: 13px;">تم الإرسال آلياً من محرك Frappe LMS لمنصة الهندسة المدنية.</p>
+        <hr style="border: none; border-top: 1px solid #0099FF; margin: 20px 0;">
+        <p style="color: #666; font-size: 13px;">تم الإرسال آلياً من محرك Handastech LMS للحلول والتدريب الهندسي والتقني.</p>
     </div>
     """
     
@@ -65,7 +66,7 @@ def send_test_email(recipient):
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "send":
-        recipient = sys.argv[2] if len(sys.argv) > 2 else "test@builders.sa"
+        recipient = sys.argv[2] if len(sys.argv) > 2 else "test@handastech.sa"
         send_test_email(recipient)
     else:
         print("Usage:")

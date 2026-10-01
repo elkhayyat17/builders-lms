@@ -10,31 +10,31 @@
    -------------------------------------------------------------------------- */
 
 :root {
-  /* Primary palette — Deep Engineering Blue */
-  --builders-primary: #1B4D7A;
-  --builders-primary-light: #2E7ABF;
-  --builders-primary-dark: #133A5C;
+  /* Handastech Primary palette — Modern Tech Blue & Architectural Charcoal */
+  --builders-primary: #0066CC;
+  --builders-primary-light: #258CF4;
+  --builders-primary-dark: #1E2530;
 
-  /* Accent — Gold / Sand (Gulf desert tones) */
-  --builders-accent: #D4A843;
-  --builders-accent-light: #E5C36B;
-  --builders-accent-dark: #B8912E;
+  /* Accent — Electric Tech Cyan */
+  --builders-accent: #0099FF;
+  --builders-accent-light: #38BDF8;
+  --builders-accent-dark: #0369A1;
 
   /* Surfaces */
-  --builders-surface: #F8F6F2;
+  --builders-surface: #F8FAFC;
   --builders-surface-card: #FFFFFF;
-  --builders-surface-hover: #F0EDE7;
+  --builders-surface-hover: #F1F5F9;
 
   /* Text */
-  --builders-text-primary: #1A1A2E;
-  --builders-text-secondary: #6B7280;
-  --builders-text-muted: #9CA3AF;
+  --builders-text-primary: #0F172A;
+  --builders-text-secondary: #475569;
+  --builders-text-muted: #94A3B8;
 
   /* Semantic */
   --builders-success: #059669;
   --builders-danger: #DC2626;
   --builders-warning: #D97706;
-  --builders-info: #2563EB;
+  --builders-info: #0066CC;
 
   /* Spacing */
   --builders-radius: 0.5rem;
