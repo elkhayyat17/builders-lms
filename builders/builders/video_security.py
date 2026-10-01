@@ -71,12 +71,49 @@ def verify_playback_token(token, video_id):
     except Exception as e:
         return False, f"Token decode error: {str(e)}"
 
+def validate_request_origin():
+    """
+    Validate Referer and Origin headers to defeat hotlinking, external iframe embedding,
+    and direct scraper downloads.
+    """
+    try:
+        referer = frappe.get_request_header("Referer") or ""
+        origin = frappe.get_request_header("Origin") or ""
+    except Exception:
+        return True, None
+
+    check_url = referer or origin
+    if check_url:
+        from urllib.parse import urlparse
+        try:
+            parsed = urlparse(check_url)
+            hostname = (parsed.hostname or "").lower()
+            allowed_hosts = [
+                "localhost",
+                "127.0.0.1",
+                "0.0.0.0",
+                getattr(frappe.local, "site", "").lower(),
+                "lms.localhost",
+                "builders.sa",
+                "handastech.com",
+            ]
+            is_allowed = any(hostname == h or hostname.endswith("." + h) for h in allowed_hosts if h)
+            if not is_allowed:
+                return False, f"Hotlink blocked: unauthorized domain '{hostname}'"
+        except Exception as e:
+            return False, f"Invalid Referer/Origin: {str(e)}"
+    return True, None
+
 @frappe.whitelist()
 def get_playback_session(video_id, lesson=None, course=None):
     """
     Generate an authenticated playback session with forensic watermark data.
     Validates learner enrollment or instructor/manager permissions.
     """
+    origin_valid, origin_err = validate_request_origin()
+    if not origin_valid:
+        frappe.throw(_(origin_err), frappe.PermissionError)
+
     user = frappe.session.user
     if user == "Guest":
         frappe.throw(_("Authentication required to access protected videos"), frappe.PermissionError)
@@ -213,6 +250,11 @@ def get_video_key(video_id=None, token=None):
     Only returns binary key bytes if user has active session and valid token.
     Prevents unauthorized key downloads and screen scraping.
     """
+    origin_valid, origin_err = validate_request_origin()
+    if not origin_valid:
+        frappe.local.response.http_status_code = 403
+        return f"Forbidden: {origin_err}"
+
     user = frappe.session.user
     if user == "Guest":
         frappe.local.response.http_status_code = 403
@@ -222,7 +264,12 @@ def get_video_key(video_id=None, token=None):
         frappe.local.response.http_status_code = 400
         return "Missing video_id"
 
-    # Verify token if passed
+    # Token enforcement: all students must provide a valid signed token
+    is_admin = user in ["Administrator"] or "System Manager" in frappe.get_roles(user)
+    if not is_admin and not token:
+        frappe.local.response.http_status_code = 403
+        return "Forbidden: Playback token required"
+
     if token:
         valid, result = verify_playback_token(token, video_id)
         if not valid:
