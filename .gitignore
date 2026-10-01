@@ -9,7 +9,9 @@
 
 # Worktrees (isolation directory for using-git-worktrees)
 .worktrees/
+.worktrees
 worktrees/
+worktrees
 
 # Python
 __pycache__/
