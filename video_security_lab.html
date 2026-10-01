@@ -194,38 +194,33 @@
     }
 
     .watermark-badge {
-      background: rgba(0, 0, 0, 0.45);
+      background: rgba(2, 6, 23, 0.45);
       backdrop-filter: blur(4px);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 6px;
-      padding: 6px 12px;
-      color: rgba(255, 255, 255, 0.65);
+      border-radius: 9999px;
+      padding: 4px 12px;
+      color: rgba(255, 255, 255, 0.7);
       font-size: 11px;
-      line-height: 1.35;
-      text-align: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      display: flex;
-      flex-direction: column;
+      line-height: 1.2;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      display: inline-flex;
       align-items: center;
+      gap: 8px;
+      white-space: nowrap;
     }
 
     .watermark-badge .name {
-      font-weight: 700;
+      font-weight: 600;
       color: rgba(255, 255, 255, 0.85);
-      font-size: 12px;
+      font-size: 11px;
     }
 
-    .watermark-badge .meta {
+    .watermark-badge .student-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: #38bdf8;
       font-size: 10px;
-      letter-spacing: 0.3px;
-      color: rgba(255, 255, 255, 0.6);
-      direction: ltr;
-    }
-
-    .watermark-badge .platform {
-      font-size: 9px;
-      color: rgba(56, 189, 248, 0.6);
-      margin-top: 1px;
+      letter-spacing: 0.5px;
     }
 
     /* Anti-Tamper Shield */
@@ -565,12 +560,12 @@
           <!-- Video element -->
           <video id="hlsVideo" playsinline></video>
 
-          <!-- Watermark -->
-          <div class="watermark-container" id="forensicWatermark" style="top: 15%; left: 15%; opacity: 0.65;">
+          <!-- Watermark (UI/UX Pro Max Ghost Pill) -->
+          <div class="watermark-container" id="forensicWatermark" style="top: 6%; left: 6%; opacity: 0.55;">
             <div class="watermark-badge">
               <span class="name" id="wmName">م. أحمد الشمري</span>
-              <span class="meta" id="wmMeta">student@builders.sa • 172.31.0.1</span>
-              <span class="platform">Handastech | كود SBC 304</span>
+              <span style="color: rgba(255,255,255,0.3); font-size: 10px;">•</span>
+              <span class="student-pill" id="wmStudentId">#HT-4821</span>
             </div>
           </div>
 
@@ -606,8 +601,8 @@
               <div class="spec-value" style="color: var(--success);">HMAC SHA-256 (300 ثانية)</div>
             </div>
             <div class="spec-item">
-              <div class="spec-label">تتبع العلامة الجنائية</div>
-              <div class="spec-value">اسم المتدرب + الإيميل + الـ IP</div>
+              <div class="spec-label">تتبع العلامة الجنائية (UI/UX)</div>
+              <div class="spec-value">الاسم + كود #Student_ID الخفي</div>
             </div>
             <div class="spec-item">
               <div class="spec-label">حماية DOM النشطة</div>
@@ -726,8 +721,10 @@
         const session = data.message;
         if (session && session.watermark) {
           document.getElementById('wmName').textContent = session.watermark.full_name || 'طالب مسجل';
-          document.getElementById('wmMeta').textContent = `${session.watermark.email || 'user@handastech.com'} • ${session.watermark.ip || '127.0.0.1'}`;
-          log(`✓ تم إصدار جلسة آمنة للدارس: ${session.watermark.full_name} (${session.watermark.ip})`, 'success');
+          if (document.getElementById('wmStudentId')) {
+            document.getElementById('wmStudentId').textContent = `#${session.watermark.student_id || 'HT-4821'}`;
+          }
+          log(`✓ تم إصدار جلسة آمنة للدارس: ${session.watermark.full_name} (#${session.watermark.student_id || 'HT-4821'})`, 'success');
         }
       } catch (err) {
         log('Session init warning (using default credentials)', 'warning');
@@ -771,28 +768,65 @@
       startAntiTamperObserver();
     }
 
-    // 2. Watermark Drifting
-    function startWatermarkDrift() {
-      const positions = [
-        { top: '12%', left: '14%' },
-        { top: '15%', left: '60%' },
-        { top: '35%', left: '25%' },
-        { top: '45%', left: '55%' },
-        { top: '65%', left: '15%' },
-        { top: '70%', left: '62%' },
-        { top: '22%', left: '40%' },
-        { top: '55%', left: '38%' }
-      ];
+    // 2. Intermittent Peripheral Stealth Duty Cycle (UI/UX Pro Max)
+    let isSystemFading = false;
+    let cycleTimer = null;
+    let moveTimeout = null;
 
-      let idx = 0;
-      driftTimer = setInterval(() => {
+    const peripheralPositions = [
+      { top: '6%', left: '6%', right: 'auto', bottom: 'auto' },
+      { top: '6%', left: 'auto', right: '6%', bottom: 'auto' },
+      { top: 'auto', left: '6%', right: 'auto', bottom: '16%' },
+      { top: 'auto', left: 'auto', right: '6%', bottom: '16%' },
+      { top: '42%', left: '5%', right: 'auto', bottom: 'auto' },
+      { top: '42%', left: 'auto', right: '5%', bottom: 'auto' }
+    ];
+
+    let currentPosIndex = 0;
+
+    function startWatermarkDrift() {
+      if (cycleTimer) clearTimeout(cycleTimer);
+      if (moveTimeout) clearTimeout(moveTimeout);
+
+      const VISIBLE_DURATION_MS = 5500;
+      const BASE_HIDDEN_MS = 18000;
+      const FADE_TRANSITION_MS = 800;
+
+      function runDutyCycle() {
         if (isTampered) return;
-        idx = (idx + 1) % positions.length;
-        const pos = positions[idx];
-        watermark.style.top = pos.top;
-        watermark.style.left = pos.left;
-        watermark.style.opacity = (0.45 + Math.random() * 0.3).toFixed(2);
-      }, 7000);
+        isSystemFading = false;
+        watermark.style.transition = `opacity ${FADE_TRANSITION_MS}ms ease-in-out`;
+        watermark.style.opacity = '0.55';
+
+        cycleTimer = setTimeout(() => {
+          if (isTampered) return;
+          isSystemFading = true;
+          watermark.style.transition = `opacity ${FADE_TRANSITION_MS}ms ease-in-out`;
+          watermark.style.opacity = '0';
+
+          moveTimeout = setTimeout(() => {
+            if (isTampered) return;
+            let nextIndex = Math.floor(Math.random() * peripheralPositions.length);
+            if (nextIndex === currentPosIndex) {
+              nextIndex = (nextIndex + 1) % peripheralPositions.length;
+            }
+            currentPosIndex = nextIndex;
+            const pos = peripheralPositions[currentPosIndex];
+
+            watermark.style.transition = 'none';
+            watermark.style.top = pos.top;
+            watermark.style.left = pos.left;
+            watermark.style.right = pos.right;
+            watermark.style.bottom = pos.bottom;
+            watermark.style.opacity = '0';
+
+            const randomHidden = BASE_HIDDEN_MS + Math.floor(Math.random() * 6000);
+            cycleTimer = setTimeout(runDutyCycle, randomHidden);
+          }, FADE_TRANSITION_MS + 200);
+        }, VISIBLE_DURATION_MS);
+      }
+
+      runDutyCycle();
     }
 
     // 3. Active MutationObserver Anti-Tamper Guard
@@ -817,11 +851,13 @@
 
           // Check style changes (display: none / opacity: 0 / visibility: hidden)
           if (mut.type === 'attributes' && mut.target === watermark) {
-            const style = window.getComputedStyle(watermark);
-            const opacity = parseFloat(style.opacity);
-            if (style.display === 'none' || style.visibility === 'hidden' || opacity < 0.1) {
-              triggerTamperAlarm('محاولة إخفاء العلامة المائية عبر تعديل CSS (display/opacity/visibility)!');
-              return;
+            if (!isSystemFading) {
+              const style = window.getComputedStyle(watermark);
+              const opacity = parseFloat(style.opacity);
+              if (style.display === 'none' || style.visibility === 'hidden' || opacity < 0.1) {
+                triggerTamperAlarm('محاولة إخفاء العلامة المائية عبر تعديل CSS (display/opacity/visibility)!');
+                return;
+              }
             }
           }
         }
@@ -854,13 +890,15 @@
       if (!viewport.contains(watermark)) {
         viewport.appendChild(watermark);
       }
-      watermark.style.display = 'block';
+      watermark.style.display = 'inline-flex';
       watermark.style.visibility = 'visible';
-      watermark.style.opacity = '0.65';
-      watermark.style.top = '15%';
-      watermark.style.left = '15%';
+      watermark.style.top = '6%';
+      watermark.style.left = '6%';
+      watermark.style.right = 'auto';
+      watermark.style.bottom = 'auto';
 
       log('✓ تم استعادة بيئة الأمان وإعادة تهيئة المشغل بشكل نظامي.', 'success');
+      startWatermarkDrift();
       startAntiTamperObserver();
       video.play().catch(() => {});
     }

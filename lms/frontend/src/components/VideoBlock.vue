@@ -40,20 +40,20 @@
 				:type="type"
 			></video>
 
-			<!-- FORENSIC FLOATING WATERMARK OVERLAY -->
+			<!-- FORENSIC SUBTLE WATERMARK OVERLAY (UI/UX PRO MAX) -->
 			<div
-				v-if="watermarkData.email || watermarkData.user_id"
+				v-if="watermarkData.student_id || watermarkData.user_id"
 				ref="watermarkRef"
 				id="ht-forensic-watermark"
 				class="ht-watermark absolute pointer-events-none select-none z-30"
 				:style="watermarkStyle"
 			>
 				<div
-					class="ht-watermark-badge bg-black/75 backdrop-blur-sm text-white px-3 py-1.5 rounded-md border border-white/25 shadow-xl flex flex-col items-center leading-tight"
+					class="ht-ghost-tag inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-950/40 backdrop-blur-sm border border-white/10 text-white/70 shadow-sm leading-none"
 				>
-					<span class="font-bold text-white text-xs sm:text-sm tracking-wide">{{ watermarkData.full_name || watermarkData.user_id }}</span>
-					<span class="text-[11px] text-slate-200 tracking-wider">{{ watermarkData.email }} • {{ watermarkData.ip }}</span>
-					<span class="text-[10px] text-sky-400 font-semibold">{{ watermarkData.timestamp }} • Handastech</span>
+					<span class="text-[11px] font-medium text-white/80 tracking-wide">{{ watermarkData.full_name || watermarkData.user_id }}</span>
+					<span class="text-white/30 text-[10px]">•</span>
+					<span class="text-[10px] font-mono font-semibold text-sky-400 tracking-wider">#{{ watermarkData.student_id || 'HT-4821' }}</span>
 				</div>
 			</div>
 
@@ -235,23 +235,29 @@ const session = sessionStore()
 
 // HLS and Video Protection State
 let hlsInstance = null
-const isTampered = ref(false)
 let tamperObserver = null
 let driftTimer = null
+let isSystemFading = false
+let cycleTimer = null
+let moveTimeout = null
+
+const isTampered = ref(false)
 
 const watermarkData = ref({
 	user_id: session?.user || 'student@builders.sa',
+	student_id: 'HT-4821',
 	full_name: session?.user === 'student@builders.sa' ? 'م. أحمد الشمري' : (session?.user ? session.user.split('@')[0] : 'م. أحمد الشمري'),
 	email: session?.user || 'student@builders.sa',
-	ip: '172.31.0.1',
-	timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC',
-	platform: 'Handastech | هندسة تك'
+	platform: 'Handastech'
 })
 
 const watermarkStyle = ref({
-	top: '14%',
-	left: '16%',
-	opacity: '0.85',
+	top: '6%',
+	left: '6%',
+	right: 'auto',
+	bottom: 'auto',
+	opacity: '0.55',
+	transition: 'opacity 0.8s ease-in-out',
 })
 
 // Speed control states
@@ -313,11 +319,21 @@ onBeforeUnmount(() => {
 		hlsInstance.destroy()
 		hlsInstance = null
 	}
+	if (cycleTimer) {
+		clearTimeout(cycleTimer)
+		cycleTimer = null
+	}
+	if (moveTimeout) {
+		clearTimeout(moveTimeout)
+		moveTimeout = null
+	}
 	if (driftTimer) {
 		clearInterval(driftTimer)
+		driftTimer = null
 	}
 	if (tamperObserver) {
 		tamperObserver.disconnect()
+		tamperObserver = null
 	}
 })
 
@@ -414,34 +430,81 @@ const setupWatermarkAndProtection = async () => {
 	}
 }
 
-// Randomized Drift (Defeats Screen Cropping & static watermark blurs)
-const startWatermarkDrift = () => {
-	const zones = [
-		{ top: '12%', left: '14%' },
-		{ top: '15%', right: '14%' },
-		{ top: '44%', left: '16%' },
-		{ top: '46%', right: '18%' },
-		{ bottom: '22%', left: '14%' },
-		{ bottom: '24%', right: '16%' },
-		{ top: '28%', left: '38%' },
-		{ bottom: '38%', left: '34%' },
-	]
+// Randomized Peripheral Drift with Stealth Duty Cycle (UI/UX Pro Max)
+// Keeps screen 75%-80% completely clear; intermittently displays an ultra-slim ghost pill
+// in peripheral zones (corners), avoiding learning focal areas, subtitles, and diagrams.
+const peripheralZones = [
+	{ top: '6%', left: '6%', right: 'auto', bottom: 'auto' },
+	{ top: '6%', right: '6%', left: 'auto', bottom: 'auto' },
+	{ bottom: '16%', left: '6%', top: 'auto', right: 'auto' },
+	{ bottom: '16%', right: '6%', top: 'auto', left: 'auto' },
+	{ top: '42%', left: '5%', right: 'auto', bottom: 'auto' },
+	{ top: '42%', right: '5%', left: 'auto', bottom: 'auto' },
+]
 
-	driftTimer = setInterval(() => {
-		const nextZone = zones[Math.floor(Math.random() * zones.length)]
+let currentZoneIndex = 0
+
+const startWatermarkDrift = () => {
+	if (cycleTimer) clearTimeout(cycleTimer)
+	if (moveTimeout) clearTimeout(moveTimeout)
+
+	const VISIBLE_DURATION_MS = 5500
+	const BASE_HIDDEN_MS = 18000
+	const FADE_TRANSITION_MS = 800
+
+	const runDutyCycle = () => {
+		// 1. Gently fade in
+		isSystemFading = false
 		watermarkStyle.value = {
-			top: nextZone.top || 'auto',
-			left: nextZone.left || 'auto',
-			right: nextZone.right || 'auto',
-			bottom: nextZone.bottom || 'auto',
-			opacity: (0.75 + Math.random() * 0.15).toFixed(2),
+			...watermarkStyle.value,
+			opacity: '0.55',
+			transition: `opacity ${FADE_TRANSITION_MS}ms ease-in-out`,
 		}
-	}, 7000)
+
+		// 2. Schedule fade out after VISIBLE_DURATION_MS
+		cycleTimer = setTimeout(() => {
+			isSystemFading = true
+			watermarkStyle.value = {
+				...watermarkStyle.value,
+				opacity: '0',
+				transition: `opacity ${FADE_TRANSITION_MS}ms ease-in-out`,
+			}
+
+			// 3. Reposition silently while completely invisible
+			moveTimeout = setTimeout(() => {
+				let nextIndex = Math.floor(Math.random() * peripheralZones.length)
+				if (nextIndex === currentZoneIndex) {
+					nextIndex = (nextIndex + 1) % peripheralZones.length
+				}
+				currentZoneIndex = nextIndex
+				const zone = peripheralZones[currentZoneIndex]
+
+				watermarkStyle.value = {
+					top: zone.top,
+					left: zone.left,
+					right: zone.right,
+					bottom: zone.bottom,
+					opacity: '0',
+					transition: 'none',
+				}
+
+				// 4. Schedule next appearance after random quiet interval
+				const randomHiddenDuration = BASE_HIDDEN_MS + Math.floor(Math.random() * 6000)
+				cycleTimer = setTimeout(runDutyCycle, randomHiddenDuration)
+			}, FADE_TRANSITION_MS + 200)
+		}, VISIBLE_DURATION_MS)
+	}
+
+	runDutyCycle()
 }
 
 // Anti-Tamper Guard using MutationObserver
 const startAntiTamperGuard = () => {
 	if (!window.MutationObserver || !videoContainer.value) return
+
+	if (tamperObserver) {
+		tamperObserver.disconnect()
+	}
 
 	tamperObserver = new MutationObserver(() => {
 		if (isTampered.value) return
@@ -450,7 +513,7 @@ const startAntiTamperGuard = () => {
 		if (watermarkRef.value) {
 			if (!videoContainer.value.contains(watermarkRef.value)) {
 				violated = true
-			} else {
+			} else if (!isSystemFading) {
 				const cs = window.getComputedStyle(watermarkRef.value)
 				if (
 					cs.display === 'none' ||
@@ -461,6 +524,8 @@ const startAntiTamperGuard = () => {
 					violated = true
 				}
 			}
+		} else {
+			violated = true
 		}
 
 		if (violated) {
@@ -483,6 +548,7 @@ const startAntiTamperGuard = () => {
 const resetTamperState = async () => {
 	isTampered.value = false
 	await nextTick()
+	startWatermarkDrift()
 	startAntiTamperGuard()
 }
 

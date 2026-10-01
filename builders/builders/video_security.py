@@ -115,6 +115,11 @@ def get_playback_session(video_id, lesson=None, course=None):
     user_doc = frappe.get_doc("User", user)
     full_name = user_doc.full_name or user_doc.first_name or user
     client_ip = getattr(frappe.local, "request_ip", "127.0.0.1")
+    
+    # Deterministic 4-digit student code (e.g. HT-4821)
+    import zlib
+    student_num = (zlib.crc32(user.encode("utf-8")) % 8999) + 1000
+    student_id = f"HT-{student_num}"
 
     return {
         "status": "success",
@@ -122,6 +127,7 @@ def get_playback_session(video_id, lesson=None, course=None):
         "token": token,
         "watermark": {
             "user_id": user,
+            "student_id": student_id,
             "full_name": full_name,
             "email": user_doc.email or user,
             "ip": client_ip,
