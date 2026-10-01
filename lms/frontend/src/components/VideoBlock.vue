@@ -31,6 +31,8 @@
 				@timeupdate="updateTime"
 				@ended="videoEnded"
 				@click="togglePlay"
+				@play="playing = true"
+				@pause="playing = false"
 				oncontextmenu="return false"
 				controlslist="nodownload noplaybackrate"
 				disablePictureInPicture
@@ -89,10 +91,30 @@
 				</Button>
 			</div>
 
+			<!-- SCREEN CAPTURE & PRIVACY SHIELD (WINDOW BLUR / CAPTURE DEFENSE) -->
+			<div
+				v-if="isWindowBlurred && !isTampered"
+				id="ht-screen-capture-shield"
+				class="absolute inset-0 z-40 bg-slate-950/95 backdrop-blur-2xl flex flex-col items-center justify-center p-6 text-center text-white"
+			>
+				<div class="w-14 h-14 rounded-full bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-sky-400 mb-3 text-2xl font-bold">
+					🛡️
+				</div>
+				<h3 class="text-base sm:text-lg font-bold text-white mb-2">
+					تم تعليق العرض مؤقتاً لحماية المحتوى
+				</h3>
+				<p class="text-xs sm:text-sm text-slate-300 max-w-sm mb-4 leading-relaxed">
+					يرجى النقر داخل نافذة المشغل للمتابعة. يتم حجب صورة الفيديو آلياً عند تشغيل برامج التقاط الشاشة أو فقدان التركيز.
+				</p>
+				<Button variant="subtle" @click="resumeAfterBlur">
+					استئناف المشاهدة
+				</Button>
+			</div>
+
 			<!-- PLAY OVERLAY BUTTON -->
 			<button
 				type="button"
-				v-if="!playing && !isTampered"
+				v-if="!playing && !isTampered && !isWindowBlurred"
 				:aria-label="__('Play video')"
 				class="absolute inset-0 flex items-center justify-center cursor-pointer z-10"
 				@click="playVideo"
@@ -255,6 +277,82 @@ let cycleTimer = null
 let moveTimeout = null
 
 const isTampered = ref(false)
+const isWindowBlurred = ref(false)
+let wasPlayingBeforeBlur = false
+
+const handleWindowBlur = () => {
+	if (videoRef.value && !videoRef.value.paused) {
+		wasPlayingBeforeBlur = true
+		videoRef.value.pause()
+	} else if (playing.value) {
+		wasPlayingBeforeBlur = true
+	}
+	playing.value = false
+	isWindowBlurred.value = true
+}
+
+const handleWindowFocus = () => {
+	if (isWindowBlurred.value) {
+		isWindowBlurred.value = false
+		if (wasPlayingBeforeBlur) {
+			wasPlayingBeforeBlur = false
+			if (videoRef.value) {
+				videoRef.value.play().then(() => {
+					playing.value = true
+				}).catch(() => {})
+			}
+		}
+	}
+}
+
+const resumeAfterBlur = () => {
+	isWindowBlurred.value = false
+	if (videoRef.value) {
+		videoRef.value.play().then(() => {
+			playing.value = true
+		}).catch(() => {})
+	}
+}
+
+const handleVisibilityChange = () => {
+	if (document.hidden) {
+		handleWindowBlur()
+	} else {
+		handleWindowFocus()
+	}
+}
+
+const handleKeyDown = (e) => {
+	// Prevent F12
+	if (e.key === 'F12' || e.keyCode === 123) {
+		e.preventDefault()
+		e.stopPropagation()
+		return false
+	}
+	// Prevent Ctrl+U (View Source)
+	if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+		e.preventDefault()
+		e.stopPropagation()
+		return false
+	}
+	// Prevent Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C (DevTools)
+	if (e.ctrlKey && e.shiftKey && ['i', 'I', 'j', 'J', 'c', 'C'].includes(e.key)) {
+		e.preventDefault()
+		e.stopPropagation()
+		return false
+	}
+	// PrintScreen deterrence
+	if (e.key === 'PrintScreen' || e.keyCode === 44) {
+		isWindowBlurred.value = true
+		if (videoRef.value) {
+			videoRef.value.pause()
+			playing.value = false
+		}
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			navigator.clipboard.writeText('Handastech LMS Protected Content').catch(() => {})
+		}
+	}
+}
 
 const watermarkData = ref({
 	user_id: session?.user || 'student@builders.sa',
@@ -326,6 +424,12 @@ onMounted(async () => {
 	}
 	startWatermarkDrift()
 	startAntiTamperGuard()
+
+	// Client & Browser Defense Listeners
+	window.addEventListener('blur', handleWindowBlur)
+	window.addEventListener('focus', handleWindowFocus)
+	document.addEventListener('visibilitychange', handleVisibilityChange)
+	window.addEventListener('keydown', handleKeyDown, true)
 })
 
 onBeforeUnmount(() => {
@@ -349,6 +453,11 @@ onBeforeUnmount(() => {
 		tamperObserver.disconnect()
 		tamperObserver = null
 	}
+
+	window.removeEventListener('blur', handleWindowBlur)
+	window.removeEventListener('focus', handleWindowFocus)
+	document.removeEventListener('visibilitychange', handleVisibilityChange)
+	window.removeEventListener('keydown', handleKeyDown, true)
 })
 
 // Dynamic HLS.js Loader & Player
