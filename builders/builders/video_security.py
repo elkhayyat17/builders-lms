@@ -264,17 +264,20 @@ def get_video_key(video_id=None, token=None):
         frappe.local.response.http_status_code = 400
         return "Missing video_id"
 
-    # Token enforcement: all students must provide a valid signed token
     is_admin = user in ["Administrator"] or "System Manager" in frappe.get_roles(user)
-    if not is_admin and not token:
-        frappe.local.response.http_status_code = 403
-        return "Forbidden: Playback token required"
 
+    # Verification: Validate signed token if provided, or require active playback session lease
     if token:
         valid, result = verify_playback_token(token, video_id)
         if not valid:
             frappe.local.response.http_status_code = 403
             return f"Forbidden: {result}"
+    elif not is_admin:
+        cache_key = f"active_stream:{user}"
+        active = frappe.cache().get_value(cache_key)
+        if not active or (active.get("video_id") != video_id and not str(video_id).startswith(str(active.get("video_id", "")))):
+            frappe.local.response.http_status_code = 403
+            return "Forbidden: Active playback session required"
 
     ensure_security_table()
     rows = frappe.db.sql(

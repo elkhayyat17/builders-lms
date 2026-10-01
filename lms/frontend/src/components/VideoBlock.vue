@@ -357,14 +357,12 @@ defineExpose({
 })
 
 const handleWindowBlur = () => {
-	if (videoRef.value && !videoRef.value.paused) {
+	if ((videoRef.value && !videoRef.value.paused) || playing.value) {
 		wasPlayingBeforeBlur = true
-		videoRef.value.pause()
-	} else if (playing.value) {
-		wasPlayingBeforeBlur = true
+		if (videoRef.value) videoRef.value.pause()
+		playing.value = false
+		isWindowBlurred.value = true
 	}
-	playing.value = false
-	isWindowBlurred.value = true
 }
 
 const handleWindowFocus = () => {

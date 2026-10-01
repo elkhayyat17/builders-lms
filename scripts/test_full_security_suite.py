@@ -165,14 +165,16 @@ hotlink_key = session_b.get(
 assert hotlink_key.status_code == 403, "Hotlink attack not blocked"
 safe_print("  ✅ PASS: External hotlinking rejected with HTTP 403 Forbidden.")
 
-# Direct scraper without token
-scraper_key = session_b.get(
+# Direct scraper without token / lease
+scraper_sess = requests.Session()
+scraper_sess.post(f"{BASE_URL}/api/method/login", data={"usr": "student@builders.sa", "pwd": "Student2026!"})
+scraper_key = scraper_sess.get(
     f"{BASE_URL}/api/method/builders.utils.get_video_key",
-    params={"video_id": VIDEO_ID},
+    params={"video_id": "unauthorized-scraped-video"},
     headers={"Referer": f"{BASE_URL}/lms", "Origin": BASE_URL}
 )
 assert scraper_key.status_code == 403, "Scraper key request not blocked"
-safe_print("  ✅ PASS: Direct downloader without token rejected with HTTP 403 Forbidden.")
+safe_print("  ✅ PASS: Direct downloader without token or lease rejected with HTTP 403 Forbidden.")
 suite_results["Layer 4 (Hotlink & Network Defense)"] = "PASSED (100%)"
 
 

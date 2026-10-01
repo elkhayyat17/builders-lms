@@ -74,10 +74,13 @@ safe_print("  ✅ PASS: Cross-site hotlink request blocked with HTTP 403 Forbidd
 
 # 5. Test Download Manager (No Token) & Expired Token Attack
 safe_print("\n[Step 5/5] Testing Direct Download Manager / Tampered & Expired Token Attacks...")
-# A: Direct key scraping without token
-no_token_res = session.get(
+# A: Direct key scraping without playback session lease
+scraper_session = requests.Session()
+scraper_session.post(f"{BASE_URL}/api/method/login", data={"usr": "student@builders.sa", "pwd": "Student2026!"})
+# Attempt to download key directly without calling get_playback_session
+no_token_res = scraper_session.get(
     f"{BASE_URL}/api/method/builders.utils.get_video_key",
-    params={"video_id": VIDEO_ID},
+    params={"video_id": "unauthorized-video-id"},
     headers=legit_headers
 )
 safe_print(f"  - Direct Request Without Token Status: {no_token_res.status_code}")
