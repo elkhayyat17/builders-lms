@@ -773,6 +773,11 @@ const startAntiTamperGuard = () => {
 }
 
 const resetTamperState = async () => {
+	const wm = watermarkRef.value || document.getElementById('ht-forensic-watermark')
+	if (wm) {
+		wm.style.removeProperty('display')
+		wm.style.removeProperty('visibility')
+	}
 	isTampered.value = false
 	await nextTick()
 	startWatermarkDrift()
