@@ -66,3 +66,14 @@ jinja = {
 update_website_context = [
     "builders.utils.update_website_context",
 ]
+
+# --------------------------------------------------------------------------
+# Document Events — Auto Video Ingestion & Transcoding Hook
+# --------------------------------------------------------------------------
+
+doc_events = {
+    "Course Lesson": {
+        "on_update": "builders.video_transcoder.on_lesson_update"
+    }
+}
+
