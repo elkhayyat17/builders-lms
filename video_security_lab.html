@@ -849,15 +849,12 @@
             }
           }
 
-          // Check style changes (display: none / opacity: 0 / visibility: hidden)
+          // Check style changes (display: none / visibility: hidden)
           if (mut.type === 'attributes' && mut.target === watermark) {
-            if (!isSystemFading) {
-              const style = window.getComputedStyle(watermark);
-              const opacity = parseFloat(style.opacity);
-              if (style.display === 'none' || style.visibility === 'hidden' || opacity < 0.1) {
-                triggerTamperAlarm('محاولة إخفاء العلامة المائية عبر تعديل CSS (display/opacity/visibility)!');
-                return;
-              }
+            const style = window.getComputedStyle(watermark);
+            if (style.display === 'none' || style.visibility === 'hidden') {
+              triggerTamperAlarm('محاولة إخفاء العلامة المائية عبر تعديل CSS (display:none / visibility:hidden)!');
+              return;
             }
           }
         }

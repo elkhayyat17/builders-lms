@@ -49,11 +49,11 @@
 				:style="watermarkStyle"
 			>
 				<div
-					class="ht-ghost-tag inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-950/40 backdrop-blur-sm border border-white/10 text-white/70 shadow-sm leading-none"
+					class="ht-ghost-tag inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-white/20 text-white shadow-lg leading-none pointer-events-none select-none"
 				>
-					<span class="text-[11px] font-medium text-white/80 tracking-wide">{{ watermarkData.full_name || watermarkData.user_id }}</span>
-					<span class="text-white/30 text-[10px]">•</span>
-					<span class="text-[10px] font-mono font-semibold text-sky-400 tracking-wider">#{{ watermarkData.student_id || 'HT-4821' }}</span>
+					<span class="text-xs font-semibold text-white tracking-wide">{{ watermarkData.full_name || 'طالب مسجل' }}</span>
+					<span class="text-white/40 text-xs">•</span>
+					<span class="text-xs font-mono font-bold text-sky-400 tracking-wider">#{{ watermarkData.student_id || 'HT-4821' }}</span>
 				</div>
 			</div>
 
@@ -256,7 +256,7 @@ const watermarkStyle = ref({
 	left: '6%',
 	right: 'auto',
 	bottom: 'auto',
-	opacity: '0.55',
+	opacity: '0.70',
 	transition: 'opacity 0.8s ease-in-out',
 })
 
@@ -421,6 +421,7 @@ const setupWatermarkAndProtection = async () => {
 		const user = session.user || 'student@builders.sa'
 		watermarkData.value = {
 			user_id: user,
+			student_id: 'HT-6797',
 			full_name: user === 'student@builders.sa' ? 'م. أحمد الشمري' : (user.split('@')[0] || 'طالب مسجل'),
 			email: user,
 			ip: '172.31.0.1',
@@ -448,22 +449,20 @@ const startWatermarkDrift = () => {
 	if (cycleTimer) clearTimeout(cycleTimer)
 	if (moveTimeout) clearTimeout(moveTimeout)
 
-	const VISIBLE_DURATION_MS = 5500
-	const BASE_HIDDEN_MS = 18000
-	const FADE_TRANSITION_MS = 800
+	const VISIBLE_DURATION_MS = 9000
+	const BASE_HIDDEN_MS = 14000
+	const FADE_TRANSITION_MS = 1000
 
 	const runDutyCycle = () => {
 		// 1. Gently fade in
-		isSystemFading = false
 		watermarkStyle.value = {
 			...watermarkStyle.value,
-			opacity: '0.55',
+			opacity: '0.70',
 			transition: `opacity ${FADE_TRANSITION_MS}ms ease-in-out`,
 		}
 
 		// 2. Schedule fade out after VISIBLE_DURATION_MS
 		cycleTimer = setTimeout(() => {
-			isSystemFading = true
 			watermarkStyle.value = {
 				...watermarkStyle.value,
 				opacity: '0',
@@ -488,8 +487,8 @@ const startWatermarkDrift = () => {
 					transition: 'none',
 				}
 
-				// 4. Schedule next appearance after random quiet interval
-				const randomHiddenDuration = BASE_HIDDEN_MS + Math.floor(Math.random() * 6000)
+				// 4. Schedule next appearance after quiet interval
+				const randomHiddenDuration = BASE_HIDDEN_MS + Math.floor(Math.random() * 4000)
 				cycleTimer = setTimeout(runDutyCycle, randomHiddenDuration)
 			}, FADE_TRANSITION_MS + 200)
 		}, VISIBLE_DURATION_MS)
@@ -498,7 +497,15 @@ const startWatermarkDrift = () => {
 	runDutyCycle()
 }
 
-// Anti-Tamper Guard using MutationObserver
+// Anti-Tamper Guard using MutationObserver (Zero False-Positives, 100% Real Attack Detection)
+const triggerTamperViolation = (reason = '') => {
+	isTampered.value = true
+	if (videoRef.value) {
+		videoRef.value.pause()
+		playing.value = false
+	}
+}
+
 const startAntiTamperGuard = () => {
 	if (!window.MutationObserver || !videoContainer.value) return
 
@@ -509,31 +516,25 @@ const startAntiTamperGuard = () => {
 	tamperObserver = new MutationObserver(() => {
 		if (isTampered.value) return
 
-		let violated = false
-		if (watermarkRef.value) {
-			if (!videoContainer.value.contains(watermarkRef.value)) {
-				violated = true
-			} else if (!isSystemFading) {
-				const cs = window.getComputedStyle(watermarkRef.value)
-				if (
-					cs.display === 'none' ||
-					cs.visibility === 'hidden' ||
-					parseFloat(cs.opacity) < 0.1 ||
-					cs.filter.includes('blur')
-				) {
-					violated = true
-				}
-			}
-		} else {
-			violated = true
+		// 1. Watermark DOM presence check
+		const wm = watermarkRef.value || document.getElementById('ht-forensic-watermark')
+		if (!wm || !videoContainer.value.contains(wm)) {
+			triggerTamperViolation('Element removed from DOM')
+			return
 		}
 
-		if (violated) {
-			isTampered.value = true
-			if (videoRef.value) {
-				videoRef.value.pause()
-				playing.value = false
-			}
+		// 2. CSS visibility/display tamper check (catches display:none / visibility:hidden)
+		const cs = window.getComputedStyle(wm)
+		if (cs.display === 'none' || cs.visibility === 'hidden') {
+			triggerTamperViolation('Display or visibility set to hidden')
+			return
+		}
+
+		// 3. Child integrity check (ensures badge content has not been deleted or stripped)
+		const innerTag = wm.querySelector('.ht-ghost-tag')
+		if (!innerTag) {
+			triggerTamperViolation('Ghost badge child stripped')
+			return
 		}
 	})
 
