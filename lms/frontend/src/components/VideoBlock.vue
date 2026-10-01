@@ -111,10 +111,30 @@
 				</Button>
 			</div>
 
+			<!-- CONCURRENT STREAM LOCKOUT OVERLAY (STAGE 2) -->
+			<div
+				v-if="isStreamLocked"
+				id="ht-stream-lock-shield"
+				class="absolute inset-0 z-50 bg-slate-950/95 backdrop-blur-2xl flex flex-col items-center justify-center p-6 text-center text-white"
+			>
+				<div class="w-16 h-16 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-400 mb-3 text-3xl font-bold">
+					🔒
+				</div>
+				<h3 class="text-base sm:text-lg font-bold text-amber-400 mb-2">
+					تنبيه أمني: البث نشط على جهاز آخر
+				</h3>
+				<p class="text-xs sm:text-sm text-slate-300 max-w-md mb-5 leading-relaxed">
+					تم إيقاف تشغيل الفيديو آلياً لأن هذا الحساب بدأ المشاهدة من جهاز أو متصفح آخر. تنص لوائح المنصة على منع مشاركة الحسابات وحصر البث على جهاز واحد في نفس الوقت.
+				</p>
+				<Button variant="solid" theme="warning" @click="reclaimPlayback">
+					المتابعة من هذا الجهاز
+				</Button>
+			</div>
+
 			<!-- PLAY OVERLAY BUTTON -->
 			<button
 				type="button"
-				v-if="!playing && !isTampered && !isWindowBlurred"
+				v-if="!playing && !isTampered && !isWindowBlurred && !isStreamLocked"
 				:aria-label="__('Play video')"
 				class="absolute inset-0 flex items-center justify-center cursor-pointer z-10"
 				@click="playVideo"
@@ -278,7 +298,63 @@ let moveTimeout = null
 
 const isTampered = ref(false)
 const isWindowBlurred = ref(false)
+const isStreamLocked = ref(false)
+const streamSessionId = ref(null)
 let wasPlayingBeforeBlur = false
+let heartbeatTimer = null
+
+const sendHeartbeat = async () => {
+	if (!streamSessionId.value || isStreamLocked.value) return
+	try {
+		let videoId = props.file.split('/').pop().replace('.m3u8', '').replace('.mp4', '') || 'handastech-video'
+		if (videoId === 'playlist' || props.file.includes('protected-stream')) {
+			videoId = 'sbc-304-1-1'
+		}
+		const res = await call('builders.utils.stream_heartbeat', {
+			video_id: videoId,
+			session_id: streamSessionId.value,
+		})
+		if (res && res.status === 'conflict') {
+			handleStreamConflict()
+		}
+	} catch (err) {
+		console.error('Stream heartbeat error:', err)
+	}
+}
+
+const handleStreamConflict = () => {
+	isStreamLocked.value = true
+	if (videoRef.value) {
+		videoRef.value.pause()
+	}
+	playing.value = false
+}
+
+const reclaimPlayback = async () => {
+	isStreamLocked.value = false
+	await setupWatermarkAndProtection()
+	if (videoRef.value) {
+		videoRef.value.play().then(() => {
+			playing.value = true
+		}).catch(() => {})
+	}
+}
+
+const onHeartbeatTrigger = () => {
+	sendHeartbeat()
+}
+
+watch(playing, (newVal) => {
+	if (newVal) {
+		sendHeartbeat()
+	}
+})
+
+defineExpose({
+	sendHeartbeat,
+	isStreamLocked,
+	reclaimPlayback,
+})
 
 const handleWindowBlur = () => {
 	if (videoRef.value && !videoRef.value.paused) {
@@ -430,9 +506,18 @@ onMounted(async () => {
 	window.addEventListener('focus', handleWindowFocus)
 	document.addEventListener('visibilitychange', handleVisibilityChange)
 	window.addEventListener('keydown', handleKeyDown, true)
+
+	// Session & Account Sharing Defense Heartbeat
+	heartbeatTimer = setInterval(sendHeartbeat, 10000)
+	window.addEventListener('ht-check-heartbeat', onHeartbeatTrigger)
 })
 
 onBeforeUnmount(() => {
+	window.removeEventListener('ht-check-heartbeat', onHeartbeatTrigger)
+	if (heartbeatTimer) {
+		clearInterval(heartbeatTimer)
+		heartbeatTimer = null
+	}
 	if (hlsInstance) {
 		hlsInstance.destroy()
 		hlsInstance = null
@@ -549,6 +634,9 @@ const setupWatermarkAndProtection = async () => {
 				platform: res.watermark.platform || 'Handastech',
 				course_id: (res.watermark.course_id || courseSlug || 'SBC-304').toUpperCase(),
 			}
+		}
+		if (res && res.stream_session_id) {
+			streamSessionId.value = res.stream_session_id
 		}
 	} catch (err) {
 		// Graceful fallback to active user session
@@ -761,7 +849,7 @@ const updateNextQuiz = () => {
 }
 
 const playVideo = () => {
-	if (isTampered.value || !videoRef.value) return
+	if (isTampered.value || isStreamLocked.value || !videoRef.value) return
 	videoRef.value.play()
 	playing.value = true
 }

@@ -134,10 +134,24 @@ def get_playback_session(video_id, lesson=None, course=None):
     course_code = (course or "SBC-304").upper()
     course_title = frappe.db.get_value("LMS Course", course, "title") if frappe.db.exists("LMS Course", course) else course_code
 
+    import uuid
+    stream_session_id = str(uuid.uuid4())
+
+    # Record active streaming session in cache (Anti-Account Sharing)
+    cache_key = f"active_stream:{user}"
+    frappe.cache().set_value(cache_key, {
+        "session_id": stream_session_id,
+        "video_id": video_id,
+        "course": course,
+        "last_heartbeat": time.time(),
+        "ip": client_ip,
+    }, expires_in_sec=120)
+
     return {
         "status": "success",
         "video_id": video_id,
         "token": token,
+        "stream_session_id": stream_session_id,
         "watermark": {
             "user_id": user,
             "student_id": student_id,
@@ -149,6 +163,47 @@ def get_playback_session(video_id, lesson=None, course=None):
             "course_id": course_code,
             "course_title": course_title or course_code,
         }
+    }
+
+@frappe.whitelist(allow_guest=False)
+def stream_heartbeat(video_id=None, session_id=None):
+    """
+    Heartbeat endpoint to enforce single concurrent video stream per learner.
+    Returns conflict status if another session/device superseded this one.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+        frappe.local.response.http_status_code = 401
+        return {"status": "unauthorized"}
+
+    if not session_id:
+        return {"status": "error", "message": "Missing session_id"}
+
+    cache_key = f"active_stream:{user}"
+    active = frappe.cache().get_value(cache_key)
+
+    if not active:
+        # Key expired or first heartbeat - register active session
+        frappe.cache().set_value(cache_key, {
+            "session_id": session_id,
+            "video_id": video_id,
+            "last_heartbeat": time.time(),
+            "ip": getattr(frappe.local, "request_ip", "127.0.0.1"),
+        }, expires_in_sec=120)
+        return {"status": "ok"}
+
+    if active.get("session_id") == session_id:
+        # Renew active lease
+        active["last_heartbeat"] = time.time()
+        if video_id:
+            active["video_id"] = video_id
+        frappe.cache().set_value(cache_key, active, expires_in_sec=120)
+        return {"status": "ok"}
+
+    # Conflict: Another device or window has taken over playback!
+    return {
+        "status": "conflict",
+        "message": _("تم تعليق المشاهدة: الحساب نشط حالياً على جهاز آخر. يُسمح بتشغيل شاشة واحدة فقط في نفس الوقت.")
     }
 
 @frappe.whitelist(allow_guest=False)

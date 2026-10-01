@@ -1,5 +1,5 @@
 import frappe
-from .video_security import get_playback_session, get_video_key, store_video_key
+from .video_security import get_playback_session, get_video_key, store_video_key, stream_heartbeat
 
 
 @frappe.whitelist(allow_guest=True)
