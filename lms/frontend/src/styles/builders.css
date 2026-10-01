@@ -1,0 +1,138 @@
+/* ==========================================================================
+   Builders LMS — Civil Engineering Brand Theme & RTL Rules
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Primary Engineering Blue */
+  --builders-primary: #1B4D7A;
+  --builders-primary-light: #2E7ABF;
+  --builders-primary-dark: #133A5C;
+
+  /* Accent Gold / Sand */
+  --builders-accent: #D4A843;
+  --builders-accent-light: #E5C36B;
+  --builders-accent-dark: #B8912E;
+
+  /* Surfaces & Ink */
+  --builders-surface: #F8F6F2;
+  --builders-surface-card: #FFFFFF;
+  --builders-text-primary: #1A1A2E;
+  --builders-text-secondary: #6B7280;
+
+  /* Semantics */
+  --builders-success: #059669;
+  --builders-danger: #DC2626;
+
+  /* Radii */
+  --builders-radius: 0.5rem;
+  --builders-radius-lg: 0.75rem;
+
+  /* Font Families */
+  --font-arabic: 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-latin: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Global Font Assignment */
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-arabic);
+}
+
+[dir='ltr'] body,
+[dir='ltr'] button,
+[dir='ltr'] input,
+[dir='ltr'] select,
+[dir='ltr'] textarea {
+  font-family: var(--font-latin);
+}
+
+/* --------------------------------------------------------------------------
+   RTL Utility & Layout Enhancements
+   -------------------------------------------------------------------------- */
+[dir='rtl'] {
+  text-align: right;
+}
+
+[dir='rtl'] .breadcrumb-separator svg,
+[dir='rtl'] .lucide-chevron-right,
+[dir='rtl'] .lucide-chevrons-right {
+  transform: scaleX(-1);
+}
+
+/* Code and formula blocks should always stay LTR */
+[dir='rtl'] pre,
+[dir='rtl'] code,
+[dir='rtl'] .code-block,
+[dir='rtl'] .codemirror {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+/* Discussion reply indentation */
+[dir='rtl'] .reply-indent {
+  margin-right: 1.5rem;
+  margin-left: 0;
+  border-right: 2px solid #E5E7EB;
+  border-left: none;
+  padding-right: 0.75rem;
+  padding-left: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Brand Badges & Highlights
+   -------------------------------------------------------------------------- */
+.badge-builders-featured {
+  background: linear-gradient(135deg, var(--builders-accent) 0%, var(--builders-accent-dark) 100%);
+  color: #FFFFFF;
+  font-weight: 600;
+  border-radius: var(--builders-radius);
+  padding: 0.2rem 0.6rem;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.badge-builders-category {
+  background-color: rgba(27, 77, 122, 0.08);
+  color: var(--builders-primary);
+  border: 1px solid rgba(27, 77, 122, 0.2);
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.badge-builders-category:hover {
+  background-color: var(--builders-primary);
+  color: #FFFFFF;
+}
+
+/* Hero Section */
+.builders-hero-banner {
+  background: linear-gradient(135deg, #133A5C 0%, #1B4D7A 50%, #2E7ABF 100%);
+  color: #FFFFFF;
+  border-radius: var(--builders-radius-lg);
+  padding: 3rem 2rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(27, 77, 122, 0.25);
+}
+
+.builders-hero-banner::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(212, 168, 67, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}

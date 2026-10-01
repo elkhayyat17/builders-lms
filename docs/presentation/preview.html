@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="app-root">
+<head>
+  <meta charset="UTF-8">
+  <title>Builders | بيلدرز - منصة دورات الهندسة المدنية</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+    
+    :root {
+      --primary: #1B4D7A;
+      --primary-dark: #133A5C;
+      --primary-light: #2E7ABF;
+      --accent: #D4A843;
+      --accent-dark: #B8912E;
+      --surface-warm: #F8F6F2;
+    }
+    
+    [dir="rtl"] { font-family: 'IBM Plex Sans Arabic', sans-serif; text-align: right; }
+    [dir="ltr"] { font-family: 'IBM Plex Sans', sans-serif; text-align: left; }
+    
+    .builders-header-gradient {
+      background: linear-gradient(135deg, #133A5C 0%, #1B4D7A 60%, #2E7ABF 100%);
+    }
+
+    .badge-gold {
+      background: linear-gradient(135deg, #D4A843 0%, #B8912E 100%);
+      color: #FFFFFF;
+    }
+  </style>
+</head>
+<body class="bg-[#F8F6F2] text-slate-800 min-h-screen flex flex-col transition-all duration-200">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="builders-header-gradient text-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo & Name -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center shadow-inner">
+          <svg class="w-6 h-6 text-[#D4A843]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M3 21h18M5 21V7l7-4 7 4v14M9 10a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm6 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm-6 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm6 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>
+          </svg>
+        </div>
+        <div>
+          <span class="text-xl font-bold tracking-tight text-white block leading-tight">BUILDERS</span>
+          <span class="text-xs text-amber-300 font-medium tracking-wide" id="txt-subbrand">منصة الهندسة المدنية للخليج</span>
+        </div>
+      </div>
+
+      <!-- Center Search Bar -->
+      <div class="hidden md:flex flex-1 max-w-md mx-8">
+        <div class="relative w-full">
+          <input 
+            type="text" 
+            id="searchInput" 
+            oninput="handleSearch(this.value)"
+            placeholder="ابحث عن دورة، كود بناء، برنامج هندسي..." 
+            class="w-full bg-white/15 border border-white/25 rounded-full py-1.5 px-4 text-sm text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-[#D4A843] focus:bg-white/25 transition-all"
+          />
+        </div>
+      </div>
+
+      <!-- Right Actions: Language Switcher & User Profile -->
+      <div class="flex items-center gap-3">
+        
+        <!-- Language Switcher Button -->
+        <button 
+          onclick="toggleLang()"
+          id="btn-lang" 
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/15 hover:bg-white/25 text-white text-xs font-semibold border border-white/20 transition-all cursor-pointer"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke-width="1.8"/>
+            <path stroke-width="1.8" d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          <span id="lang-label">English (LTR)</span>
+        </button>
+
+        <!-- Launch Full LMS Portal Button -->
+        <a 
+          href="http://localhost:8000/lms" 
+          target="_blank" 
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#D4A843] hover:bg-[#B8912E] text-white text-xs font-bold shadow transition-all cursor-pointer"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+          </svg>
+          <span id="txt-launch-portal">دخول منصة LMS الرسمية (:8000)</span>
+        </a>
+
+        <!-- User Menu Demo -->
+        <div class="flex items-center gap-2 border-s border-white/20 ps-3">
+          <div class="w-8 h-8 rounded-full bg-amber-400 text-[#133A5C] font-bold flex items-center justify-center text-xs shadow">
+            م.ع
+          </div>
+          <span class="hidden sm:inline text-xs font-medium text-white/90">م. أحمد (مدرب)</span>
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="builders-header-gradient text-white py-10 px-4 sm:px-6 lg:px-8 border-b border-amber-500/20 shadow-inner">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+      
+      <div class="max-w-2xl space-y-3 text-center md:text-start">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-amber-300 text-xs font-semibold">
+          <span>✨</span>
+          <span id="hero-badge">مُعتمد طبقاً لكود البناء السعودي (SBC) والأكواد الخليجية</span>
+        </div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight" id="hero-title">
+          ابنِ مسيرتك الاحترافية في الهندسة المدنية
+        </h1>
+        <p class="text-sm sm:text-base text-slate-200 leading-relaxed" id="hero-desc">
+          دورات تخصصية متقدمة في التصميم الإنشائي، إدارة المشاريع (PMP / Primavera)، عقود الفيديك (FIDIC)، وحصر الكميات للمهندسين في منطقة الخليج العربي.
+        </p>
+        
+        <div class="pt-2 flex flex-wrap gap-3 justify-center md:justify-start">
+          <button onclick="scrollToCourses()" class="px-5 py-2.5 rounded-lg bg-[#D4A843] hover:bg-[#B8912E] text-white font-bold text-sm shadow-lg transition-transform hover:-translate-y-0.5 cursor-pointer" id="btn-explore">
+            تصفح الدورات التدريبية
+          </button>
+          <button onclick="openModal('live-class')" class="px-4 py-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium text-sm border border-white/20 transition cursor-pointer" id="btn-live">
+            📅 جدول الحصص المباشرة
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Counter Box -->
+      <div class="grid grid-cols-2 gap-3 w-full sm:w-auto">
+        <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-xl p-4 text-center">
+          <div class="text-2xl font-bold text-amber-300">+2,400</div>
+          <div class="text-xs text-slate-200 mt-1" id="m-engineers">مهندس مسجل</div>
+        </div>
+        <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-xl p-4 text-center">
+          <div class="text-2xl font-bold text-white">5</div>
+          <div class="text-xs text-slate-200 mt-1" id="m-departments">تخصصات هندسية</div>
+        </div>
+        <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-xl p-4 text-center">
+          <div class="text-2xl font-bold text-white">100%</div>
+          <div class="text-xs text-slate-200 mt-1" id="m-practical">تطبيق عملي ومشاريع</div>
+        </div>
+        <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-xl p-4 text-center">
+          <div class="text-2xl font-bold text-amber-300">4.9/5</div>
+          <div class="text-xs text-slate-200 mt-1" id="m-rating">تقييم المتدربين</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CATEGORY FILTER CHIPS -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4 w-full" id="courses-section">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-bold text-[#1B4D7A] flex items-center gap-2" id="txt-categories-title">
+        <span>🏗️</span> التخصصات والأقسام الهندسية
+      </h2>
+      <span class="text-xs text-slate-500 font-medium" id="course-count-display">عرض 5 دورات متوفرة</span>
+    </div>
+
+    <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="categoryChips">
+      <button onclick="filterCategory('all')" class="cat-btn active px-4 py-2 rounded-full text-xs font-semibold border transition cursor-pointer bg-[#1B4D7A] text-white border-[#1B4D7A]" data-cat="all">
+        الكل (All)
+      </button>
+      <button onclick="filterCategory('structural')" class="cat-btn px-4 py-2 rounded-full text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:border-[#1B4D7A] transition cursor-pointer" data-cat="structural">
+        🏛️ الهندسة الإنشائية (Structural)
+      </button>
+      <button onclick="filterCategory('management')" class="cat-btn px-4 py-2 rounded-full text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:border-[#1B4D7A] transition cursor-pointer" data-cat="management">
+        📊 إدارة المشاريع (Management)
+      </button>
+      <button onclick="filterCategory('codes')" class="cat-btn px-4 py-2 rounded-full text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:border-[#1B4D7A] transition cursor-pointer" data-cat="codes">
+        📜 الأكواد والمعايير (Codes & Standards)
+      </button>
+      <button onclick="filterCategory('software')" class="cat-btn px-4 py-2 rounded-full text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:border-[#1B4D7A] transition cursor-pointer" data-cat="software">
+        💻 التدريب على البرمجيات (Software)
+      </button>
+      <button onclick="filterCategory('qs')" class="cat-btn px-4 py-2 rounded-full text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:border-[#1B4D7A] transition cursor-pointer" data-cat="qs">
+        📐 حصر الكميات (Quantity Surveying)
+      </button>
+    </div>
+  </section>
+
+  <!-- COURSES GRID -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex-1 w-full">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="coursesGrid">
+      
+      <!-- Course Card 1: Structural Concrete Design -->
+      <div class="course-card bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col" data-cat="structural">
+        <div class="h-44 bg-gradient-to-r from-blue-900 to-indigo-900 relative p-4 flex flex-col justify-between text-white">
+          <div class="flex items-center justify-between">
+            <span class="badge-gold text-[10px] font-bold px-2 py-0.5 rounded shadow">⭐ مميز / Featured</span>
+            <span class="bg-black/40 backdrop-blur text-[10px] text-white px-2 py-0.5 rounded">متقدم / Advanced</span>
+          </div>
+          <div>
+            <span class="text-[11px] text-amber-300 font-medium">الهندسة الإنشائية</span>
+            <h3 class="text-base font-bold text-white line-clamp-2">تصميم المنشآت الخرسانية المسلحة طبقاً لكود SBC 304 و ACI 318</h3>
+          </div>
+        </div>
+        <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+          <p class="text-xs text-slate-600 line-clamp-2">
+            دورة متكاملة لتصميم الأبراج والعمارات السكنية بالخليج شاملة فحص الزلازل، الرياح، والتحليل الإنشائي الكامل.
+          </p>
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span class="flex items-center gap-1">📖 24 درساً</span>
+            <span class="flex items-center gap-1">⏱️ 36 ساعة</span>
+            <span class="flex items-center gap-1 text-amber-600 font-semibold">⭐ 4.9 (184)</span>
+          </div>
+          <button onclick="openCourseModal(1)" class="w-full mt-2 py-2 rounded-lg bg-[#1B4D7A] hover:bg-[#133A5C] text-white font-semibold text-xs transition cursor-pointer">
+            عرض التفاصيل والمنهج
+          </button>
+        </div>
+      </div>
+
+      <!-- Course Card 2: Saudi Building Code & Gulf Codes -->
+      <div class="course-card bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col" data-cat="codes">
+        <div class="h-44 bg-gradient-to-r from-slate-800 to-slate-900 relative p-4 flex flex-col justify-between text-white">
+          <div class="flex items-center justify-between">
+            <span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">كود البناء</span>
+            <span class="bg-black/40 backdrop-blur text-[10px] text-white px-2 py-0.5 rounded">متوسط / Intermediate</span>
+          </div>
+          <div>
+            <span class="text-[11px] text-amber-300 font-medium">الأكواد والمعايير</span>
+            <h3 class="text-base font-bold text-white line-clamp-2">شرح اشتراطات كود البناء السعودي (SBC) وتطبيقاته العملية للمشاريع</h3>
+          </div>
+        </div>
+        <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+          <p class="text-xs text-slate-600 line-clamp-2">
+            فهم متطلبات كود البناء العام SBC 201، كود الأحمال 301، وكود المنشآت الخرسانية للحصول على اعتمادات بلدي.
+          </p>
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span class="flex items-center gap-1">📖 18 درساً</span>
+            <span class="flex items-center gap-1">⏱️ 22 ساعة</span>
+            <span class="flex items-center gap-1 text-amber-600 font-semibold">⭐ 4.8 (95)</span>
+          </div>
+          <button onclick="openCourseModal(2)" class="w-full mt-2 py-2 rounded-lg bg-[#1B4D7A] hover:bg-[#133A5C] text-white font-semibold text-xs transition cursor-pointer">
+            عرض التفاصيل والمنهج
+          </button>
+        </div>
+      </div>
+
+      <!-- Course Card 3: Primavera P6 & Project Planning -->
+      <div class="course-card bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col" data-cat="management">
+        <div class="h-44 bg-gradient-to-r from-sky-900 to-blue-950 relative p-4 flex flex-col justify-between text-white">
+          <div class="flex items-center justify-between">
+            <span class="badge-gold text-[10px] font-bold px-2 py-0.5 rounded shadow">الأكثر طلباً</span>
+            <span class="bg-black/40 backdrop-blur text-[10px] text-white px-2 py-0.5 rounded">مبتدئ إلى متقدم</span>
+          </div>
+          <div>
+            <span class="text-[11px] text-amber-300 font-medium">إدارة المشاريع والجدولة</span>
+            <h3 class="text-base font-bold text-white line-clamp-2">احتراف إدارة المشاريع الإنشائية ببرنامج Primavera P6</h3>
+          </div>
+        </div>
+        <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+          <p class="text-xs text-slate-600 line-clamp-2">
+            إعداد جداول زمنية كاملة للمشروع، تخصيص الموارد، حساب التكلفة ومسار الحرج (CPM)، وإعداد تقارير EVM.
+          </p>
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span class="flex items-center gap-1">📖 30 درساً</span>
+            <span class="flex items-center gap-1">⏱️ 40 ساعة</span>
+            <span class="flex items-center gap-1 text-amber-600 font-semibold">⭐ 4.95 (310)</span>
+          </div>
+          <button onclick="openCourseModal(3)" class="w-full mt-2 py-2 rounded-lg bg-[#1B4D7A] hover:bg-[#133A5C] text-white font-semibold text-xs transition cursor-pointer">
+            عرض التفاصيل والمنهج
+          </button>
+        </div>
+      </div>
+
+      <!-- Course Card 4: Revit Structure & BIM -->
+      <div class="course-card bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col" data-cat="software">
+        <div class="h-44 bg-gradient-to-r from-teal-900 to-emerald-950 relative p-4 flex flex-col justify-between text-white">
+          <div class="flex items-center justify-between">
+            <span class="bg-teal-700 text-white text-[10px] font-bold px-2 py-0.5 rounded">BIM Structural</span>
+            <span class="bg-black/40 backdrop-blur text-[10px] text-white px-2 py-0.5 rounded">متوسط</span>
+          </div>
+          <div>
+            <span class="text-[11px] text-amber-300 font-medium">البرمجيات الهندسية</span>
+            <h3 class="text-base font-bold text-white line-clamp-2">نمذجة المنشآت الإنشائية وإخراج اللوحات التنفيذية بـ Revit Structure</h3>
+          </div>
+        </div>
+        <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+          <p class="text-xs text-slate-600 line-clamp-2">
+            إتقان النمذجة الإنشائية BIM، تفريد حديد التسليح (Rebar Detailing)، وربط النموذج ببرامج التحليل الإنشائي.
+          </p>
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span class="flex items-center gap-1">📖 20 درساً</span>
+            <span class="flex items-center gap-1">⏱️ 28 ساعة</span>
+            <span class="flex items-center gap-1 text-amber-600 font-semibold">⭐ 4.85 (140)</span>
+          </div>
+          <button onclick="openCourseModal(4)" class="w-full mt-2 py-2 rounded-lg bg-[#1B4D7A] hover:bg-[#133A5C] text-white font-semibold text-xs transition cursor-pointer">
+            عرض التفاصيل والمنهج
+          </button>
+        </div>
+      </div>
+
+      <!-- Course Card 5: Quantity Surveying & BOQ -->
+      <div class="course-card bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col" data-cat="qs">
+        <div class="h-44 bg-gradient-to-r from-amber-900 to-amber-950 relative p-4 flex flex-col justify-between text-white">
+          <div class="flex items-center justify-between">
+            <span class="badge-gold text-[10px] font-bold px-2 py-0.5 rounded shadow">حصر هندسي</span>
+            <span class="bg-black/40 backdrop-blur text-[10px] text-white px-2 py-0.5 rounded">شامل</span>
+          </div>
+          <div>
+            <span class="text-[11px] text-amber-300 font-medium">حصر الكميات والعقود</span>
+            <h3 class="text-base font-bold text-white line-clamp-2">حصر الكميات الإنشائية وإعداد جداول الـ BOQ والمستخلصات الشهرية</h3>
+          </div>
+        </div>
+        <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+          <p class="text-xs text-slate-600 line-clamp-2">
+            حصر الخرسانات، حديد التسليح، العزل، والتشطيبات عملياً على مخططات حقيقية وإعداد المستخلصات والمطالبات.
+          </p>
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span class="flex items-center gap-1">📖 16 درساً</span>
+            <span class="flex items-center gap-1">⏱️ 20 ساعة</span>
+            <span class="flex items-center gap-1 text-amber-600 font-semibold">⭐ 4.9 (210)</span>
+          </div>
+          <button onclick="openCourseModal(5)" class="w-full mt-2 py-2 rounded-lg bg-[#1B4D7A] hover:bg-[#133A5C] text-white font-semibold text-xs transition cursor-pointer">
+            عرض التفاصيل والمنهج
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- COURSE MODAL (DETAIL & SYLLABUS PREVIEW) -->
+  <div id="courseModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200">
+      
+      <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+        <div>
+          <span class="text-xs font-semibold text-[#D4A843]" id="modal-dept">الهندسة الإنشائية</span>
+          <h3 class="text-lg font-bold text-[#1B4D7A]" id="modal-title">تفاصيل الدورة التدريبية</h3>
+        </div>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold cursor-pointer">
+          ✕
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4 text-sm text-slate-700">
+        
+        <!-- Video Preview Player Frame -->
+        <div class="w-full aspect-video bg-slate-900 rounded-xl overflow-hidden flex flex-col items-center justify-center text-white relative">
+          <svg class="w-16 h-16 text-amber-400 mb-2 opacity-90" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <span class="text-xs text-slate-300 font-medium" id="modal-preview-text">فيديو المعاينة المجاني للدرس الأول (HD Video Preview)</span>
+        </div>
+
+        <!-- Custom Fields: Prerequisites & Target Audience -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+          <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+            <span class="font-bold text-xs text-[#1B4D7A] block mb-1">🎯 الفئة المستهدفة:</span>
+            <span class="text-xs text-slate-600" id="modal-audience">مهندسو التصميم الإنشائي، مهندسو المواقع، وخريجو الهندسة المدنية الباحثون عن عمل بالخليج.</span>
+          </div>
+          <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+            <span class="font-bold text-xs text-[#1B4D7A] block mb-1">📋 المتطلبات المسبقة:</span>
+            <span class="text-xs text-slate-600" id="modal-prereqs">معرفة أساسية بمقاومة المواد وتحليل الإنشاءات + أساسيات برنامج AutoCAD.</span>
+          </div>
+        </div>
+
+        <!-- Chapters List -->
+        <div>
+          <h4 class="font-bold text-sm text-slate-800 mb-2">📚 المنهج الدراسي للدورة:</h4>
+          <div class="space-y-2">
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center text-xs">
+              <span class="font-medium">الفصل 1: مقدمة كود SBC وحساب الأحمال الحية والميتة والرياح</span>
+              <span class="text-emerald-600 font-bold">معاينة مجانية ▶</span>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center text-xs">
+              <span class="font-medium">الفصل 2: التحليل الإنشائي وحساب العزوم وقوى القص</span>
+              <span class="text-slate-400">مغلق 🔒</span>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center text-xs">
+              <span class="font-medium">الفصل 3: تصميم البلاطات والكمرات والأعمدة وتفريد التسليح</span>
+              <span class="text-slate-400">مغلق 🔒</span>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center text-xs">
+              <span class="font-medium">الفصل 4: اختبار الفصل وتطبيق مشروع فيلا سكنية كامل</span>
+              <span class="text-slate-400">اختبار تقييمي 📝</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 flex items-center justify-between border-t border-slate-100">
+          <div>
+            <span class="text-xs text-slate-400 block">لغة الدورة:</span>
+            <span class="font-bold text-xs text-[#1B4D7A]">العربية (مع المصطلحات الهندسية بالإنجليزية)</span>
+          </div>
+          <button onclick="alert('تم تفعيل التسجيل في الدورة التجريبية بنجاح!')" class="px-6 py-2.5 rounded-lg bg-[#D4A843] hover:bg-[#B8912E] text-white font-bold text-sm shadow transition cursor-pointer">
+            ابدأ التعلم الآن
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#133A5C] text-slate-300 py-8 px-4 sm:px-6 lg:px-8 border-t border-white/10 mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-white text-sm">BUILDERS</span>
+        <span class="text-slate-400">| منصة تدريب المهندسين المدنيين (منطقة الخليج العربي)</span>
+      </div>
+      <div>
+        <span>نظام إدارة التعلم مبني ومُخصص على إطار Frappe Framework مفتوح المصدر</span>
+      </div>
+      <div class="text-amber-400 font-semibold">
+        © 2026 Builders LMS. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- INTERACTIVE LOGIC SCRIPT -->
+  <script>
+    let isArabic = true;
+
+    const translations = {
+      ar: {
+        dir: 'rtl',
+        lang: 'ar',
+        langBtn: 'English (LTR)',
+        subbrand: 'منصة الهندسة المدنية للخليج',
+        heroBadge: 'مُعتمد طبقاً لكود البناء السعودي (SBC) والأكواد الخليجية',
+        heroTitle: 'ابنِ مسيرتك الاحترافية في الهندسة المدنية',
+        heroDesc: 'دورات تخصصية متقدمة في التصميم الإنشائي، إدارة المشاريع (PMP / Primavera)، عقود الفيديك (FIDIC)، وحصر الكميات للمهندسين في منطقة الخليج العربي.',
+        exploreBtn: 'تصفح الدورات التدريبية',
+        liveBtn: '📅 جدول الحصص المباشرة',
+        catTitle: '🏗️ التخصصات والأقسام الهندسية',
+        searchPlaceholder: 'ابحث عن دورة، كود بناء، برنامج هندسي...',
+        engineers: 'مهندس مسجل',
+        departments: 'تخصصات هندسية',
+        practical: 'تطبيق عملي ومشاريع',
+        rating: 'تقييم المتدربين'
+      },
+      en: {
+        dir: 'ltr',
+        lang: 'en',
+        langBtn: 'العربية (RTL)',
+        subbrand: 'Civil Engineering LMS for the Gulf',
+        heroBadge: 'Aligned with Saudi Building Code (SBC) & GCC Standards',
+        heroTitle: 'Build Your Professional Civil Engineering Career',
+        heroDesc: 'Advanced specialized courses in Structural Design, Construction Management (PMP / Primavera P6), FIDIC Contracts, and Quantity Surveying for Gulf region engineers.',
+        exploreBtn: 'Explore Courses',
+        liveBtn: '📅 Live Classes Schedule',
+        catTitle: '🏗️ Civil Engineering Departments',
+        searchPlaceholder: 'Search courses, building codes, software...',
+        engineers: 'Registered Engineers',
+        departments: 'Engineering Fields',
+        practical: 'Hands-on Projects',
+        rating: 'Learner Rating'
+      }
+    };
+
+    function toggleLang() {
+      isArabic = !isArabic;
+      const dict = isArabic ? translations.ar : translations.en;
+      
+      const root = document.getElementById('app-root');
+      root.setAttribute('dir', dict.dir);
+      root.setAttribute('lang', dict.lang);
+      
+      document.getElementById('lang-label').textContent = dict.langBtn;
+      document.getElementById('txt-subbrand').textContent = dict.subbrand;
+      document.getElementById('hero-badge').textContent = dict.heroBadge;
+      document.getElementById('hero-title').textContent = dict.heroTitle;
+      document.getElementById('hero-desc').textContent = dict.heroDesc;
+      document.getElementById('btn-explore').textContent = dict.exploreBtn;
+      document.getElementById('btn-live').textContent = dict.liveBtn;
+      document.getElementById('txt-categories-title').textContent = dict.catTitle;
+      document.getElementById('searchInput').placeholder = dict.searchPlaceholder;
+      document.getElementById('m-engineers').textContent = dict.engineers;
+      document.getElementById('m-departments').textContent = dict.departments;
+      document.getElementById('m-practical').textContent = dict.practical;
+      document.getElementById('m-rating').textContent = dict.rating;
+    }
+
+    function filterCategory(cat) {
+      // Update buttons
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        if (btn.getAttribute('data-cat') === cat) {
+          btn.classList.add('bg-[#1B4D7A]', 'text-white', 'border-[#1B4D7A]');
+          btn.classList.remove('bg-white', 'text-slate-700', 'border-slate-200');
+        } else {
+          btn.classList.remove('bg-[#1B4D7A]', 'text-white', 'border-[#1B4D7A]');
+          btn.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
+        }
+      });
+
+      // Filter cards
+      let visible = 0;
+      document.querySelectorAll('.course-card').forEach(card => {
+        if (cat === 'all' || card.getAttribute('data-cat') === cat) {
+          card.style.display = 'flex';
+          visible++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      document.getElementById('course-count-display').textContent = `عرض ${visible} دورات متوفرة`;
+    }
+
+    function handleSearch(term) {
+      term = term.toLowerCase().trim();
+      let visible = 0;
+      document.querySelectorAll('.course-card').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (!term || text.includes(term)) {
+          card.style.display = 'flex';
+          visible++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      document.getElementById('course-count-display').textContent = `عرض ${visible} دورات متوفرة`;
+    }
+
+    function scrollToCourses() {
+      document.getElementById('courses-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function openCourseModal(id) {
+      document.getElementById('courseModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('courseModal').classList.add('hidden');
+    }
+  </script>
+
+</body>
+</html>

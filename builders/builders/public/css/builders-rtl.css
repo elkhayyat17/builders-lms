@@ -1,0 +1,171 @@
+/* ==========================================================================
+   Builders LMS — RTL Overrides
+   Applied when dir="rtl" is set on the html element
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Base Direction
+   -------------------------------------------------------------------------- */
+
+[dir='rtl'] {
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   Navigation & Sidebar
+   -------------------------------------------------------------------------- */
+
+[dir='rtl'] .sidebar {
+  direction: rtl;
+  border-left: 1px solid #E5E7EB;
+  border-right: none;
+}
+
+[dir='rtl'] .sidebar-item .icon {
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Course Cards
+   -------------------------------------------------------------------------- */
+
+[dir='rtl'] .course-card {
+  text-align: right;
+}
+
+[dir='rtl'] .course-card .card-meta {
+  direction: rtl;
+}
+
+/* --------------------------------------------------------------------------
+   Breadcrumbs
+   -------------------------------------------------------------------------- */
+
+[dir='rtl'] .breadcrumb {
+  direction: rtl;
+}
+
+[dir='rtl'] .breadcrumb-separator svg {
+  transform: scaleX(-1);
+}
+
+/* --------------------------------------------------------------------------
+   Forms & Inputs
+   -------------------------------------------------------------------------- */
+
+[dir='rtl'] .form-group label {
+  text-align: right;
+}
+
+[dir='rtl'] input,
+[dir='rtl'] textarea,
+[dir='rtl'] select {
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   Quiz Components
+   -------------------------------------------------------------------------- */
+
+[dir='rtl'] .quiz-option {
+  flex-direction: row-reverse;
+}
+
+[dir='rtl'] .quiz-option label {
+  margin-right: 0;
+  margin-left: 0.5rem;
+  text-align: right;
+}
+
+[dir='rtl'] .quiz-option input[type='radio'],
+[dir='rtl'] .quiz-option input[type='checkbox'] {
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Discussion / Comments
+   -------------------------------------------------------------------------- */
+
+[dir='rtl'] .reply-indent {
+  margin-right: 2rem;
+  margin-left: 0;
+  border-right: 2px solid #E5E7EB;
+  border-left: none;
+  padding-right: 1rem;
+  padding-left: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Lesson Content
+   -------------------------------------------------------------------------- */
+
+[dir='rtl'] .lesson-content {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Keep code blocks LTR */
+[dir='rtl'] .lesson-content code,
+[dir='rtl'] .lesson-content pre,
+[dir='rtl'] .lesson-content .code-block {
+  direction: ltr;
+  text-align: left;
+}
+
+/* --------------------------------------------------------------------------
+   Tables
+   -------------------------------------------------------------------------- */
+
+[dir='rtl'] table {
+  direction: rtl;
+}
+
+[dir='rtl'] th,
+[dir='rtl'] td {
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   Modals & Dialogs
+   -------------------------------------------------------------------------- */
+
+[dir='rtl'] .modal-header .close {
+  margin-right: auto;
+  margin-left: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Flex Utilities — Mirror for RTL
+   -------------------------------------------------------------------------- */
+
+[dir='rtl'] .gap-icon-text {
+  flex-direction: row-reverse;
+}
+
+/* --------------------------------------------------------------------------
+   Tailwind logical property overrides
+   When Tailwind RTL plugin is active, ms-* and me-* handle this.
+   These are fallbacks for non-Tailwind components.
+   -------------------------------------------------------------------------- */
+
+[dir='rtl'] .ml-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir='rtl'] .mr-auto {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+[dir='rtl'] .pl-4 {
+  padding-left: 0;
+  padding-right: 1rem;
+}
+
+[dir='rtl'] .pr-4 {
+  padding-right: 0;
+  padding-left: 1rem;
+}

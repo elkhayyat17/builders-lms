@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:10.8
+    container_name: builders-mariadb
+    restart: always
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+      - --skip-innodb-read-only-compressed
+      - --innodb-buffer-pool-size=1G
+      - --max-connections=500
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-BuildersSecureRoot2026!}
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - builders-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis-cache:
+    image: redis:alpine
+    container_name: builders-redis-cache
+    restart: always
+    command: redis-server --maxmemory 512mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-cache-data:/data
+    networks:
+      - builders-network
+
+  redis-queue:
+    image: redis:alpine
+    container_name: builders-redis-queue
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-queue-data:/data
+    networks:
+      - builders-network
+
+  frappe:
+    image: frappe/bench:latest
+    container_name: builders-lms-app
+    restart: always
+    command: bash /workspace/lms/docker/init.sh
+    environment:
+      - SHELL=/bin/bash
+      - PRODUCTION=1
+      - SITE_NAME=${SITE_DOMAIN:-lms.builders.sa}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-BuildersAdmin2026!}
+      - DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-BuildersSecureRoot2026!}
+    working_dir: /home/frappe
+    volumes:
+      - .:/workspace
+      - bench-sites:/home/frappe/frappe-bench/sites
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis-cache:
+        condition: service_started
+      redis-queue:
+        condition: service_started
+    networks:
+      - builders-network
+    expose:
+      - "8000"
+      - "9000"
+
+  nginx:
+    image: nginx:alpine
+    container_name: builders-nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./nginx/certbot/www:/var/www/certbot:ro
+      - bench-sites:/var/www/sites:ro
+    depends_on:
+      - frappe
+    networks:
+      - builders-network
+
+networks:
+  builders-network:
+    driver: bridge
+
+volumes:
+  mariadb-data:
+  redis-cache-data:
+  redis-queue-data:
+  bench-sites:

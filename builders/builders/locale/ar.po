@@ -1,0 +1,172 @@
+# Builders LMS — Arabic Translations
+# Copyright (C) 2024 Builders Team
+# This file is distributed under the MIT license.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: builders 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: 2024-01-01 00:00+0000\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+
+#: Category names
+msgid "Structural Engineering"
+msgstr "الهندسة الإنشائية"
+
+msgid "Construction Management"
+msgstr "إدارة المشاريع"
+
+msgid "Codes & Standards"
+msgstr "الأكواد والمعايير"
+
+msgid "Software Training"
+msgstr "التدريب على البرمجيات"
+
+msgid "Quantity Surveying"
+msgstr "حصر الكميات"
+
+#: Difficulty levels
+msgid "Beginner"
+msgstr "مبتدئ"
+
+msgid "Intermediate"
+msgstr "متوسط"
+
+msgid "Advanced"
+msgstr "متقدم"
+
+#: Course languages
+msgid "Arabic"
+msgstr "عربي"
+
+msgid "English"
+msgstr "إنجليزي"
+
+msgid "Bilingual"
+msgstr "ثنائي اللغة"
+
+#: Landing page
+msgid "Build Your Civil Engineering Career"
+msgstr "ابنِ مسيرتك المهنية في الهندسة المدنية"
+
+msgid "Browse Courses"
+msgstr "تصفح الدورات"
+
+msgid "Featured Courses"
+msgstr "الدورات المميزة"
+
+msgid "All Categories"
+msgstr "جميع التخصصات"
+
+msgid "View All Courses"
+msgstr "عرض جميع الدورات"
+
+#: Course detail
+msgid "Prerequisites"
+msgstr "المتطلبات المسبقة"
+
+msgid "Target Audience"
+msgstr "الفئة المستهدفة"
+
+msgid "Difficulty Level"
+msgstr "مستوى الصعوبة"
+
+msgid "Course Language"
+msgstr "لغة الدورة"
+
+msgid "Enroll Now"
+msgstr "سجل الآن"
+
+msgid "Preview"
+msgstr "معاينة"
+
+msgid "Course Outline"
+msgstr "المنهج الدراسي"
+
+msgid "About Instructor"
+msgstr "عن المدرب"
+
+#: Navigation
+msgid "Home"
+msgstr "الرئيسية"
+
+msgid "Courses"
+msgstr "الدورات"
+
+msgid "Contact Us"
+msgstr "تواصل معنا"
+
+msgid "My Dashboard"
+msgstr "لوحة التحكم"
+
+msgid "Continue Learning"
+msgstr "متابعة التعلم"
+
+msgid "My Courses"
+msgstr "دوراتي"
+
+#: Quiz
+msgid "Start Quiz"
+msgstr "ابدأ الاختبار"
+
+msgid "Submit Answers"
+msgstr "إرسال الإجابات"
+
+msgid "Your Score"
+msgstr "درجتك"
+
+msgid "Correct"
+msgstr "صحيح"
+
+msgid "Incorrect"
+msgstr "خطأ"
+
+msgid "Try Again"
+msgstr "حاول مرة أخرى"
+
+#: Live class
+msgid "Upcoming Live Classes"
+msgstr "الحصص المباشرة القادمة"
+
+msgid "Join Class"
+msgstr "انضم للحصة"
+
+#: Discussion
+msgid "Discussion"
+msgstr "مناقشة"
+
+msgid "Ask a Question"
+msgstr "اطرح سؤالاً"
+
+msgid "Reply"
+msgstr "رد"
+
+msgid "Post"
+msgstr "نشر"
+
+#: General
+msgid "Search"
+msgstr "بحث"
+
+msgid "Filter"
+msgstr "تصفية"
+
+msgid "Loading"
+msgstr "جاري التحميل"
+
+msgid "No results found"
+msgstr "لا توجد نتائج"
+
+msgid "lessons"
+msgstr "دروس"
+
+msgid "chapters"
+msgstr "فصول"
+
+msgid "students"
+msgstr "طلاب"

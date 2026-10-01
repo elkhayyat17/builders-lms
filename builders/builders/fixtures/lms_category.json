@@ -1,0 +1,27 @@
+[
+  {
+    "doctype": "LMS Category",
+    "category": "الهندسة الإنشائية - Structural Engineering",
+    "name": "الهندسة الإنشائية - Structural Engineering"
+  },
+  {
+    "doctype": "LMS Category",
+    "category": "إدارة المشاريع - Construction Management",
+    "name": "إدارة المشاريع - Construction Management"
+  },
+  {
+    "doctype": "LMS Category",
+    "category": "الأكواد والمعايير - Codes & Standards",
+    "name": "الأكواد والمعايير - Codes & Standards"
+  },
+  {
+    "doctype": "LMS Category",
+    "category": "التدريب على البرمجيات - Software Training",
+    "name": "التدريب على البرمجيات - Software Training"
+  },
+  {
+    "doctype": "LMS Category",
+    "category": "حصر الكميات - Quantity Surveying",
+    "name": "حصر الكميات - Quantity Surveying"
+  }
+]

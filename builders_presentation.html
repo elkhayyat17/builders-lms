@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض المنتج التنفيذي: منصة بيلدرز للتعليم الهندسي المدني | Builders LMS</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --builders-primary: #1B4D7A;
+            --builders-primary-light: #2E7ABF;
+            --builders-primary-dark: #102E4A;
+            --builders-accent: #D4A843;
+            --builders-accent-light: #E5C36B;
+            --builders-bg: #0B1926;
+            --builders-card-bg: rgba(27, 77, 122, 0.15);
+            --builders-border: rgba(212, 168, 67, 0.25);
+            --builders-text: #F3F4F6;
+            --builders-text-muted: #9CA3AF;
+            --builders-success: #10B981;
+            --builders-danger: #EF4444;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'IBM Plex Sans Arabic', -apple-system, sans-serif;
+            background: var(--builders-bg);
+            color: var(--builders-text);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            user-select: none;
+        }
+
+        .slide-deck {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px 60px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.98);
+            background: radial-gradient(circle at 80% 20%, rgba(27, 77, 122, 0.35) 0%, rgba(11, 25, 38, 0.95) 70%);
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        /* Slide Top Header */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--builders-border);
+            padding-bottom: 14px;
+        }
+        .brand-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .brand-logo-box {
+            background: linear-gradient(135deg, var(--builders-primary), var(--builders-accent));
+            color: #fff;
+            font-weight: 700;
+            font-size: 18px;
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(212, 168, 67, 0.3);
+        }
+        .brand-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+        .po-badge {
+            background: rgba(212, 168, 67, 0.15);
+            color: var(--builders-accent);
+            border: 1px solid var(--builders-accent);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Slide Content Body */
+        .slide-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .slide-title-area {
+            margin-bottom: 24px;
+        }
+        .slide-pre-title {
+            color: var(--builders-accent);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .slide-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.25;
+        }
+        .slide-subtitle {
+            font-size: 16px;
+            color: var(--builders-text-muted);
+            margin-top: 6px;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: stretch;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        /* Cards */
+        .feature-card {
+            background: var(--builders-card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            backdrop-filter: blur(8px);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .feature-card:hover {
+            border-color: var(--builders-accent);
+            transform: translateY(-2px);
+        }
+        .feature-icon {
+            font-size: 28px;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .feature-desc {
+            font-size: 14px;
+            color: var(--builders-text-muted);
+            line-height: 1.6;
+        }
+
+        /* Screenshot / Mockup Wrapper */
+        .mockup-window {
+            background: #111E2E;
+            border: 1px solid rgba(212, 168, 67, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+        .mockup-header {
+            background: #0D1622;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .mockup-dots {
+            display: flex;
+            gap: 6px;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot-red { background: #FF5F56; }
+        .dot-yellow { background: #FFBD2E; }
+        .dot-green { background: #27C93F; }
+        .mockup-url {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            padding: 2px 14px;
+            font-size: 12px;
+            color: #94A3B8;
+            font-family: monospace;
+            direction: ltr;
+        }
+        .mockup-content {
+            padding: 16px;
+            background: #0F1A26;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* UI Components for mockups */
+        .mock-hero {
+            background: linear-gradient(135deg, #1B4D7A 0%, #102E4A 100%);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(212, 168, 67, 0.2);
+        }
+        .mock-badge {
+            background: var(--builders-accent);
+            color: #000;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        .mock-course-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .mock-course-thumb {
+            width: 70px;
+            height: 50px;
+            background: #1B4D7A;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* Account Table */
+        .account-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .account-table th {
+            background: rgba(27, 77, 122, 0.4);
+            color: var(--builders-accent);
+            padding: 12px 16px;
+            text-align: right;
+            font-size: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .account-table td {
+            padding: 12px 16px;
+            font-size: 13.5px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .account-table tr:hover td {
+            background: rgba(27, 77, 122, 0.25);
+        }
+        .copy-pill {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12.5px;
+            color: #38BDF8;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        /* Slide Footer & Controls */
+        .slide-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--builders-border);
+            padding-top: 14px;
+        }
+        .slide-counter {
+            font-size: 14px;
+            color: var(--builders-text-muted);
+            font-weight: 500;
+        }
+        .nav-controls {
+            display: flex;
+            gap: 10px;
+        }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--builders-border);
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 13.5px;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover {
+            background: var(--builders-accent);
+            color: #000;
+            border-color: var(--builders-accent);
+        }
+
+        /* Chart container */
+        .chart-box {
+            position: relative;
+            height: 240px;
+            width: 100%;
+        }
+
+        /* Key Metrics */
+        .stat-box {
+            background: linear-gradient(180deg, rgba(27, 77, 122, 0.3) 0%, rgba(16, 46, 74, 0.3) 100%);
+            border: 1px solid rgba(212, 168, 67, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--builders-accent);
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: var(--builders-text-muted);
+        }
+    </style>
+</head>
+<body>
+
+<div class="slide-deck">
+
+    <!-- ============================================================== -->
+    <!-- SLIDE 1: COVER & EXECUTIVE VISION                              -->
+    <!-- ============================================================== -->
+    <div class="slide active" id="slide-1">
+        <div class="slide-header">
+            <div class="brand-badge">
+                <div class="brand-logo-box">B</div>
+                <div class="brand-title">منصة بيلدرز | Builders LMS</div>
+            </div>
+            <div class="po-badge">عرض المنتج التنفيذي • Product Owner Pitch</div>
+        </div>
+
+        <div class="slide-body">
+            <div class="slide-title-area" style="text-align: center; max-width: 900px; margin: 0 auto 30px auto;">
+                <div class="slide-pre-title">البوابة التعليمية الرقمية للهندسة المدنية في الخليج العربي</div>
+                <h1 class="slide-title" style="font-size: 42px; margin: 12px 0;">تمكين المهندس الخليجي بكود البناء السعودي والأدوات الرقمية</h1>
+                <p class="slide-subtitle" style="font-size: 18px;">
+                    منصة متكاملة بنظام بيئي مغلق تجمع بين الشرح النظري، التطبيق على الكود السعودي (SBC)، ونمذجة الـ BIM، وإدارة عقود فيديك FIDIC.
+                </p>
+            </div>
+
+            <div class="grid-4" style="max-width: 1050px; margin: 0 auto; width: 100%;">
+                <div class="stat-box">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">تخصصات هندسية معتمدة</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">كود البناء السعودي SBC</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">SAR</div>
+                    <div class="stat-label">تسعير مباشر بالريال السعودي</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">QR</div>
+                    <div class="stat-label">شهادات رقمية موثقة سحابياً</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-footer">
+            <div class="slide-counter">الشريحة 1 من 11</div>
+            <div class="nav-controls">
+                <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- SLIDE 2: THE PROBLEM & MARKET OPPORTUNITY                     -->
+    <!-- ============================================================== -->
+    <div class="slide" id="slide-2">
+        <div class="slide-header">
+            <div class="brand-badge">
+                <div class="brand-logo-box">B</div>
+                <div class="brand-title">فرصة السوق والاحتياج | Market Fit</div>
+            </div>
+            <div class="po-badge">رؤية السعودية 2030 والمشاريع الكبرى</div>
+        </div>
+
+        <div class="slide-body">
+            <div class="slide-title-area">
+                <div class="slide-pre-title">تحليل الفجوة والفرصة الاستثمارية</div>
+                <h2 class="slide-title">لماذا تحتاج السوق الخليجية إلى "بيلدرز"؟</h2>
+            </div>
+
+            <div class="grid-3">
+                <div class="feature-card" style="border-right: 4px solid var(--builders-danger);">
+                    <div class="feature-icon">❌</div>
+                    <div class="feature-title">فجوة التعليم التقليدي</div>
+                    <div class="feature-desc">
+                        الجامعات والمنصات العالمية (Coursera/Udemy) تقدم علوماً عامة وغير مطابقة لكود البناء السعودي (SBC) أو خصوصية التربة والمناخ الخليجي الحار.
+                    </div>
+                </div>
+                <div class="feature-card" style="border-right: 4px solid var(--builders-accent);">
+                    <div class="feature-icon">🏗️</div>
+                    <div class="feature-title">طفرة المشاريع الإنشائية</div>
+                    <div class="feature-desc">
+                        مشاريع رؤية 2030 (نيوم، البحر الأحمر، القدية، مترو الرياض) تتطلب أكثر من 120,000 مهندس مؤهل في نمذجة الـ BIM وإدارة عقود الفيديك وحصر الـ BOQ.
+                    </div>
+                </div>
+                <div class="feature-card" style="border-right: 4px solid var(--builders-success);">
+                    <div class="feature-icon">✅</div>
+                    <div class="feature-title">حل بيلدرز المبتكر</div>
+                    <div class="feature-desc">
+                        منصة عملية باللغة العربية أولاً، تدعم التسعير بالريال السعودي، مشغل دروس هندسي يدعم المعادلات والـ DWG، وشهادات معتمدة برمز QR فوري.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-footer">
+            <div class="slide-counter">الشريحة 2 من 11</div>
+            <div class="nav-controls">
+                <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
+                <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- SLIDE 3: SHOWCASE - SCREEN 1: LANDING & DISCIPLINES          -->
+    <!-- ============================================================== -->
+    <div class="slide" id="slide-3">
+        <div class="slide-header">
+            <div class="brand-badge">
+                <div class="brand-logo-box">B</div>
+                <div class="brand-title">معاينة الشاشات • الشاشة الأولى</div>
+            </div>
+            <div class="po-badge">صفحة الهبوط والتسويق (:3000)</div>
+        </div>
+
+        <div class="slide-body">
+            <div class="grid-2">
+                <div>
+                    <div class="slide-pre-title">بوابة الاستقطاب والتحويل</div>
+                    <h2 class="slide-title" style="font-size: 26px;">صفحة الهبوط والتخصصات الخمسة</h2>
+                    <p class="slide-subtitle" style="margin-bottom: 20px;">
+                        واجهة تسويقية حديثة مصممة بأعلى معايير تحويل الزوار إلى متدربين مشتركين، مع إبراز هوية الخليج العربي.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong>🏛️ التخصصات الخمسة:</strong> إنشائي، فيديك وإدارة مشاريع، كود SBC، برمجيات ETABS، وحصر كميات BOQ بأيقونات SVG خاصة.
+                        </div>
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong>⚡ زر الإطلاق الفوري:</strong> زر "Launch LMS Portal" ينقل الزائر مباشرة لقاعة التعلم السحابية.
+                        </div>
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong>🌐 دعم اللغتين:</strong> تبديل سلس بين العربية والإنجليزية مع الحفاظ على التنسيق.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mockup-window">
+                    <div class="mockup-header">
+                        <div class="mockup-dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </div>
+                        <div class="mockup-url">http://localhost:3000/index.html</div>
+                        <div style="font-size: 11px; color: var(--builders-accent);">Live 200 OK</div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="mock-hero">
+                            <span class="mock-badge">كود البناء السعودي SBC</span>
+                            <div style="font-weight: 700; font-size: 16px; color: #fff; margin-bottom: 6px;">المنصة الرائدة لتعليم الهندسة المدنية في الخليج العربي</div>
+                            <div style="font-size: 11.5px; color: #CBD5E1; margin-bottom: 12px;">تأهيل هندسي متكامل لمشاريع نيوم والرياض 2030</div>
+                            <div style="display: flex; justify-content: center; gap: 8px;">
+                                <div style="background: var(--builders-accent); color: #000; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 4px;">تصفح الدورات (SAR)</div>
+                                <div style="background: rgba(255,255,255,0.1); color: #fff; font-size: 11px; padding: 4px 12px; border-radius: 4px;">دخول المنصة &larr;</div>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 11px;">
+                            <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; text-align: center; border-top: 2px solid var(--builders-accent);">
+                                🏛️ الهندسة الإنشائية
+                            </div>
+                            <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; text-align: center; border-top: 2px solid #38BDF8;">
+                                📜 عقود فيديك
+                            </div>
+                            <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; text-align: center; border-top: 2px solid #10B981;">
+                                💻 برامج ETABS
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-footer">
+            <div class="slide-counter">الشريحة 3 من 11</div>
+            <div class="nav-controls">
+                <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
+                <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- SLIDE 4: SHOWCASE - SCREEN 2: COURSES CATALOG                -->
+    <!-- ============================================================== -->
+    <div class="slide" id="slide-4">
+        <div class="slide-header">
+            <div class="brand-badge">
+                <div class="brand-logo-box">B</div>
+                <div class="brand-title">معاينة الشاشات • الشاشة الثانية</div>
+            </div>
+            <div class="po-badge">دليل الدورات والتسعير (/courses)</div>
+        </div>
+
+        <div class="slide-body">
+            <div class="grid-2">
+                <div>
+                    <div class="slide-pre-title">تجربة المتدرب والكتالوج الذكي</div>
+                    <h2 class="slide-title" style="font-size: 26px;">دليل الدورات والفلترة بالريال السعودي</h2>
+                    <p class="slide-subtitle" style="margin-bottom: 20px;">
+                        بوابة دورات ديناميكية تعرض بطاقات الدورات المعتمدة، مستويات الصعوبة، واللغة مع محرك بحث فوري.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong>💰 أسعار معتمدة بالريال:</strong> دورات من 350 إلى 600 ر.س مع كورس كود SBC المجاني المفتوح لاستقطاب الطلاب.
+                        </div>
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong>🎯 فلاتر متعددة الأبعاد:</strong> فرز حسب التخصص الإنشائي، ومستوى الخبرة (مبتدئ / متوسط / متقدم).
+                        </div>
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong>⭐ تقييمات واعتمادات:</strong> عدد المتدربين المسجلين وشارات التميز (Featured).
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mockup-window">
+                    <div class="mockup-header">
+                        <div class="mockup-dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </div>
+                        <div class="mockup-url">http://localhost:8000/lms/courses</div>
+                        <div style="font-size: 11px; color: #10B981;">Vue 3 SPA</div>
+                    </div>
+                    <div class="mockup-content">
+                        <!-- Course 1 -->
+                        <div class="mock-course-card">
+                            <div class="mock-course-thumb">🏗️</div>
+                            <div style="flex: 1;">
+                                <div style="font-size: 12.5px; font-weight: 600; color: #fff;">تصميم الخرسانة المسلحة وفق كود SBC 304</div>
+                                <div style="font-size: 11px; color: var(--builders-accent); margin: 2px 0;">450 ر.س • متوسط • عربي</div>
+                                <div style="font-size: 10.5px; color: var(--builders-text-muted);">د. م. خالد العتيبي | 4 دروس تفاعلية</div>
+                            </div>
+                            <div style="background: var(--builders-primary-light); color: #fff; font-size: 10px; padding: 4px 8px; border-radius: 4px;">تسجيل</div>
+                        </div>
+
+                        <!-- Course 2 -->
+                        <div class="mock-course-card">
+                            <div class="mock-course-thumb" style="background: #1E3A8A;">📜</div>
+                            <div style="flex: 1;">
+                                <div style="font-size: 12.5px; font-weight: 600; color: #fff;">إدارة المشاريع وعقود الفيديك FIDIC</div>
+                                <div style="font-size: 11px; color: var(--builders-accent); margin: 2px 0;">600 ر.س • متقدم • عربي</div>
+                                <div style="font-size: 10.5px; color: var(--builders-text-muted);">شرح الكتاب الأحمر وإجراءات المطالبات</div>
+                            </div>
+                            <div style="background: var(--builders-primary-light); color: #fff; font-size: 10px; padding: 4px 8px; border-radius: 4px;">تسجيل</div>
+                        </div>
+
+                        <!-- Course 3 -->
+                        <div class="mock-course-card">
+                            <div class="mock-course-thumb" style="background: #047857;">💻</div>
+                            <div style="flex: 1;">
+                                <div style="font-size: 12.5px; font-weight: 600; color: #fff;">احتراف برامج ETABS & SAFE في النمذجة</div>
+                                <div style="font-size: 11px; color: var(--builders-accent); margin: 2px 0;">550 ر.س • متوسط • عربي</div>
+                                <div style="font-size: 10.5px; color: var(--builders-text-muted);">تحليل الأحمال الزلزالية وجدران القص</div>
+                            </div>
+                            <div style="background: var(--builders-primary-light); color: #fff; font-size: 10px; padding: 4px 8px; border-radius: 4px;">تسجيل</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-footer">
+            <div class="slide-counter">الشريحة 4 من 11</div>
+            <div class="nav-controls">
+                <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
+                <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- SLIDE 5: SHOWCASE - SCREEN 3: INTERACTIVE LESSON PLAYER      -->
+    <!-- ============================================================== -->
+    <div class="slide" id="slide-5">
+        <div class="slide-header">
+            <div class="brand-badge">
+                <div class="brand-logo-box">B</div>
+                <div class="brand-title">معاينة الشاشات • الشاشة الثالثة</div>
+            </div>
+            <div class="po-badge">قاعة المحاضرات ومشغل الدروس (/learn)</div>
+        </div>
+
+        <div class="slide-body">
+            <div class="grid-2">
+                <div>
+                    <div class="slide-pre-title">بيئة التعلم المركزة للدروس الهندسية</div>
+                    <h2 class="slide-title" style="font-size: 26px;">مشغل الدروس الذكي والنوتة الإنشائية</h2>
+                    <p class="slide-subtitle" style="margin-bottom: 20px;">
+                        تصميم مدروس يجمع بين الفيديو عالي الدقة، ونوتة الحسابات الإنشائية المدعومة بمعادلات LaTeX الرياضية، والمخططات التوضيحية.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong>🎥 تكامل مرن للفيديو:</strong> دعم كامل لليوتيوب، فيميو، وتدفقات HLS المشفرة مع التحكم بالسرعة.
+                        </div>
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong>📐 نوتة كود البناء السعودي:</strong> شرح معادلات العزوم والقص ($U = 1.2D + 1.6L$) وتفريد حديد التسليح.
+                        </div>
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong>✅ تتبع الإنجاز الآلي:</strong> زر "تعليم كمكتمل" وتحديث شريط تقدم الطالب في قاعدة بيانات MariaDB فورياً.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mockup-window">
+                    <div class="mockup-header">
+                        <div class="mockup-dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </div>
+                        <div class="mockup-url">http://localhost:8000/lms/courses/sbc-304/learn/1-1</div>
+                        <div style="font-size: 11px; color: var(--builders-accent);">Lesson Player</div>
+                    </div>
+                    <div class="mockup-content" style="padding: 12px;">
+                        <!-- Mock Video Area -->
+                        <div style="background: #000; height: 130px; border-radius: 6px; display: flex; align-items: center; justify-content: center; position: relative;">
+                            <div style="width: 44px; height: 44px; background: rgba(212, 168, 67, 0.85); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-size: 18px;">▶</div>
+                            <div style="position: absolute; bottom: 8px; right: 12px; font-size: 11px; color: #fff; background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 3px;">18:45 / 24:00</div>
+                        </div>
+
+                        <!-- Lesson Text Content -->
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px; border-radius: 6px;">
+                            <div style="font-size: 12px; font-weight: 700; color: #fff;">الدرس 1.1: فلسفة التصميم ومعاملات الأمان في كود SBC 304</div>
+                            <div style="font-size: 11px; color: #94A3B8; margin-top: 4px; line-height: 1.5;">
+                                يتم تصميم مقاطع الانحناء تحت تأثير الحمل الأقصى: <br>
+                                <span style="color: var(--builders-accent); font-family: monospace;">U = 1.2 D + 1.6 L | &Phi; = 0.90</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Bar -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
+                            <span style="color: #10B981;">✓ مكتمل بنسبة 25%</span>
+                            <div style="background: var(--builders-primary); color: #fff; padding: 4px 12px; border-radius: 4px; font-weight: 600;">الدرس التالي &larr;</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-footer">
+            <div class="slide-counter">الشريحة 5 من 11</div>
+            <div class="nav-controls">
+                <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
+                <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- SLIDE 6: SHOWCASE - SCREEN 4: DIGITAL CERTIFICATES & QR      -->
+    <!-- ============================================================== -->
+    <div class="slide" id="slide-6">
+        <div class="slide-header">
+            <div class="brand-badge">
+                <div class="brand-logo-box">B</div>
+                <div class="brand-title">معاينة الشاشات • الشاشة الرابعة</div>
+            </div>
+            <div class="po-badge">الشهادات المعتمدة والتحقق السحابي بالـ QR</div>
+        </div>
+
+        <div class="slide-body">
+            <div class="grid-2">
+                <div>
+                    <div class="slide-pre-title">القيمة المضافة للمتدرب والشركات</div>
+                    <h2 class="slide-title" style="font-size: 26px;">شهادات إتمام موثقة برمز QR لا يقبل التزوير</h2>
+                    <p class="slide-subtitle" style="margin-bottom: 20px;">
+                        تمنح المنصة كل خريج وثيقة اعتماد رسمية تحتوي على معرّف تسلسلي فريد ورابط تحقق عام يثبت صحة المؤهل لشركات المقاولات والاستشارات.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong>🔍 صفحة تحقق عامة:</strong> مسار `/certified-participants` يتيح لأي جهة توظيف التأكد من هوية المهندس بضغطة زر.
+                        </div>
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong>📄 تحميل PDF فائق الدقة:</strong> طباعة رسمية بجودة عالية لحفظها في الملف الهندسي.
+                        </div>
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong>💼 إضافة فورية إلى LinkedIn:</strong> دعم تكامل "Add to Profile" بضغطة واحدة لزيادة انتشار العلامة التجارية.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mockup-window">
+                    <div class="mockup-header">
+                        <div class="mockup-dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </div>
+                        <div class="mockup-url">http://localhost:8000/lms/certified-participants</div>
+                        <div style="font-size: 11px; color: #10B981;">QR Verified</div>
+                    </div>
+                    <div class="mockup-content" style="align-items: center; justify-content: center; background: #0B1622;">
+                        <!-- Certificate Mockup -->
+                        <div style="width: 90%; background: #FAF9F6; color: #1E293B; padding: 18px; border-radius: 8px; border: 4px double #1B4D7A; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                            <div style="font-size: 11px; font-weight: 700; color: #D4A843; letter-spacing: 1px;">BUILDERS CIVIL ENGINEERING ACADEMY</div>
+                            <div style="font-size: 16px; font-weight: 700; color: #1B4D7A; margin: 4px 0;">شهادة إتمام واجتياز معتمدة</div>
+                            <div style="font-size: 11px; color: #64748B;">يشهد مركز بيلدرز للتدريب الهندسي بأن المهندس:</div>
+                            <div style="font-size: 15px; font-weight: 700; color: #0F172A; margin: 6px 0; border-bottom: 1px dashed #CBD5E1; padding-bottom: 4px;">
+                                م. أحمد الشمري
+                            </div>
+                            <div style="font-size: 10.5px; color: #475569;">قد اجتاز بنجاح دورة: <strong>تصميم المنشآت الخرسانية وفق كود SBC 304</strong></div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 9.5px; color: #64748B;">
+                                <div>الرقم: <strong>BLD-2026-9842</strong></div>
+                                <div style="width: 32px; height: 32px; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 8px; border-radius: 2px;">QR Code</div>
+                                <div>التاريخ: <strong>30/09/2026</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-footer">
+            <div class="slide-counter">الشريحة 6 من 11</div>
+            <div class="nav-controls">
+                <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
+                <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- SLIDE 7: SHOWCASE - SCREEN 5: FRAPPE DESK ADMIN ERP          -->
+    <!-- ============================================================== -->
+    <div class="slide" id="slide-7">
+        <div class="slide-header">
+            <div class="brand-badge">
+                <div class="brand-logo-box">B</div>
+                <div class="brand-title">معاينة الشاشات • الشاشة الخامسة</div>
+            </div>
+            <div class="po-badge">لوحة التحكم المركزية للتشغيل والـ ERP (/app)</div>
+        </div>
+
+        <div class="slide-body">
+            <div class="grid-2">
+                <div>
+                    <div class="slide-pre-title">إدارة الأعمال والعمليات الأكاديمية</div>
+                    <h2 class="slide-title" style="font-size: 26px;">لوحة تحكم المشرفين والمدراء المركزية</h2>
+                    <p class="slide-subtitle" style="margin-bottom: 20px;">
+                        نظام إدارة موارد مؤسسي (ERP) مدمج يمنح إدارة المنصة سيطرة كاملة على المحتوى والاشتراكات والمدفوعات.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong>👥 إدارة الصلاحيات متعددة المستويات:</strong> فصل تام بين أدوار الطالب، المدرب (Course Creator)، المصحح، ومدير النظام.
+                        </div>
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong>📊 تقارير الاشتراكات والمالية:</strong> متابعة سجلات الدفع عبر `LMS Payment` وعمليات الشراء بالريال السعودي.
+                        </div>
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong>⚙️ إعدادات بوابات الدفع والبريد:</strong> ربط مباشر مع Tap Payments، Moyasar، و SMTP في ثوانٍ.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mockup-window">
+                    <div class="mockup-header">
+                        <div class="mockup-dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </div>
+                        <div class="mockup-url">http://localhost:8000/app/lms</div>
+                        <div style="font-size: 11px; color: #38BDF8;">Frappe Desk v15</div>
+                    </div>
+                    <div class="mockup-content" style="background: #0B131E; font-size: 12px;">
+                        <!-- Admin Quick Nav -->
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                            <div style="background: rgba(27, 77, 122, 0.25); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 6px;">
+                                <div style="color: var(--builders-accent); font-weight: 700;">LMS Course</div>
+                                <div style="color: #94A3B8; font-size: 11px; margin-top: 2px;">5 دورات هندسية نشطة</div>
+                            </div>
+                            <div style="background: rgba(27, 77, 122, 0.25); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 6px;">
+                                <div style="color: #38BDF8; font-weight: 700;">LMS Enrollment</div>
+                                <div style="color: #94A3B8; font-size: 11px; margin-top: 2px;">اشتراكات نشطة ومحدثة</div>
+                            </div>
+                            <div style="background: rgba(27, 77, 122, 0.25); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 6px;">
+                                <div style="color: #10B981; font-weight: 700;">LMS Certificate</div>
+                                <div style="color: #94A3B8; font-size: 11px; margin-top: 2px;">إصدار الشهادات والـ QR</div>
+                            </div>
+                            <div style="background: rgba(27, 77, 122, 0.25); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 6px;">
+                                <div style="color: #F59E0B; font-weight: 700;">LMS Settings</div>
+                                <div style="color: #94A3B8; font-size: 11px; margin-top: 2px;">بوابات الدفع وخادم البريد</div>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-size: 11.5px; color: #fff; font-weight: 600; margin-bottom: 4px;">حالة النظام (System Health):</div>
+                            <div style="display: flex; gap: 14px; font-size: 10.5px; color: #10B981;">
+                                <span>● MariaDB 10.8 متصلة</span>
+                                <span>● Redis Cache متصل</span>
+                                <span>● النسخ الاحتياطي مفعل</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-footer">
+            <div class="slide-counter">الشريحة 7 من 11</div>
+            <div class="nav-controls">
+                <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
+                <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- SLIDE 8: TEST / DEMO ACCOUNTS MATRIX                          -->
+    <!-- ============================================================== -->
+    <div class="slide" id="slide-8">
+        <div class="slide-header">
+            <div class="brand-badge">
+                <div class="brand-logo-box">B</div>
+                <div class="brand-title">تجربة حية ومباشرة | Live Demo</div>
+            </div>
+            <div class="po-badge">الحسابات الاختبارية الجاهزة للاستخدام الآن</div>
+        </div>
+
+        <div class="slide-body">
+            <div class="slide-title-area">
+                <div class="slide-pre-title">تسهيلاً لمعاينة صاحب المشروع وفريق العمل</div>
+                <h2 class="slide-title">بيانات الحسابات الاختبارية للأدوار الثلاثة (Active Credentials)</h2>
+                <p class="slide-subtitle">
+                    تم إنشاء وتفعيل 3 حسابات حقيقية في قاعدة البيانات مسبقاً لاختبار كافة مسارات وتجارب المنصة:
+                </p>
+            </div>
+
+            <table class="account-table">
+                <thead>
+                    <tr>
+                        <th>الدور (Role)</th>
+                        <th>الاسم المعتمد</th>
+                        <th>البريد الإلكتروني (Login)</th>
+                        <th>كلمة المرور (Password)</th>
+                        <th>الصلاحيات ونطاق التجربة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong style="color: #38BDF8;">👨‍🎓 متدرب / مهندس طالب</strong></td>
+                        <td>م. أحمد الشمري</td>
+                        <td><span class="copy-pill">student@builders.sa</span></td>
+                        <td><span class="copy-pill">Student2026!</span></td>
+                        <td>مشاهدة الدروس، حل الاختبارات، تتبع نسبة الإنجاز في كود SBC 304، وتحميل الشهادة.</td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: var(--builders-accent);">👨‍🏫 مدرب / محاضر</strong></td>
+                        <td>د. م. خالد العتيبي</td>
+                        <td><span class="copy-pill">instructor@builders.sa</span></td>
+                        <td><span class="copy-pill">Instructor2026!</span></td>
+                        <td>إنشاء وتعديل المناهج، إضافة الفصول والدروس، وتصحيح مشاريع وحسابات الطلاب.</td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: var(--builders-success);">👑 مدير النظام والمنصة</strong></td>
+                        <td>م. فهد القحطاني</td>
+                        <td><span class="copy-pill">manager@builders.sa</span></td>
+                        <td><span class="copy-pill">Manager2026!</span></td>
+                        <td>تحكم كامل في لوحة Frappe Desk، إدارة المستندات، التقارير المالية، والتحكم بالأعضاء.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 20px; background: rgba(212, 168, 67, 0.1); border: 1px solid var(--builders-accent); border-radius: 8px; padding: 12px 18px; font-size: 13.5px; color: var(--builders-accent-light);">
+                💡 <strong>ملاحظة للمالك:</strong> يمكنك تسجيل الدخول بأي من هذه الحسابات فوراً عبر شاشة الدخول المعتمدة: 
+                <span class="copy-pill" style="color: #fff;">http://localhost:8000/login</span>
+            </div>
+        </div>
+
+        <div class="slide-footer">
+            <div class="slide-counter">الشريحة 8 من 11</div>
+            <div class="nav-controls">
+                <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
+                <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- SLIDE 9: BUSINESS MODEL & FINANCIAL PROJECTIONS              -->
+    <!-- ============================================================== -->
+    <div class="slide" id="slide-9">
+        <div class="slide-header">
+            <div class="brand-badge">
+                <div class="brand-logo-box">B</div>
+                <div class="brand-title">النموذج الربحي والمالي | Business Model</div>
+            </div>
+            <div class="po-badge">استدامة الإيرادات بالريال السعودي</div>
+        </div>
+
+        <div class="slide-body">
+            <div class="grid-2">
+                <div>
+                    <div class="slide-pre-title">قنوات التدفقات النقدية (Revenue Streams)</div>
+                    <h2 class="slide-title" style="font-size: 26px;">نموذج تسعير ثلاثي الأبعاد</h2>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 14px;">
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong style="color: #38BDF8;">1. مبيعات الدورات المنفصلة (B2C):</strong><br>
+                            تسعير يتراوح بين 350 - 600 ر.س لكل دورة تخصصية مع وصول دائم ومحدث للكود.
+                        </div>
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong style="color: var(--builders-accent);">2. باقات الدبلومات المهنية (Bundles):</strong><br>
+                            برامج متكاملة بسعر 1,800 - 2,500 ر.س (تأهيل مهندس تصميم إنشائي معتمد).
+                        </div>
+                        <div class="feature-card" style="padding: 12px;">
+                            <strong style="color: #10B981;">3. الاشتراكات المؤسسية للشركات (B2B):</strong><br>
+                            عقود تدريب لمكاتب الاستشارات الهندسية وشركات المقاولات لتأهيل كوادرها.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-card" style="display: flex; flex-direction: column; justify-content: center;">
+                    <div style="font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 12px; text-align: center;">
+                        توقعات نمو الإيرادات المتراكمة (بالريال السعودي - الربع الأول للرابع)
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-footer">
+            <div class="slide-counter">الشريحة 9 من 11</div>
+            <div class="nav-controls">
+                <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
+                <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- SLIDE 10: PRODUCT ROADMAP                                     -->
+    <!-- ============================================================== -->
+    <div class="slide" id="slide-10">
+        <div class="slide-header">
+            <div class="brand-badge">
+                <div class="brand-logo-box">B</div>
+                <div class="brand-title">خارطة الطريق المستقبلية | Product Roadmap</div>
+            </div>
+            <div class="po-badge">خطة التوسع 2026 - 2027</div>
+        </div>
+
+        <div class="slide-body">
+            <div class="slide-title-area">
+                <div class="slide-pre-title">استراتيجية التطوير والنمو</div>
+                <h2 class="slide-title">مراحل إطلاق وتطوير منصة بيلدرز</h2>
+            </div>
+
+            <div class="grid-3">
+                <div class="feature-card" style="border-top: 4px solid #10B981;">
+                    <div style="color: #10B981; font-weight: 700; font-size: 13px; margin-bottom: 8px;">المرحلة 1: مكتملة بنجاح ✅</div>
+                    <div class="feature-title">التأسيس والجاهزية الفنية</div>
+                    <div class="feature-desc">
+                        • بناء منصة LMS وهندسة الـ Vue 3 SPA.<br>
+                        • اعتماد التصنيفات الهندسية الخمسة.<br>
+                        • زراعة مناهج كود SBC 304 وعقود فيديك.<br>
+                        • استقرار البناء الآلي للحاويات (Docker).<br>
+                        • فحص واختبار 36 شاشة ومسار حي بنسبة 100%.
+                    </div>
+                </div>
+
+                <div class="feature-card" style="border-top: 4px solid var(--builders-accent);">
+                    <div style="color: var(--builders-accent); font-weight: 700; font-size: 13px; margin-bottom: 8px;">المرحلة 2: الربع القادم (Q4 2026) 🚀</div>
+                    <div class="feature-title">الإطلاق التجاري والتوسع</div>
+                    <div class="feature-desc">
+                        • ربط بوابات الدفع (Tap / Moyasar) لمدى و Apple Pay.<br>
+                        • ربط خادم إرسال الإيميلات الرسمي (SMTP).<br>
+                        • إطلاق النطاق الرسمي وتفعيل شهادة SSL.<br>
+                        • حملة استقطاب أول 1,000 مهندس في المملكة.<br>
+                        • ربط الفوترة الإلكترونية مع منصة زاتكا (ZATCA).
+                    </div>
+                </div>
+
+                <div class="feature-card" style="border-top: 4px solid #38BDF8;">
+                    <div style="color: #38BDF8; font-weight: 700; font-size: 13px; margin-bottom: 8px;">المرحلة 3: المستقبل (2027) 💡</div>
+                    <div class="feature-title">الذكاء الاصطناعي والتطبيقات</div>
+                    <div class="feature-desc">
+                        • إطلاق تطبيق الجوال المخصص (Flutter App).<br>
+                        • مساعد ذكي (SBC AI Copilot) مدرب على الكود السعودي.<br>
+                        • جولات محاكاة افتراضية (Virtual VR) لمواقع المشاريع.<br>
+                        • شراكات رسمية مع الهيئة السعودية للمهندسين.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-footer">
+            <div class="slide-counter">الشريحة 10 من 11</div>
+            <div class="nav-controls">
+                <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
+                <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- SLIDE 11: PO CONCLUSION & DECISION REQUEST                   -->
+    <!-- ============================================================== -->
+    <div class="slide" id="slide-11">
+        <div class="slide-header">
+            <div class="brand-badge">
+                <div class="brand-logo-box">B</div>
+                <div class="brand-title">القرار والتوصية التنفيذية | Executive Decision</div>
+            </div>
+            <div class="po-badge">توصية مدير المنتج (PO Recommendation)</div>
+        </div>
+
+        <div class="slide-body">
+            <div class="slide-title-area" style="text-align: center; max-width: 850px; margin: 0 auto 24px auto;">
+                <div class="slide-pre-title">خلاصة العرض والتوصية</div>
+                <h2 class="slide-title" style="font-size: 34px;">المنصة جاهزة تقنياً وعملياً لبدء مرحلة النشر التجاري</h2>
+                <p class="slide-subtitle" style="font-size: 16px;">
+                    لقد أنجزنا بنية تحتية هندسية راسخة تفوقت في جميع اختبارات الضغط والأداء والمصادقة بنسبة 100%.
+                </p>
+            </div>
+
+            <div class="grid-2" style="max-width: 900px; margin: 0 auto; width: 100%;">
+                <div class="feature-card" style="border: 1px solid var(--builders-accent);">
+                    <div style="font-size: 16px; font-weight: 700; color: var(--builders-accent); margin-bottom: 8px;">🎯 المطلوب من المالك لإطلاق المنصة اليوم:</div>
+                    <ol style="margin-right: 20px; line-height: 2; font-size: 14px; color: var(--builders-text);">
+                        <li>تحديد اسم النطاق الرسمي (مثال: <span class="copy-pill">builders.sa</span>).</li>
+                        <li>اختيار مزود الدفع الإلكتروني (Tap Payments أو Moyasar).</li>
+                        <li>تزويدنا ببيانات خادم البريد (SMTP) لإرسال الإشعارات.</li>
+                    </ol>
+                </div>
+
+                <div class="feature-card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                    <div style="font-size: 40px; margin-bottom: 10px;">🚀</div>
+                    <div style="font-size: 18px; font-weight: 700; color: #fff;">ابدأ تجربة المنصة الحية الآن</div>
+                    <p style="font-size: 13px; color: var(--builders-text-muted); margin: 6px 0 16px 0;">
+                        استخدم الحسابات التجريبية لاستعراض دورة التعلم كمهندس أو كمدرب.
+                    </p>
+                    <a href="http://localhost:8000/lms" target="_blank" style="background: var(--builders-accent); color: #000; padding: 10px 24px; border-radius: 6px; font-weight: 700; text-decoration: none; font-size: 14px;">
+                        فتح بوابة LMS الحية &larr;
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-footer">
+            <div class="slide-counter">الشريحة 11 من 11</div>
+            <div class="nav-controls">
+                <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
+                <button class="nav-btn" onclick="goToSlide(0)">البداية ↺</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(index) {
+        if (index < 0) index = 0;
+        if (index >= totalSlides) index = totalSlides - 1;
+        
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active');
+            if (i === index) {
+                slide.classList.add('active');
+            }
+        });
+        currentSlide = index;
+    }
+
+    function nextSlide() {
+        showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+        showSlide(currentSlide - 1);
+    }
+
+    function goToSlide(index) {
+        showSlide(index);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft' || e.key === ' ') {
+            nextSlide();
+        } else if (e.key === 'ArrowRight') {
+            prevSlide();
+        }
+    });
+
+    // Initialize Chart.js on slide 9
+    document.addEventListener('DOMContentLoaded', () => {
+        const ctx = document.getElementById('revenueChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['الربع 1', 'الربع 2', 'الربع 3', 'الربع 4'],
+                    datasets: [
+                        {
+                            label: 'إيرادات مبيعات الدورات (SAR)',
+                            data: [45000, 140000, 290000, 520000],
+                            borderColor: '#D4A843',
+                            backgroundColor: 'rgba(212, 168, 67, 0.15)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'عقود الشركات B2B (SAR)',
+                            data: [20000, 80000, 190000, 380000],
+                            borderColor: '#38BDF8',
+                            backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#CBD5E1',
+                                font: { family: 'IBM Plex Sans Arabic' }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#94A3B8' },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#94A3B8',
+                                callback: function(value) { return value.toLocaleString() + ' ر.س'; }
+                            },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
