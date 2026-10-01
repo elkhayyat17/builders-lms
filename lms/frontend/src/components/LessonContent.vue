@@ -36,17 +36,9 @@
 		</div>
 		<div
 			v-else-if="block.includes('{{ Video')"
-			class="not-prose my-5 overflow-hidden rounded-7 border border-outline-gray-2"
+			class="not-prose my-5"
 		>
-			<video
-				controls
-				width="100%"
-				class="block w-full"
-				controlsList="nodownload"
-				oncontextmenu="return false;"
-			>
-				<source :src="safeUrl(getId(block))" type="video/mp4" />
-			</video>
+			<VideoBlock :file="safeUrl(getId(block))" />
 		</div>
 		<div v-else-if="block.includes('{{ PDF')">
 			<PdfBlock v-if="inlinePdf" :file="getId(block)" />
@@ -101,6 +93,7 @@
 <script setup lang="ts">
 import Quiz from '@/components/QuizBlock.vue'
 import PdfBlock from '@/components/PdfBlock.vue'
+import VideoBlock from '@/components/VideoBlock.vue'
 // @ts-expect-error markdown-it ships no type declarations
 import MarkdownIt from 'markdown-it'
 import { extractYoutubeID, getMacroArg } from '@/utils/lessonMacros'

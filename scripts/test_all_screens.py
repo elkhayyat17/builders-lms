@@ -190,11 +190,11 @@ try:
     r_lesson = session.get(f"{BASE_URL_8000}/api/resource/Course Lesson/{lesson_name}", timeout=5)
     lesson_doc = r_lesson.json().get("data", {})
     has_body = len(lesson_doc.get("body", "")) > 100
-    has_youtube = bool(lesson_doc.get("youtube"))
+    has_video = bool(lesson_doc.get("youtube")) or ("{{ Video(" in lesson_doc.get("body", ""))
     has_latex = "1.2 D + 1.6 L" in lesson_doc.get("body", "")
-    passed = r_lesson.status_code == 200 and has_body and has_youtube and has_latex
+    passed = r_lesson.status_code == 200 and has_body and has_video and has_latex
     record("Interactive Lesson Content (/api/resource/Course Lesson)", "Lesson Player", passed, r_lesson.status_code,
-           f"Title: {lesson_title}, Has Body: {has_body}, Has Video: {has_youtube}, Has SBC Formulas: {has_latex}")
+           f"Title: {lesson_title}, Has Body: {has_body}, Has Video: {has_video}, Has SBC Formulas: {has_latex}")
 except Exception as e:
     record("Interactive Lesson Content", "Lesson Player", False, None, str(e))
 

@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مختبر الحماية الرقمية ومكافحة القرصنة | Handastech Video Security Lab</title>
+  <link rel="icon" type="image/png" href="/assets/builders/images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="http://localhost:8000/assets/builders/js/hls.min.js"></script>
+  <style>
+    :root {
+      --primary: #0066CC;
+      --primary-hover: #0052A3;
+      --cyan: #38BDF8;
+      --charcoal: #1E2530;
+      --slate-dark: #0F172A;
+      --slate-card: #1E293B;
+      --border-color: #334155;
+      --accent-gold: #D4A843;
+      --danger: #EF4444;
+      --success: #10B981;
+      --warning: #F59E0B;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0B0F19;
+      color: #F8FAFC;
+      line-height: 1.6;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    header {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-logo {
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .badge-pill {
+      background: rgba(0, 102, 204, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+    }
+
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #F8FAFC;
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--cyan);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1350px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .page-title {
+      margin-bottom: 2rem;
+    }
+
+    .page-title h1 {
+      font-size: 1.875rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #FFFFFF 0%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-title p {
+      color: #94A3B8;
+      font-size: 0.95rem;
+      max-width: 850px;
+    }
+
+    /* Grid layout */
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 1.7fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Video Player Card */
+    .player-card {
+      background: var(--slate-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-header {
+      padding: 1rem 1.5rem;
+      background: rgba(15, 23, 42, 0.6);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
+    }
+
+    /* Video Container & Protection */
+    .video-viewport {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
+
+    /* Floating Forensic Watermark */
+    .watermark-container {
+      position: absolute;
+      pointer-events: none;
+      z-index: 25;
+      transition: top 1.8s cubic-bezier(0.4, 0, 0.2, 1), left 1.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+    }
+
+    .watermark-badge {
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 6px 12px;
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 11px;
+      line-height: 1.35;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .watermark-badge .name {
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 12px;
+    }
+
+    .watermark-badge .meta {
+      font-size: 10px;
+      letter-spacing: 0.3px;
+      color: rgba(255, 255, 255, 0.6);
+      direction: ltr;
+    }
+
+    .watermark-badge .platform {
+      font-size: 9px;
+      color: rgba(56, 189, 248, 0.6);
+      margin-top: 1px;
+    }
+
+    /* Anti-Tamper Shield */
+    .tamper-shield {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(10px);
+      z-index: 40;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .tamper-shield.active {
+      display: flex;
+    }
+
+    .shield-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(239, 68, 68, 0.15);
+      border: 2px solid var(--danger);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin-bottom: 1rem;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .shield-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #F87171;
+      margin-bottom: 0.5rem;
+    }
+
+    .shield-desc {
+      color: #CBD5E1;
+      font-size: 0.875rem;
+      max-width: 480px;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .btn-reset {
+      background: var(--danger);
+      color: #FFF;
+      font-weight: 700;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: background 0.2s;
+    }
+
+    .btn-reset:hover {
+      background: #DC2626;
+    }
+
+    /* Custom Player Controls */
+    .player-controls {
+      padding: 1rem 1.5rem;
+      background: #111827;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .btn-play {
+      background: var(--primary);
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background 0.2s;
+    }
+
+    .btn-play:hover {
+      background: var(--primary-hover);
+    }
+
+    .progress-bar-container {
+      flex: 1;
+      height: 6px;
+      background: #374151;
+      border-radius: 3px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--cyan);
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .time-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem;
+      color: #94A3B8;
+    }
+
+    /* Security Control Panel */
+    .security-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .panel-box {
+      background: var(--slate-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+
+    .panel-box h3 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .panel-box p {
+      font-size: 0.875rem;
+      color: #94A3B8;
+      margin-bottom: 1.25rem;
+    }
+
+    .attack-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .btn-attack {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #FCA5A5;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-align: right;
+      transition: all 0.2s;
+    }
+
+    .btn-attack:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: var(--danger);
+      transform: translateY(-1px);
+    }
+
+    .btn-attack span {
+      direction: ltr;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Diagnostics Terminal */
+    .terminal-box {
+      background: #090D16;
+      border: 1px solid #1E293B;
+      border-radius: 12px;
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      height: 240px;
+      overflow-y: auto;
+      color: #A5F3FC;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .terminal-line {
+      display: flex;
+      gap: 0.5rem;
+      word-break: break-all;
+    }
+
+    .terminal-time {
+      color: #64748B;
+      shrink: 0;
+    }
+
+    .terminal-success { color: #34D399; }
+    .terminal-danger { color: #F87171; }
+    .terminal-warning { color: #FBBF24; }
+    .terminal-info { color: #38BDF8; }
+
+    /* Security Specs Pills */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .spec-item {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 0.75rem;
+      border-radius: 8px;
+    }
+
+    .spec-label {
+      font-size: 0.7rem;
+      color: #64748B;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .spec-value {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: #E2E8F0;
+    }
+
+    /* Action bar */
+    .action-bar {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, rgba(0, 102, 204, 0.15) 0%, rgba(15, 23, 42, 0.8) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .action-text h4 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #FFF;
+      margin-bottom: 0.25rem;
+    }
+
+    .action-text p {
+      font-size: 0.875rem;
+      color: #94A3B8;
+    }
+
+    .btn-lms-live {
+      background: linear-gradient(135deg, var(--primary) 0%, #0284C7 100%);
+      color: #FFF;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 15px rgba(0, 102, 204, 0.4);
+      transition: all 0.2s;
+    }
+
+    .btn-lms-live:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 102, 204, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand-group">
+      <img src="http://localhost:8000/assets/builders/images/handastech-horizontal.png" alt="Handastech" class="brand-logo">
+      <span class="badge-pill">🛡️ مختبر الحماية الرقمية v2.0</span>
+    </div>
+    <div class="header-links">
+      <a href="http://localhost:3000/index.html" class="btn-secondary">الصفحة الرئيسية</a>
+      <a href="http://localhost:3000/handastech_presentation.html" class="btn-secondary">العرض التقديمي</a>
+      <a href="http://localhost:8000/lms/courses/sbc-304/learn/1-1" target="_blank" class="btn-secondary" style="border-color: var(--cyan); color: var(--cyan);">فتح الدرس في المنصة</a>
+    </div>
+  </header>
+
+  <!-- CONTAINER -->
+  <div class="container">
+    <div class="page-title">
+      <h1>مختبر فحص واختبار حماية الفيديوهات المتقدمة (Anti-Piracy Suite)</h1>
+      <p>
+        بيئة تجريبية حية لفحص منظومة التشفير الذاتي <strong>HLS AES-128</strong> مع مفاتيح فك التشفير المؤقتة (Ephemeral Signed Tokens)، والعلامة المائية الجنائية العائمة (Forensic Floating Watermark)، ودرع مكافحة التلاعب النشط (MutationObserver Anti-Tamper Guard).
+      </p>
+    </div>
+
+    <div class="grid-layout">
+      <!-- LEFT: VIDEO PLAYER -->
+      <div class="player-card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="status-dot"></span>
+            مشغل الفيديو الآمن المشفر (HLS.js In-Memory Decryption)
+          </div>
+          <span style="font-size: 0.75rem; color: #94A3B8; font-family: monospace;">Stream: sbc-304-1-1</span>
+        </div>
+
+        <div class="video-viewport" id="videoViewport">
+          <!-- Video element -->
+          <video id="hlsVideo" playsinline></video>
+
+          <!-- Watermark -->
+          <div class="watermark-container" id="forensicWatermark" style="top: 15%; left: 15%; opacity: 0.65;">
+            <div class="watermark-badge">
+              <span class="name" id="wmName">م. أحمد الشمري</span>
+              <span class="meta" id="wmMeta">student@builders.sa • 172.31.0.1</span>
+              <span class="platform">Handastech | كود SBC 304</span>
+            </div>
+          </div>
+
+          <!-- Tamper Shield -->
+          <div class="tamper-shield" id="tamperShield">
+            <div class="shield-icon">⚠️</div>
+            <div class="shield-title">تم رصد محاولة تلاعب أمني أو اختراق للعلامة المائية!</div>
+            <div class="shield-desc">
+              تم رصد محاولة إزالة العلامة المائية أو حجبها عبر أدوات المطورين (DevTools / Inspect Element). تم إيقاف المشغل فكياً وتعليق فك التشفير لحماية حقوق المحتوى.
+            </div>
+            <button class="btn-reset" onclick="resetTamperState()">إعادة تهيئة المشغل واستئناف البث</button>
+          </div>
+        </div>
+
+        <!-- Custom Controls -->
+        <div class="player-controls">
+          <button class="btn-play" id="playBtn" onclick="togglePlay()">▶</button>
+          <div class="progress-bar-container" id="progressBar" onclick="seekVideo(event)">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
+        </div>
+
+        <!-- Specs summary -->
+        <div style="padding: 1.25rem 1.5rem; background: rgba(15, 23, 42, 0.4); border-top: 1px solid var(--border-color);">
+          <div class="specs-grid">
+            <div class="spec-item">
+              <div class="spec-label">خوارزمية التشفير</div>
+              <div class="spec-value" style="color: var(--cyan);">AES-128-CBC (HLS RFC 8216)</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">صلاحية رمز المفتاح</div>
+              <div class="spec-value" style="color: var(--success);">HMAC SHA-256 (300 ثانية)</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">تتبع العلامة الجنائية</div>
+              <div class="spec-value">اسم المتدرب + الإيميل + الـ IP</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">حماية DOM النشطة</div>
+              <div class="spec-value" style="color: var(--warning);">Active MutationObserver Guard</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: CONTROLS & DIAGNOSTICS -->
+      <div class="security-panel">
+        <!-- ATTACK SIMULATION -->
+        <div class="panel-box">
+          <h3>🧪 محاكاة هجمات القراصنة (Penetration Testing)</h3>
+          <p>جرّب محاكاة أساليب التلاعب والقرصنة الشائعة لاختبار استجابة النظام الفورية:</p>
+          
+          <div class="attack-buttons">
+            <button class="btn-attack" onclick="simulateNodeDelete()">
+              <div>
+                <div>💥 حذف العلامة المائية من الـ DOM</div>
+                <div style="font-size: 0.75rem; font-weight: normal; color: #E2E8F0;">محاكاة حذف العنصر عبر Inspect Element</div>
+              </div>
+              <span>DOM.remove()</span>
+            </button>
+
+            <button class="btn-attack" onclick="simulateCssHide()">
+              <div>
+                <div>🕶️ إخفاء العلامة عبر كود CSS</div>
+                <div style="font-size: 0.75rem; font-weight: normal; color: #E2E8F0;">محاكاة display:none أو opacity:0</div>
+              </div>
+              <span>style.display='none'</span>
+            </button>
+
+            <button class="btn-attack" onclick="simulateDirectDownload()">
+              <div>
+                <div>🚨 محاولة تنزيل المفتاح بدون تصريح</div>
+                <div style="font-size: 0.75rem; font-weight: normal; color: #E2E8F0;">طلب GET مباشر لـ get_video_key كزائر</div>
+              </div>
+              <span>GET /get_video_key 403</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- LIVE TERMINAL -->
+        <div class="panel-box">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+            <h3>📡 سجل تشخيص الأمان الحي (Live Security Log)</h3>
+            <span style="font-size: 0.7rem; color: #64748B; cursor: pointer;" onclick="clearLogs()">مسح السجل</span>
+          </div>
+          <div class="terminal-box" id="terminalLog">
+            <!-- lines appended by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTION BAR -->
+    <div class="action-bar">
+      <div class="action-text">
+        <h4>🚀 جاهز للاختبار في بيئة الكورس الحقيقية؟</h4>
+        <p>الدرس 1.1 من كود الخرسانة السعودي SBC 304 مرتبط الآن بالبث المشفر والعلامة المائية في المنصة مباشرة.</p>
+      </div>
+      <a href="http://localhost:8000/lms/courses/sbc-304/learn/1-1" target="_blank" class="btn-lms-live">
+        ▶ تجربة المشغل داخل حساب الطالب (Ahmed Al-Shammari)
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const STREAM_URL = 'http://localhost:8000/assets/builders/protected-stream/playlist.m3u8';
+    const SESSION_API = 'http://localhost:8000/api/method/builders.utils.get_playback_session?video_id=sbc-304-1-1';
+    
+    const video = document.getElementById('hlsVideo');
+    const playBtn = document.getElementById('playBtn');
+    const progressFill = document.getElementById('progressFill');
+    const timeDisplay = document.getElementById('timeDisplay');
+    const terminal = document.getElementById('terminalLog');
+    const watermark = document.getElementById('forensicWatermark');
+    const tamperShield = document.getElementById('tamperShield');
+
+    let hls = null;
+    let observer = null;
+    let driftTimer = null;
+    let isTampered = false;
+
+    function log(msg, type = 'info') {
+      const now = new Date().toTimeString().split(' ')[0];
+      const line = document.createElement('div');
+      line.className = 'terminal-line';
+      let colorClass = 'terminal-info';
+      if (type === 'success') colorClass = 'terminal-success';
+      if (type === 'danger') colorClass = 'terminal-danger';
+      if (type === 'warning') colorClass = 'terminal-warning';
+
+      line.innerHTML = `<span class="terminal-time">[${now}]</span><span class="${colorClass}">${msg}</span>`;
+      terminal.appendChild(line);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function clearLogs() {
+      terminal.innerHTML = '';
+      log('Log terminal cleared.', 'info');
+    }
+
+    // 1. Initialize Player & Security
+    async function initPlayer() {
+      log('جارِ استدعاء جلسة التشغيل المؤقتة من Frappe Backend...', 'info');
+
+      try {
+        const resp = await fetch(SESSION_API, { credentials: 'include' });
+        if (resp.status === 403) {
+          log('⚠️ لم يتم تسجيل الدخول كطالب مشترك (Guest). جاري طلب تصريح اختباري...', 'warning');
+        }
+
+        const data = await resp.json();
+        const session = data.message;
+        if (session && session.watermark) {
+          document.getElementById('wmName').textContent = session.watermark.full_name || 'طالب مسجل';
+          document.getElementById('wmMeta').textContent = `${session.watermark.email || 'user@handastech.com'} • ${session.watermark.ip || '127.0.0.1'}`;
+          log(`✓ تم إصدار جلسة آمنة للدارس: ${session.watermark.full_name} (${session.watermark.ip})`, 'success');
+        }
+      } catch (err) {
+        log('Session init warning (using default credentials)', 'warning');
+      }
+
+      // Check HLS support
+      if (Hls.isSupported()) {
+        log('تهيئة محرك Hls.js المدمج محلياً (Zero External CDN)...', 'info');
+        hls = new Hls({
+          xhrSetup: function (xhr, url) {
+            xhr.withCredentials = true;
+          }
+        });
+
+        hls.loadSource(STREAM_URL);
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+          log('✅ تم تحميل وفهرسة ملف البث المشفر playlist.m3u8 بنجاح!', 'success');
+          log('🔑 جاري تبادل مفتاح AES-128 عبر القناة الآمنة /get_video_key...', 'info');
+        });
+
+        hls.on(Hls.Events.KEY_LOADED, function (event, data) {
+          log(`🔑 تم استلام وتفريغ مفتاح فك التشفير بنجاح في الذاكرة RAM! (Key length: 16 bytes)`, 'success');
+        });
+
+        hls.on(Hls.Events.FRAG_LOADED, function (event, data) {
+          log(`📦 تم تحميل وفك تشفير جزء الفيديو: ${data.frag.relurl}`, 'info');
+        });
+
+        hls.on(Hls.Events.ERROR, function (event, data) {
+          if (data.fatal) {
+            log(`❌ خطأ فادح في البث: ${data.details}`, 'danger');
+          }
+        });
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = STREAM_URL;
+      }
+
+      startWatermarkDrift();
+      startAntiTamperObserver();
+    }
+
+    // 2. Watermark Drifting
+    function startWatermarkDrift() {
+      const positions = [
+        { top: '12%', left: '14%' },
+        { top: '15%', left: '60%' },
+        { top: '35%', left: '25%' },
+        { top: '45%', left: '55%' },
+        { top: '65%', left: '15%' },
+        { top: '70%', left: '62%' },
+        { top: '22%', left: '40%' },
+        { top: '55%', left: '38%' }
+      ];
+
+      let idx = 0;
+      driftTimer = setInterval(() => {
+        if (isTampered) return;
+        idx = (idx + 1) % positions.length;
+        const pos = positions[idx];
+        watermark.style.top = pos.top;
+        watermark.style.left = pos.left;
+        watermark.style.opacity = (0.45 + Math.random() * 0.3).toFixed(2);
+      }, 7000);
+    }
+
+    // 3. Active MutationObserver Anti-Tamper Guard
+    function startAntiTamperObserver() {
+      if (observer) observer.disconnect();
+
+      const viewport = document.getElementById('videoViewport');
+
+      observer = new MutationObserver((mutations) => {
+        if (isTampered) return;
+
+        for (const mut of mutations) {
+          // Check removal
+          if (mut.type === 'childList') {
+            for (const removed of mut.removedNodes) {
+              if (removed === watermark || (removed.id === 'forensicWatermark')) {
+                triggerTamperAlarm('حذف عنصر العلامة المائية من الـ DOM عبر DevTools!');
+                return;
+              }
+            }
+          }
+
+          // Check style changes (display: none / opacity: 0 / visibility: hidden)
+          if (mut.type === 'attributes' && mut.target === watermark) {
+            const style = window.getComputedStyle(watermark);
+            const opacity = parseFloat(style.opacity);
+            if (style.display === 'none' || style.visibility === 'hidden' || opacity < 0.1) {
+              triggerTamperAlarm('محاولة إخفاء العلامة المائية عبر تعديل CSS (display/opacity/visibility)!');
+              return;
+            }
+          }
+        }
+      });
+
+      observer.observe(viewport, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class', 'hidden']
+      });
+
+      log('🛡️ تم تفعيل درع المراقبة الأمني (MutationObserver Active Guard)', 'success');
+    }
+
+    function triggerTamperAlarm(reason) {
+      isTampered = true;
+      video.pause();
+      tamperShield.classList.add('active');
+      log(`🚨 إنذار قرصنة وتلاعب: ${reason}`, 'danger');
+      log('🛑 تم إيقاف المشغل وحجب الصورة فورياً لحماية المحتوى!', 'danger');
+    }
+
+    function resetTamperState() {
+      isTampered = false;
+      tamperShield.classList.remove('active');
+
+      // Re-attach watermark if deleted
+      const viewport = document.getElementById('videoViewport');
+      if (!viewport.contains(watermark)) {
+        viewport.appendChild(watermark);
+      }
+      watermark.style.display = 'block';
+      watermark.style.visibility = 'visible';
+      watermark.style.opacity = '0.65';
+      watermark.style.top = '15%';
+      watermark.style.left = '15%';
+
+      log('✓ تم استعادة بيئة الأمان وإعادة تهيئة المشغل بشكل نظامي.', 'success');
+      startAntiTamperObserver();
+      video.play().catch(() => {});
+    }
+
+    // 4. Attack Simulations
+    function simulateNodeDelete() {
+      log('⚡ محاكاة هجوم: تنفيذ element.remove() على العلامة المائية...', 'warning');
+      watermark.remove();
+    }
+
+    function simulateCssHide() {
+      log('⚡ محاكاة هجوم: تطبيق style.display = "none" عبر DevTools...', 'warning');
+      watermark.style.display = 'none';
+    }
+
+    async function simulateDirectDownload() {
+      log('⚡ محاكاة هجوم: طلب مباشر لـ /get_video_key كزائر غير مصرح...', 'warning');
+      try {
+        const r = await fetch('http://localhost:8000/api/method/builders.utils.get_video_key?video_id=sbc-304-1-1');
+        if (r.status === 403) {
+          log(`🛡️ رفض الخادم الطلب بنجاح: 403 Forbidden (محمي برمز HMAC والجلسة)`, 'success');
+        } else {
+          log(`رد الخادم: ${r.status}`, 'info');
+        }
+      } catch (e) {
+        log(`خطأ: ${e.message}`, 'danger');
+      }
+    }
+
+    // 5. Controls
+    function togglePlay() {
+      if (isTampered) return;
+      if (video.paused) {
+        video.play();
+        playBtn.textContent = '⏸';
+      } else {
+        video.pause();
+        playBtn.textContent = '▶';
+      }
+    }
+
+    video.addEventListener('play', () => { playBtn.textContent = '⏸'; });
+    video.addEventListener('pause', () => { playBtn.textContent = '▶'; });
+
+    video.addEventListener('timeupdate', () => {
+      const cur = video.currentTime;
+      const dur = video.duration || 1;
+      const pct = (cur / dur) * 100;
+      progressFill.style.width = pct + '%';
+      timeDisplay.textContent = `${formatTime(cur)} / ${formatTime(dur)}`;
+    });
+
+    function seekVideo(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const pct = clickX / rect.width;
+      video.currentTime = pct * (video.duration || 0);
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    // Auto init on load
+    window.addEventListener('DOMContentLoaded', initPlayer);
+  </script>
+</body>
+</html>

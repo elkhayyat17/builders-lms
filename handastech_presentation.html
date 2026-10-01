@@ -418,7 +418,7 @@
         </div>
 
         <div class="slide-footer">
-            <div class="slide-counter">الشريحة 1 من 11</div>
+            <div class="slide-counter">الشريحة 1 من 12</div>
             <div class="nav-controls">
                 <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
             </div>
@@ -469,7 +469,7 @@
         </div>
 
         <div class="slide-footer">
-            <div class="slide-counter">الشريحة 2 من 11</div>
+            <div class="slide-counter">الشريحة 2 من 12</div>
             <div class="nav-controls">
                 <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
                 <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
@@ -548,7 +548,7 @@
         </div>
 
         <div class="slide-footer">
-            <div class="slide-counter">الشريحة 3 من 11</div>
+            <div class="slide-counter">الشريحة 3 من 12</div>
             <div class="nav-controls">
                 <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
                 <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
@@ -638,7 +638,7 @@
         </div>
 
         <div class="slide-footer">
-            <div class="slide-counter">الشريحة 4 من 11</div>
+            <div class="slide-counter">الشريحة 4 من 12</div>
             <div class="nav-controls">
                 <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
                 <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
@@ -716,7 +716,7 @@
         </div>
 
         <div class="slide-footer">
-            <div class="slide-counter">الشريحة 5 من 11</div>
+            <div class="slide-counter">الشريحة 5 من 12</div>
             <div class="nav-controls">
                 <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
                 <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
@@ -790,7 +790,7 @@
         </div>
 
         <div class="slide-footer">
-            <div class="slide-counter">الشريحة 6 من 11</div>
+            <div class="slide-counter">الشريحة 6 من 12</div>
             <div class="nav-controls">
                 <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
                 <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
@@ -876,7 +876,7 @@
         </div>
 
         <div class="slide-footer">
-            <div class="slide-counter">الشريحة 7 من 11</div>
+            <div class="slide-counter">الشريحة 7 من 12</div>
             <div class="nav-controls">
                 <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
                 <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
@@ -947,7 +947,7 @@
         </div>
 
         <div class="slide-footer">
-            <div class="slide-counter">الشريحة 8 من 11</div>
+            <div class="slide-counter">الشريحة 8 من 12</div>
             <div class="nav-controls">
                 <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
                 <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
@@ -956,9 +956,95 @@
     </div>
 
     <!-- ============================================================== -->
-    <!-- SLIDE 9: BUSINESS MODEL & FINANCIAL PROJECTIONS              -->
+    <!-- SLIDE 9: VIDEO ANTI-PIRACY SECURITY ARCHITECTURE               -->
     <!-- ============================================================== -->
     <div class="slide" id="slide-9">
+        <div class="slide-header">
+            <div class="brand-badge">
+                <div class="brand-logo-box" style="background: linear-gradient(135deg, #0284C7, #0369A1);">🛡️</div>
+                <div class="brand-title">الأمان وحماية المحتوى | Anti-Piracy Suite</div>
+            </div>
+            <div class="po-badge" style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; border-color: #38BDF8;">منظومة حماية ذاتية 100% بدون تكاليف إضافية (Zero-Cost)</div>
+        </div>
+
+        <div class="slide-body">
+            <div class="grid-2">
+                <div>
+                    <div class="slide-pre-title">بنية تحتية هندسية لمنع تسريب وسرقة الدورات</div>
+                    <h2 class="slide-title" style="font-size: 26px;">حماية الفيديوهات بالتشفير والعلامة المائية الجنائية</h2>
+                    <p class="slide-subtitle" style="margin-bottom: 16px;">
+                        تم بناء خط دفاع رباعي متكامل يمنع برامج التحميل المباشر وتطبيقات تصوير الشاشة دون الحاجة لاشتراكات DRM سحابية باهظة:
+                    </p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div class="feature-card" style="padding: 10px 14px;">
+                            <strong style="color: #38BDF8;">1. تشفير HLS AES-128 المجزأ:</strong><br>
+                            تقسيم الفيديو إلى أجزاء .ts مشفرة بمفتاح 16 بايت لا يمكن دمجها أو تشغيلها خارج المشغل.
+                        </div>
+                        <div class="feature-card" style="padding: 10px 14px;">
+                            <strong style="color: #10B981;">2. بوابة مفاتيح موقعة برمز HMAC مؤقت:</strong><br>
+                            تسليم المفتاح في الذاكرة الحية (RAM) فقط للمشترك الفعلي مع رفض أي محاولة وصول خارجي (403 Forbidden).
+                        </div>
+                        <div class="feature-card" style="padding: 10px 14px;">
+                            <strong style="color: var(--builders-accent);">3. علامة مائية جنائية عائمة متغيرة:</strong><br>
+                            طباعة اسم المتدرب وإيميله ورقم الـ IP مع حركة عشوائية كل 7 ثوانٍ لردع تصوير الكاميرات والشاشات.
+                        </div>
+                        <div class="feature-card" style="padding: 10px 14px;">
+                            <strong style="color: #F87171;">4. درع حماية نشط (MutationObserver Anti-Tamper):</strong><br>
+                            رصد محاولات حذف العلامة المائية عبر أدوات المتصفح (Inspect Element) وإيقاف الفيديو فورياً.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mockup-window" style="display: flex; flex-direction: column;">
+                    <div class="mockup-header">
+                        <div class="mockup-dots">
+                            <div class="mockup-dot red"></div>
+                            <div class="mockup-dot yellow"></div>
+                            <div class="mockup-dot green"></div>
+                        </div>
+                        <div class="mockup-url">http://localhost:3000/video_security_lab.html</div>
+                    </div>
+                    <div class="mockup-content" style="padding: 18px; display: flex; flex-direction: column; justify-content: space-between; flex: 1;">
+                        <div style="background: rgba(15, 23, 42, 0.9); border: 1px solid #334155; border-radius: 12px; padding: 14px; position: relative; overflow: hidden; min-height: 200px;">
+                            <!-- Mock video player -->
+                            <div style="width: 100%; height: 140px; background: #000; border-radius: 8px; position: relative; display: flex; align-items: center; justify-content: center;">
+                                <span style="font-size: 32px; color: #38BDF8; opacity: 0.8;">▶</span>
+                                <!-- Floating watermark badge mockup -->
+                                <div style="position: absolute; top: 20%; left: 20%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 10px; color: rgba(255,255,255,0.7); text-align: center;">
+                                    <div style="font-weight: bold; color: #fff;">م. أحمد الشمري</div>
+                                    <div style="font-size: 8px;">student@builders.sa • 172.31.0.1</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 11px; color: #94A3B8;">
+                                <span style="color: #10B981;">● حالة التشفير: AES-128 In-Memory (Active)</span>
+                                <span style="color: #38BDF8;">درع المراقبة: شغال بنجاح</span>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 16px; text-align: center;">
+                            <a href="http://localhost:3000/video_security_lab.html" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #0066CC, #0284C7); color: #fff; font-weight: 700; font-size: 13px; padding: 10px 20px; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(0,102,204,0.4);">
+                                🛡️ فتح مختبر فحص واختبار الأمان الحي (Video Security Lab) &larr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-footer">
+            <div class="slide-counter">الشريحة 9 من 12</div>
+            <div class="nav-controls">
+                <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
+                <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- SLIDE 10: BUSINESS MODEL & FINANCIAL PROJECTIONS              -->
+    <!-- ============================================================== -->
+    <div class="slide" id="slide-10">
         <div class="slide-header">
             <div class="brand-badge">
                 <div class="brand-logo-box">B</div>
@@ -1001,7 +1087,7 @@
         </div>
 
         <div class="slide-footer">
-            <div class="slide-counter">الشريحة 9 من 11</div>
+            <div class="slide-counter">الشريحة 10 من 12</div>
             <div class="nav-controls">
                 <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
                 <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
@@ -1010,9 +1096,9 @@
     </div>
 
     <!-- ============================================================== -->
-    <!-- SLIDE 10: PRODUCT ROADMAP                                     -->
+    <!-- SLIDE 11: PRODUCT ROADMAP                                     -->
     <!-- ============================================================== -->
-    <div class="slide" id="slide-10">
+    <div class="slide" id="slide-11">
         <div class="slide-header">
             <div class="brand-badge">
                 <div class="brand-logo-box">B</div>
@@ -1036,7 +1122,8 @@
                         • اعتماد التصنيفات الهندسية الخمسة.<br>
                         • زراعة مناهج كود SBC 304 وعقود فيديك.<br>
                         • استقرار البناء الآلي للحاويات (Docker).<br>
-                        • فحص واختبار 36 شاشة ومسار حي بنسبة 100%.
+                        • فحص واختبار 36 شاشة ومسار حي بنسبة 100%.<br>
+                        • تشفير الفيديوهات HLS AES-128 والعلامة المائية.
                     </div>
                 </div>
 
@@ -1066,7 +1153,7 @@
         </div>
 
         <div class="slide-footer">
-            <div class="slide-counter">الشريحة 10 من 11</div>
+            <div class="slide-counter">الشريحة 11 من 12</div>
             <div class="nav-controls">
                 <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
                 <button class="nav-btn" onclick="nextSlide()">التالي &larr;</button>
@@ -1075,9 +1162,9 @@
     </div>
 
     <!-- ============================================================== -->
-    <!-- SLIDE 11: PO CONCLUSION & DECISION REQUEST                   -->
+    <!-- SLIDE 12: PO CONCLUSION & DECISION REQUEST                   -->
     <!-- ============================================================== -->
-    <div class="slide" id="slide-11">
+    <div class="slide" id="slide-12">
         <div class="slide-header">
             <div class="brand-badge">
                 <div class="brand-logo-box">B</div>
@@ -1099,7 +1186,7 @@
                 <div class="feature-card" style="border: 1px solid var(--builders-accent);">
                     <div style="font-size: 16px; font-weight: 700; color: var(--builders-accent); margin-bottom: 8px;">🎯 المطلوب من المالك لإطلاق المنصة اليوم:</div>
                     <ol style="margin-right: 20px; line-height: 2; font-size: 14px; color: var(--builders-text);">
-                        <li>تحديد اسم النطاق الرسمي (مثال: <span class="copy-pill">builders.sa</span>).</li>
+                        <li>تحديد اسم النطاق الرسمي (مثال: <span class="copy-pill">handastech.sa</span>).</li>
                         <li>اختيار مزود الدفع الإلكتروني (Tap Payments أو Moyasar).</li>
                         <li>تزويدنا ببيانات خادم البريد (SMTP) لإرسال الإشعارات.</li>
                     </ol>
@@ -1119,7 +1206,7 @@
         </div>
 
         <div class="slide-footer">
-            <div class="slide-counter">الشريحة 11 من 11</div>
+            <div class="slide-counter">الشريحة 12 من 12</div>
             <div class="nav-controls">
                 <button class="nav-btn" onclick="prevSlide()">&rarr; السابق</button>
                 <button class="nav-btn" onclick="goToSlide(0)">البداية ↺</button>
