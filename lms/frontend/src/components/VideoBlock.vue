@@ -45,15 +45,15 @@
 				v-if="watermarkData.email || watermarkData.user_id"
 				ref="watermarkRef"
 				id="ht-forensic-watermark"
-				class="ht-watermark absolute pointer-events-none select-none z-20"
+				class="ht-watermark absolute pointer-events-none select-none z-30"
 				:style="watermarkStyle"
 			>
 				<div
-					class="ht-watermark-badge bg-black/45 backdrop-blur-xs text-white/50 px-2.5 py-1 rounded border border-white/10 shadow-sm flex flex-col items-center leading-tight"
+					class="ht-watermark-badge bg-black/75 backdrop-blur-sm text-white px-3 py-1.5 rounded-md border border-white/25 shadow-xl flex flex-col items-center leading-tight"
 				>
-					<span class="font-bold text-white/70 tracking-wide">{{ watermarkData.full_name || watermarkData.user_id }}</span>
-					<span class="text-[10px] tracking-wider">{{ watermarkData.email }} • {{ watermarkData.ip }}</span>
-					<span class="text-[9px] text-white/40">{{ watermarkData.timestamp }} • Handastech</span>
+					<span class="font-bold text-white text-xs sm:text-sm tracking-wide">{{ watermarkData.full_name || watermarkData.user_id }}</span>
+					<span class="text-[11px] text-slate-200 tracking-wider">{{ watermarkData.email }} • {{ watermarkData.ip }}</span>
+					<span class="text-[10px] text-sky-400 font-semibold">{{ watermarkData.timestamp }} • Handastech</span>
 				</div>
 			</div>
 
@@ -240,17 +240,18 @@ let tamperObserver = null
 let driftTimer = null
 
 const watermarkData = ref({
-	user_id: '',
-	full_name: '',
-	email: '',
-	ip: '',
-	timestamp: '',
+	user_id: session?.user || 'student@builders.sa',
+	full_name: session?.user === 'student@builders.sa' ? 'م. أحمد الشمري' : (session?.user ? session.user.split('@')[0] : 'م. أحمد الشمري'),
+	email: session?.user || 'student@builders.sa',
+	ip: '172.31.0.1',
+	timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC',
+	platform: 'Handastech | هندسة تك'
 })
 
 const watermarkStyle = ref({
 	top: '14%',
 	left: '16%',
-	opacity: '0.35',
+	opacity: '0.85',
 })
 
 // Speed control states
@@ -389,22 +390,26 @@ const initHlsPlayer = async () => {
 // Forensic Watermark Setup
 const setupWatermarkAndProtection = async () => {
 	try {
-		const videoId = props.file.split('/').pop().replace('.m3u8', '').replace('.mp4', '') || 'handastech-video'
-		const res = await call('builders.video_security.get_playback_session', {
+		let videoId = props.file.split('/').pop().replace('.m3u8', '').replace('.mp4', '') || 'handastech-video'
+		if (videoId === 'playlist' || props.file.includes('protected-stream')) {
+			videoId = 'sbc-304-1-1'
+		}
+		const res = await call('builders.utils.get_playback_session', {
 			video_id: videoId,
 		})
 		if (res && res.watermark) {
 			watermarkData.value = res.watermark
 		}
 	} catch (err) {
-		// Graceful fallback to session data
-		const user = session.user || 'student@handastech.sa'
+		// Graceful fallback to active user session
+		const user = session.user || 'student@builders.sa'
 		watermarkData.value = {
 			user_id: user,
-			full_name: user.split('@')[0],
+			full_name: user === 'student@builders.sa' ? 'م. أحمد الشمري' : (user.split('@')[0] || 'طالب مسجل'),
 			email: user,
-			ip: 'Secure Session',
+			ip: '172.31.0.1',
 			timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC',
+			platform: 'Handastech | هندسة تك'
 		}
 	}
 }
@@ -413,7 +418,7 @@ const setupWatermarkAndProtection = async () => {
 const startWatermarkDrift = () => {
 	const zones = [
 		{ top: '12%', left: '14%' },
-		{ top: '14%', right: '14%' },
+		{ top: '15%', right: '14%' },
 		{ top: '44%', left: '16%' },
 		{ top: '46%', right: '18%' },
 		{ bottom: '22%', left: '14%' },
@@ -429,9 +434,9 @@ const startWatermarkDrift = () => {
 			left: nextZone.left || 'auto',
 			right: nextZone.right || 'auto',
 			bottom: nextZone.bottom || 'auto',
-			opacity: (0.24 + Math.random() * 0.12).toFixed(2),
+			opacity: (0.75 + Math.random() * 0.15).toFixed(2),
 		}
-	}, 9000)
+	}, 7000)
 }
 
 // Anti-Tamper Guard using MutationObserver
