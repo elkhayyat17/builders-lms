@@ -87,8 +87,18 @@ def get_playback_session(video_id, lesson=None, course=None):
     if not course and video_id:
         ensure_security_table()
         res = frappe.db.sql(f"SELECT course FROM `{RAW_TABLE}` WHERE video_id = %s LIMIT 1", (video_id,))
-        if res:
+        if res and res[0][0]:
             course = res[0][0]
+    if not course and video_id:
+        if "-" in video_id:
+            parts = video_id.split("-")
+            for length in [2, 1, 3]:
+                cand = "-".join(parts[:length])
+                if frappe.db.exists("LMS Course", cand):
+                    course = cand
+                    break
+        if not course:
+            course = "sbc-304"
 
     # Check entitlements
     is_admin = user in ["Administrator"] or "System Manager" in frappe.get_roles(user)
@@ -121,6 +131,9 @@ def get_playback_session(video_id, lesson=None, course=None):
     student_num = (zlib.crc32(user.encode("utf-8")) % 8999) + 1000
     student_id = f"HT-{student_num}"
 
+    course_code = (course or "SBC-304").upper()
+    course_title = frappe.db.get_value("LMS Course", course, "title") if frappe.db.exists("LMS Course", course) else course_code
+
     return {
         "status": "success",
         "video_id": video_id,
@@ -132,7 +145,9 @@ def get_playback_session(video_id, lesson=None, course=None):
             "email": user_doc.email or user,
             "ip": client_ip,
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
-            "platform": "Handastech | هندسة تك"
+            "platform": "Handastech",
+            "course_id": course_code,
+            "course_title": course_title or course_code,
         }
     }
 

@@ -49,11 +49,24 @@
 				:style="watermarkStyle"
 			>
 				<div
-					class="ht-ghost-tag inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-white/20 text-white shadow-lg leading-none pointer-events-none select-none"
+					class="ht-ghost-tag inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-900/85 backdrop-blur-md border border-white/20 text-white shadow-xl leading-none pointer-events-none select-none text-xs"
 				>
-					<span class="text-xs font-semibold text-white tracking-wide">{{ watermarkData.full_name || 'طالب مسجل' }}</span>
-					<span class="text-white/40 text-xs">•</span>
-					<span class="text-xs font-mono font-bold text-sky-400 tracking-wider">#{{ watermarkData.student_id || 'HT-4821' }}</span>
+					<!-- Platform & Course Attribution -->
+					<div class="inline-flex items-center gap-1.5 font-medium">
+						<span class="text-sky-400 font-bold tracking-tight">{{ watermarkData.platform || 'Handastech' }}</span>
+						<span class="text-white/30 text-[10px]">•</span>
+						<span class="text-slate-300 font-mono font-semibold uppercase tracking-wider text-[11px]">{{ watermarkData.course_id || 'SBC-304' }}</span>
+					</div>
+
+					<!-- Divider -->
+					<span class="w-px h-3 bg-white/25"></span>
+
+					<!-- Trainee Forensic ID -->
+					<div class="inline-flex items-center gap-1.5">
+						<span class="font-semibold text-white/95 tracking-wide">{{ watermarkData.full_name || 'طالب مسجل' }}</span>
+						<span class="text-white/30 text-[10px]">•</span>
+						<span class="font-mono font-bold text-sky-400 tracking-wider">#{{ watermarkData.student_id || 'HT-6797' }}</span>
+					</div>
 				</div>
 			</div>
 
@@ -245,10 +258,11 @@ const isTampered = ref(false)
 
 const watermarkData = ref({
 	user_id: session?.user || 'student@builders.sa',
-	student_id: 'HT-4821',
+	student_id: 'HT-6797',
 	full_name: session?.user === 'student@builders.sa' ? 'م. أحمد الشمري' : (session?.user ? session.user.split('@')[0] : 'م. أحمد الشمري'),
 	email: session?.user || 'student@builders.sa',
-	platform: 'Handastech'
+	platform: 'Handastech',
+	course_id: 'SBC-304',
 })
 
 const watermarkStyle = ref({
@@ -410,23 +424,40 @@ const setupWatermarkAndProtection = async () => {
 		if (videoId === 'playlist' || props.file.includes('protected-stream')) {
 			videoId = 'sbc-304-1-1'
 		}
+		let courseSlug = ''
+		if (typeof window !== 'undefined' && window.location.pathname) {
+			const m = window.location.pathname.match(/\/courses\/([^\/]+)/)
+			if (m && m[1]) courseSlug = m[1]
+		}
 		const res = await call('builders.utils.get_playback_session', {
 			video_id: videoId,
+			course: courseSlug || undefined,
 		})
 		if (res && res.watermark) {
-			watermarkData.value = res.watermark
+			watermarkData.value = {
+				...watermarkData.value,
+				...res.watermark,
+				platform: res.watermark.platform || 'Handastech',
+				course_id: (res.watermark.course_id || courseSlug || 'SBC-304').toUpperCase(),
+			}
 		}
 	} catch (err) {
 		// Graceful fallback to active user session
 		const user = session.user || 'student@builders.sa'
+		let courseSlug = 'SBC-304'
+		if (typeof window !== 'undefined' && window.location.pathname) {
+			const m = window.location.pathname.match(/\/courses\/([^\/]+)/)
+			if (m && m[1]) courseSlug = m[1]
+		}
 		watermarkData.value = {
 			user_id: user,
 			student_id: 'HT-6797',
 			full_name: user === 'student@builders.sa' ? 'م. أحمد الشمري' : (user.split('@')[0] || 'طالب مسجل'),
 			email: user,
+			course_id: courseSlug.toUpperCase(),
+			platform: 'Handastech',
 			ip: '172.31.0.1',
 			timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC',
-			platform: 'Handastech | هندسة تك'
 		}
 	}
 }

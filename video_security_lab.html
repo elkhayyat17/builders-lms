@@ -194,32 +194,52 @@
     }
 
     .watermark-badge {
-      background: rgba(2, 6, 23, 0.45);
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 9999px;
-      padding: 4px 12px;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 11px;
-      line-height: 1.2;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      padding: 6px 14px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 12px;
+      line-height: 1;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
       display: inline-flex;
       align-items: center;
       gap: 8px;
       white-space: nowrap;
     }
 
+    .watermark-badge .brand-tag {
+      font-weight: 700;
+      color: #38bdf8;
+      letter-spacing: -0.2px;
+    }
+
+    .watermark-badge .course-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: #cbd5e1;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .watermark-badge .divider {
+      width: 1px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.25);
+    }
+
     .watermark-badge .name {
       font-weight: 600;
-      color: rgba(255, 255, 255, 0.85);
-      font-size: 11px;
+      color: #ffffff;
     }
 
     .watermark-badge .student-pill {
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
       color: #38bdf8;
-      font-size: 10px;
+      font-size: 11px;
       letter-spacing: 0.5px;
     }
 
@@ -560,12 +580,16 @@
           <!-- Video element -->
           <video id="hlsVideo" playsinline></video>
 
-          <!-- Watermark (UI/UX Pro Max Ghost Pill) -->
-          <div class="watermark-container" id="forensicWatermark" style="top: 6%; left: 6%; opacity: 0.55;">
+          <!-- Watermark (UI/UX Pro Max Multi-Attribution Ghost Pill) -->
+          <div class="watermark-container" id="forensicWatermark" style="top: 6%; left: 6%; opacity: 0.70;">
             <div class="watermark-badge">
+              <span class="brand-tag">Handastech</span>
+              <span style="color: rgba(255,255,255,0.3); font-size: 10px;">•</span>
+              <span class="course-tag" id="wmCourseId">SBC-304</span>
+              <span class="divider"></span>
               <span class="name" id="wmName">م. أحمد الشمري</span>
               <span style="color: rgba(255,255,255,0.3); font-size: 10px;">•</span>
-              <span class="student-pill" id="wmStudentId">#HT-4821</span>
+              <span class="student-pill" id="wmStudentId">#HT-6797</span>
             </div>
           </div>
 
@@ -722,9 +746,12 @@
         if (session && session.watermark) {
           document.getElementById('wmName').textContent = session.watermark.full_name || 'طالب مسجل';
           if (document.getElementById('wmStudentId')) {
-            document.getElementById('wmStudentId').textContent = `#${session.watermark.student_id || 'HT-4821'}`;
+            document.getElementById('wmStudentId').textContent = `#${session.watermark.student_id || 'HT-6797'}`;
           }
-          log(`✓ تم إصدار جلسة آمنة للدارس: ${session.watermark.full_name} (#${session.watermark.student_id || 'HT-4821'})`, 'success');
+          if (document.getElementById('wmCourseId')) {
+            document.getElementById('wmCourseId').textContent = session.watermark.course_id || 'SBC-304';
+          }
+          log(`✓ تم إصدار جلسة آمنة: [${session.watermark.platform || 'Handastech'} • ${session.watermark.course_id || 'SBC-304'}] للدارس: ${session.watermark.full_name} (#${session.watermark.student_id || 'HT-6797'})`, 'success');
         }
       } catch (err) {
         log('Session init warning (using default credentials)', 'warning');
