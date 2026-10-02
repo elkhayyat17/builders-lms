@@ -39,14 +39,75 @@ def resolve_file_path(file_path):
         
     return public_candidate
 
-def transcode_video(file_path, video_id=None, course=None, lesson=None, delete_original=True):
+def probe_video_resolution(input_path):
+    cmd = [
+        "ffprobe", "-v", "error",
+        "-select_streams", "v:0",
+        "-show_entries", "stream=width,height",
+        "-of", "csv=s=x:p=0",
+        input_path
+    ]
+    try:
+        res = subprocess.check_output(cmd).decode().strip()
+        parts = res.split("x")
+        if len(parts) == 2:
+            return int(parts[0]), int(parts[1])
+    except Exception:
+        pass
+    return 1920, 1080
+
+ALL_RENDITIONS = [
+    {
+        "name": "1080p",
+        "height": 1080,
+        "width": 1920,
+        "bitrate": "2800k",
+        "maxrate": "3200k",
+        "bufsize": "5600k",
+        "audio_bitrate": "128k",
+        "bandwidth": 3328000,
+    },
+    {
+        "name": "720p",
+        "height": 720,
+        "width": 1280,
+        "bitrate": "1400k",
+        "maxrate": "1600k",
+        "bufsize": "2800k",
+        "audio_bitrate": "128k",
+        "bandwidth": 1728000,
+    },
+    {
+        "name": "480p",
+        "height": 480,
+        "width": 854,
+        "bitrate": "800k",
+        "maxrate": "950k",
+        "bufsize": "1600k",
+        "audio_bitrate": "96k",
+        "bandwidth": 896000,
+    },
+    {
+        "name": "360p",
+        "height": 360,
+        "width": 640,
+        "bitrate": "400k",
+        "maxrate": "450k",
+        "bufsize": "800k",
+        "audio_bitrate": "64k",
+        "bandwidth": 464000,
+    },
+]
+
+def transcode_video(file_path, video_id=None, course=None, lesson=None, delete_original=True, multi_bitrate=True):
     """
-    Automated AES-128 HLS Transcoder.
+    Automated AES-128 Multi-Bitrate Adaptive HLS Transcoder (ABR).
     1. Generates 16-byte random key and IV.
     2. Stores key safely in MariaDB video security table.
-    3. Runs FFmpeg to create encrypted HLS stream.
-    4. Deletes original unencrypted raw MP4.
-    5. Returns stream metadata.
+    3. Transcodes video into multi-rendition HLS (1080p, 720p, 480p, 360p).
+    4. Generates standard Master Playlist with bandwidth tiers.
+    5. Deletes original unencrypted raw MP4.
+    6. Returns stream metadata.
     """
     abs_input_path = resolve_file_path(file_path)
     if not abs_input_path or not os.path.exists(abs_input_path):
@@ -78,36 +139,74 @@ def transcode_video(file_path, video_id=None, course=None, lesson=None, delete_o
     with open(temp_key_path, "wb") as f:
         f.write(key_bytes)
 
-    # Key info format:
-    # 1: Key URI (requested by HLS players via authenticated API)
-    # 2: Local path to binary key for FFmpeg to encrypt
-    # 3: IV in hex
     key_uri = f"/api/method/builders.utils.get_video_key?video_id={video_id}"
     with open(temp_keyinfo_path, "w", encoding="utf-8") as f:
         f.write(f"{key_uri}\n{temp_key_path}\n{iv_hex}\n")
 
-    playlist_path = os.path.join(output_dir, "playlist.m3u8")
-    segment_pattern = os.path.join(output_dir, "segment_%03d.ts")
-
-    ffmpeg_cmd = [
-        "ffmpeg", "-y",
-        "-i", abs_input_path,
-        "-c:v", "libx264", "-preset", "fast", "-crf", "22",
-        "-c:a", "aac", "-b:a", "128k",
-        "-hls_time", "6",
-        "-hls_playlist_type", "vod",
-        "-hls_key_info_file", temp_keyinfo_path,
-        "-hls_segment_filename", segment_pattern,
-        playlist_path
-    ]
+    # Probe source resolution to determine active renditions
+    src_width, src_height = probe_video_resolution(abs_input_path)
+    if multi_bitrate:
+        active_renditions = [r for r in ALL_RENDITIONS if src_height >= r["height"] - 50]
+        if not active_renditions:
+            active_renditions = [ALL_RENDITIONS[-1]]  # At least 360p
+    else:
+        active_renditions = [{
+            "name": "default",
+            "height": src_height,
+            "width": src_width,
+            "bitrate": "2200k",
+            "maxrate": "2600k",
+            "bufsize": "4400k",
+            "audio_bitrate": "128k",
+            "bandwidth": 2328000
+        }]
 
     try:
-        proc = subprocess.run(
-            ffmpeg_cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            check=True
-        )
+        # Transcode each rendition
+        for r in active_renditions:
+            rendition_m3u8 = os.path.join(output_dir, f"{r['name']}.m3u8")
+            segment_pattern = os.path.join(output_dir, f"{r['name']}_%03d.ts")
+
+            ffmpeg_cmd = [
+                "ffmpeg", "-y",
+                "-i", abs_input_path,
+                "-vf", f"scale=-2:{r['height']}",
+                "-c:v", "libx264", "-preset", "veryfast",
+                "-b:v", r["bitrate"], "-maxrate", r["maxrate"], "-bufsize", r["bufsize"],
+                "-c:a", "aac", "-b:a", r["audio_bitrate"],
+                "-hls_time", "6",
+                "-hls_playlist_type", "vod",
+                "-hls_key_info_file", temp_keyinfo_path,
+                "-hls_segment_filename", segment_pattern,
+                rendition_m3u8
+            ]
+
+            subprocess.run(
+                ffmpeg_cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=True
+            )
+
+        # Generate Master Playlist (playlist.m3u8) referencing all variants
+        master_playlist_path = os.path.join(output_dir, "playlist.m3u8")
+        if len(active_renditions) > 1:
+            master_lines = ["#EXTM3U", "#EXT-X-VERSION:3"]
+            for r in active_renditions:
+                master_lines.append(f'#EXT-X-STREAM-INF:BANDWIDTH={r["bandwidth"]},RESOLUTION={r["width"]}x{r["height"]},NAME="{r["name"]}"')
+                master_lines.append(f'{r["name"]}.m3u8')
+            with open(master_playlist_path, "w", encoding="utf-8") as f:
+                f.write("\n".join(master_lines) + "\n")
+        else:
+            # Single rendition backward-compat
+            single_r = active_renditions[0]
+            single_file = os.path.join(output_dir, f"{single_r['name']}.m3u8")
+            if os.path.exists(single_file):
+                with open(single_file, "r", encoding="utf-8") as sf:
+                    content = sf.read()
+                with open(master_playlist_path, "w", encoding="utf-8") as mf:
+                    mf.write(content)
+
     except subprocess.CalledProcessError as e:
         err_msg = e.stderr.decode("utf-8", errors="replace")
         frappe.log_error(f"FFmpeg transcode failed for {video_id}: {err_msg}", "Video Transcoder")

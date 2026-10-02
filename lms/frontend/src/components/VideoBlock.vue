@@ -218,6 +218,10 @@
 					<Button>{{ playbackSpeedLabel }}</Button>
 				</Dropdown>
 
+				<Dropdown v-if="qualityLevels.length > 1" :options="qualityDropdownOptions">
+					<Button>{{ currentQualityLabel }}</Button>
+				</Dropdown>
+
 				<Button
 					variant="ghost"
 					@click="toggleMute"
@@ -504,6 +508,39 @@ const playbackSpeeds = [
 	{ label: '2x', value: 2 },
 ]
 
+// Quality / Adaptive Bitrate (ABR) States
+const qualityLevels = ref([])
+const currentQuality = ref(-1) // -1 is Auto ABR mode
+const currentQualityLabel = ref('Auto')
+const activeQualityResolution = ref('')
+
+const setQualityLevel = (levelIndex, label) => {
+	currentQuality.value = levelIndex
+	currentQualityLabel.value = label
+	if (hlsInstance) {
+		hlsInstance.currentLevel = levelIndex
+	}
+}
+
+const qualityDropdownOptions = computed(() => {
+	const options = [
+		{
+			label: currentQuality.value === -1 ? (activeQualityResolution.value ? `Auto (${activeQualityResolution.value})` : 'Auto (تلقائي)') : 'Auto (تلقائي)',
+			selected: currentQuality.value === -1,
+			onClick: () => setQualityLevel(-1, 'Auto'),
+		},
+	]
+	qualityLevels.value.forEach((lvl, idx) => {
+		const label = `${lvl.height}p`
+		options.push({
+			label,
+			selected: currentQuality.value === idx,
+			onClick: () => setQualityLevel(idx, label),
+		})
+	})
+	return options
+})
+
 const props = defineProps({
 	file: {
 		type: String,
@@ -624,17 +661,42 @@ const initHlsPlayer = async () => {
 		hlsInstance = new Hls({
 			debug: false,
 			enableWorker: true,
+			capLevelToPlayerSize: true,
+			startLevel: -1,
+			maxBufferLength: 30,
+			maxMaxBufferLength: 60,
 			xhrSetup: function (xhr) {
 				xhr.withCredentials = true
 			},
 		})
 
-		hlsInstance.loadSource(safeUrl(fileURL.value))
+		const rawUrl = safeUrl(fileURL.value)
+		const cacheBustUrl = rawUrl + (rawUrl.includes('?') ? '&' : '?') + 'abr=' + Date.now()
+		hlsInstance.loadSource(cacheBustUrl)
 		hlsInstance.attachMedia(videoRef.value)
 
-		hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
+		hlsInstance.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
 			if (videoRef.value) {
 				duration.value = videoRef.value.duration || 0
+			}
+			if (data && data.levels && data.levels.length > 0) {
+				qualityLevels.value = data.levels.map((lvl) => ({
+					height: lvl.height,
+					width: lvl.width,
+					bitrate: lvl.bitrate,
+					name: lvl.name || `${lvl.height}p`,
+				}))
+				currentQuality.value = -1
+			}
+		})
+
+		hlsInstance.on(Hls.Events.LEVEL_SWITCHED, (event, data) => {
+			if (data && data.level >= 0 && qualityLevels.value[data.level]) {
+				const active = qualityLevels.value[data.level]
+				activeQualityResolution.value = `${active.height}p`
+				if (currentQuality.value === -1) {
+					currentQualityLabel.value = `Auto (${active.height}p)`
+				}
 			}
 		})
 
