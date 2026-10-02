@@ -86,11 +86,34 @@ def create_builders_custom_fields():
                     "insert_after": "target_audience",
                     "module": "Builders",
                 },
-            ]
+            ],
+            "LMS Lesson Note": [
+                {
+                    "fieldname": "video_timestamp",
+                    "label": "Video Timestamp (Seconds)",
+                    "fieldtype": "Float",
+                    "insert_after": "color",
+                    "module": "Builders",
+                },
+                {
+                    "fieldname": "formatted_time",
+                    "label": "Formatted Time (mm:ss)",
+                    "fieldtype": "Data",
+                    "insert_after": "video_timestamp",
+                    "module": "Builders",
+                },
+                {
+                    "fieldname": "is_pinned",
+                    "label": "Pinned Note",
+                    "fieldtype": "Check",
+                    "insert_after": "formatted_time",
+                    "module": "Builders",
+                },
+            ],
         },
         update=True,
     )
-    print("✅ Builders custom fields created on LMS Course")
+    print("✅ Builders custom fields created on LMS Course and LMS Lesson Note")
 
 
 def seed_lms_categories():
