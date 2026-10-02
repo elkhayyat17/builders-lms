@@ -111,6 +111,29 @@
 				</Button>
 			</div>
 
+			<!-- SUSPICIOUS SCREEN CAPTURE LOCKDOWN (SNIPPING TOOL & RECORDING DEFENSE) -->
+			<div
+				v-if="isCaptureLocked && !isTampered"
+				id="ht-capture-lockdown-shield"
+				class="absolute inset-0 z-50 bg-slate-950/98 backdrop-blur-3xl flex flex-col items-center justify-center p-6 text-center text-white"
+			>
+				<div class="w-16 h-16 rounded-full bg-red-600/20 border border-red-500/50 flex items-center justify-center text-red-500 mb-3 text-3xl font-bold animate-pulse">
+					🚫
+				</div>
+				<h3 class="text-base sm:text-lg font-bold text-red-400 mb-2">
+					تنبيه أمني: تم رصد محاولة تسجيل أو تصوير للشاشة
+				</h3>
+				<p class="text-xs sm:text-sm text-slate-300 max-w-md mb-2 leading-relaxed">
+					تم إيقاف تشغيل الفيديو آلياً نظراً لرصد تكرار فتح أدوات التقاط الشاشة (مثل Snipping Tool أو اختصارات النسخ والتسجيل).
+				</p>
+				<p class="text-[11px] text-amber-300/90 font-mono mb-4 bg-amber-950/40 px-3 py-1.5 rounded border border-amber-500/30">
+					معرّف المتدرب: #{{ watermarkData.student_id }} • جلسة مراقبة أمنياً
+				</p>
+				<Button variant="solid" theme="danger" @click="resolveCaptureLockdown">
+					أقر بالالتزام واستئناف المشاهدة
+				</Button>
+			</div>
+
 			<!-- CONCURRENT STREAM LOCKOUT OVERLAY (STAGE 2) -->
 			<div
 				v-if="isStreamLocked"
@@ -298,6 +321,8 @@ let moveTimeout = null
 
 const isTampered = ref(false)
 const isWindowBlurred = ref(false)
+const isCaptureLocked = ref(false)
+const recentBlurTimestamps = ref([])
 const isStreamLocked = ref(false)
 const streamSessionId = ref(null)
 let wasPlayingBeforeBlur = false
@@ -361,22 +386,26 @@ const handleWindowBlur = () => {
 		wasPlayingBeforeBlur = true
 		if (videoRef.value) videoRef.value.pause()
 		playing.value = false
-		isWindowBlurred.value = true
+
+		const now = Date.now()
+		recentBlurTimestamps.value = recentBlurTimestamps.value.filter(t => now - t < 45000)
+		recentBlurTimestamps.value.push(now)
+
+		// Repeated blur in a short window indicates active Snipping Tool / external recording overlay
+		if (recentBlurTimestamps.value.length >= 2) {
+			isCaptureLocked.value = true
+			isWindowBlurred.value = false
+		} else {
+			isWindowBlurred.value = true
+		}
 	}
 }
 
 const handleWindowFocus = () => {
-	if (isWindowBlurred.value) {
-		isWindowBlurred.value = false
-		if (wasPlayingBeforeBlur) {
-			wasPlayingBeforeBlur = false
-			if (videoRef.value) {
-				videoRef.value.play().then(() => {
-					playing.value = true
-				}).catch(() => {})
-			}
-		}
-	}
+	// Intentionally do NOT auto-resume playback on focus.
+	// Auto-resuming allows background screen recording tools (e.g. Snipping Tool recording)
+	// to capture video without user intervention.
+	// We require an explicit user click on the overlay button.
 }
 
 const resumeAfterBlur = () => {
@@ -388,11 +417,31 @@ const resumeAfterBlur = () => {
 	}
 }
 
+const resolveCaptureLockdown = () => {
+	isCaptureLocked.value = false
+	recentBlurTimestamps.value = []
+	if (videoRef.value) {
+		videoRef.value.play().then(() => {
+			playing.value = true
+		}).catch(() => {})
+	}
+}
+
 const handleVisibilityChange = () => {
 	if (document.hidden) {
 		handleWindowBlur()
-	} else {
-		handleWindowFocus()
+	}
+}
+
+const triggerCaptureLockdown = () => {
+	isCaptureLocked.value = true
+	isWindowBlurred.value = false
+	if (videoRef.value) {
+		videoRef.value.pause()
+		playing.value = false
+	}
+	if (navigator.clipboard && navigator.clipboard.writeText) {
+		navigator.clipboard.writeText('Handastech LMS Protected Content - محتوى تعليمي محمي يمنع تسجيله أو تداوله').catch(() => {})
 	}
 }
 
@@ -415,16 +464,15 @@ const handleKeyDown = (e) => {
 		e.stopPropagation()
 		return false
 	}
-	// PrintScreen deterrence
+	// Snipping tool detection (Win+Shift+S / Shift+S / PrintScreen)
+	if (e.key === 'PrintScreen' || e.keyCode === 44 || (e.shiftKey && (e.key === 's' || e.key === 'S') && (e.metaKey || e.ctrlKey))) {
+		triggerCaptureLockdown()
+	}
+}
+
+const handleKeyUp = (e) => {
 	if (e.key === 'PrintScreen' || e.keyCode === 44) {
-		isWindowBlurred.value = true
-		if (videoRef.value) {
-			videoRef.value.pause()
-			playing.value = false
-		}
-		if (navigator.clipboard && navigator.clipboard.writeText) {
-			navigator.clipboard.writeText('Handastech LMS Protected Content').catch(() => {})
-		}
+		triggerCaptureLockdown()
 	}
 }
 
@@ -504,6 +552,7 @@ onMounted(async () => {
 	window.addEventListener('focus', handleWindowFocus)
 	document.addEventListener('visibilitychange', handleVisibilityChange)
 	window.addEventListener('keydown', handleKeyDown, true)
+	window.addEventListener('keyup', handleKeyUp, true)
 
 	// Session & Account Sharing Defense Heartbeat
 	heartbeatTimer = setInterval(sendHeartbeat, 10000)
@@ -541,6 +590,7 @@ onBeforeUnmount(() => {
 	window.removeEventListener('focus', handleWindowFocus)
 	document.removeEventListener('visibilitychange', handleVisibilityChange)
 	window.removeEventListener('keydown', handleKeyDown, true)
+	window.removeEventListener('keyup', handleKeyUp, true)
 })
 
 // Dynamic HLS.js Loader & Player
@@ -675,52 +725,42 @@ const startWatermarkDrift = () => {
 	if (cycleTimer) clearTimeout(cycleTimer)
 	if (moveTimeout) clearTimeout(moveTimeout)
 
-	const VISIBLE_DURATION_MS = 9000
-	const BASE_HIDDEN_MS = 14000
-	const FADE_TRANSITION_MS = 1000
+	const MOVE_INTERVAL_MS = 10000
 
-	const runDutyCycle = () => {
-		// 1. Gently fade in
+	const runDrift = () => {
+		let nextIndex = Math.floor(Math.random() * peripheralZones.length)
+		if (nextIndex === currentZoneIndex) {
+			nextIndex = (nextIndex + 1) % peripheralZones.length
+		}
+		currentZoneIndex = nextIndex
+		const zone = peripheralZones[currentZoneIndex]
+
+		const subtleOpacities = ['0.35', '0.45', '0.50', '0.40']
+		const nextOpacity = subtleOpacities[Math.floor(Math.random() * subtleOpacities.length)]
+
 		watermarkStyle.value = {
-			...watermarkStyle.value,
-			opacity: '0.70',
-			transition: `opacity ${FADE_TRANSITION_MS}ms ease-in-out`,
+			top: zone.top,
+			left: zone.left,
+			right: zone.right,
+			bottom: zone.bottom,
+			opacity: nextOpacity,
+			transition: 'top 1.2s ease-in-out, left 1.2s ease-in-out, right 1.2s ease-in-out, bottom 1.2s ease-in-out, opacity 0.8s ease-in-out',
 		}
 
-		// 2. Schedule fade out after VISIBLE_DURATION_MS
-		cycleTimer = setTimeout(() => {
-			watermarkStyle.value = {
-				...watermarkStyle.value,
-				opacity: '0',
-				transition: `opacity ${FADE_TRANSITION_MS}ms ease-in-out`,
-			}
-
-			// 3. Reposition silently while completely invisible
-			moveTimeout = setTimeout(() => {
-				let nextIndex = Math.floor(Math.random() * peripheralZones.length)
-				if (nextIndex === currentZoneIndex) {
-					nextIndex = (nextIndex + 1) % peripheralZones.length
-				}
-				currentZoneIndex = nextIndex
-				const zone = peripheralZones[currentZoneIndex]
-
-				watermarkStyle.value = {
-					top: zone.top,
-					left: zone.left,
-					right: zone.right,
-					bottom: zone.bottom,
-					opacity: '0',
-					transition: 'none',
-				}
-
-				// 4. Schedule next appearance after quiet interval
-				const randomHiddenDuration = BASE_HIDDEN_MS + Math.floor(Math.random() * 4000)
-				cycleTimer = setTimeout(runDutyCycle, randomHiddenDuration)
-			}, FADE_TRANSITION_MS + 200)
-		}, VISIBLE_DURATION_MS)
+		cycleTimer = setTimeout(runDrift, MOVE_INTERVAL_MS)
 	}
 
-	runDutyCycle()
+	// Always active on screen - never 0 opacity, ensuring zero clean recording frames
+	watermarkStyle.value = {
+		top: peripheralZones[0].top,
+		left: peripheralZones[0].left,
+		right: peripheralZones[0].right,
+		bottom: peripheralZones[0].bottom,
+		opacity: '0.45',
+		transition: 'opacity 0.8s ease-in-out',
+	}
+
+	cycleTimer = setTimeout(runDrift, MOVE_INTERVAL_MS)
 }
 
 // Anti-Tamper Guard using MutationObserver (Zero False-Positives, 100% Real Attack Detection)
