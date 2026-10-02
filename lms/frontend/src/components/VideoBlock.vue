@@ -255,7 +255,7 @@
 		<Quiz
 			v-if="showQuiz && !readOnly"
 			:quiz="currentQuiz"
-			@resume="resumeVideo"
+			@resume="resumeQuiz"
 		/>
 
 		<!-- EDIT QUIZ MODAL -->
@@ -286,7 +286,7 @@
 	</div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, computed, watch, onBeforeUnmount, nextTick } from 'vue'
 import { Button, Dialog, Dropdown, call } from 'frappe-ui'
 import { formatSeconds, formatTimestamp } from '@/utils/format'
@@ -377,12 +377,6 @@ watch(playing, (newVal) => {
 	if (newVal) {
 		sendHeartbeat()
 	}
-})
-
-defineExpose({
-	sendHeartbeat,
-	isStreamLocked,
-	reclaimPlayback,
 })
 
 const handleWindowBlur = () => {
@@ -917,7 +911,7 @@ watch(quizLoadTimer, () => {
 	}
 })
 
-const resumeVideo = (restart = false) => {
+const resumeQuiz = (restart = false) => {
 	showQuiz.value = false
 	currentQuiz.value = null
 	updateCurrentTime()
@@ -959,10 +953,31 @@ const playVideo = () => {
 	playing.value = true
 }
 
+const getCurrentTime = (): number => {
+	return videoRef.value ? videoRef.value.currentTime : currentTime.value
+}
+
+const seekTo = (seconds: number) => {
+	if (videoRef.value) {
+		const target = Math.max(0, Math.min(seconds, duration.value || seconds))
+		videoRef.value.currentTime = target
+		currentTime.value = target
+		if (videoRef.value.paused) {
+			videoRef.value.play().catch(() => {})
+		}
+	}
+}
+
 const pauseVideo = () => {
-	if (!videoRef.value) return
-	videoRef.value.pause()
-	playing.value = false
+	if (videoRef.value && !videoRef.value.paused) {
+		videoRef.value.pause()
+	}
+}
+
+const resumeVideo = () => {
+	if (videoRef.value && videoRef.value.paused) {
+		videoRef.value.play().catch(() => {})
+	}
 }
 
 const togglePlay = () => {
@@ -1029,6 +1044,19 @@ const dropdownOptions = computed(() =>
 		onClick: () => setPlaybackSpeed(speed.value, speed.label),
 	}))
 )
+
+defineExpose({
+	getCurrentTime,
+	seekTo,
+	pauseVideo,
+	resumeVideo,
+	resetTamperState,
+	resolveCaptureLockdown,
+	playing,
+	sendHeartbeat,
+	isStreamLocked,
+	reclaimPlayback,
+})
 </script>
 
 <style scoped>
