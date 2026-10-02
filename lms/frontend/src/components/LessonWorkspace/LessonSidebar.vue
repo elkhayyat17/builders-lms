@@ -103,7 +103,7 @@
 				<component :is="tab.icon" class="size-4.5" />
 				<div
 					v-if="activeTab === tab.id"
-					class="absolute start-0 top-1.5 bottom-1.5 w-1 bg-surface-blue-5 rounded-e"
+					class="absolute start-0 top-1.5 bottom-1.5 w-1 bg-surface-blue-5 rounded-e-4"
 				/>
 			</button>
 		</div>

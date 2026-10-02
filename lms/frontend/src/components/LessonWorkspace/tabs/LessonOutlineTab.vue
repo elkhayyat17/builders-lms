@@ -1,5 +1,5 @@
 <template>
-	<div class="lesson-outline-tab flex flex-col h-full min-h-0">
+	<div class="flex flex-col h-full min-h-0">
 		<!-- Outline Header & Search -->
 		<div class="px-4 pt-3 pb-2 shrink-0 border-b border-outline-gray-2 bg-surface-base">
 			<!-- Overall Course Progress Bar -->
@@ -184,7 +184,7 @@
 							<!-- Active Strip Indicator -->
 							<div
 								v-if="isLessonActive(lesson)"
-								class="absolute start-0 top-0 bottom-0 w-1 bg-surface-blue-5 rounded-e"
+								class="absolute start-0 top-0 bottom-0 w-1 bg-surface-blue-5 rounded-e-4"
 							/>
 
 							<!-- Status Icon (Left/Start) -->
@@ -207,7 +207,7 @@
 
 								<!-- Active Icon -->
 								<template v-else-if="isLessonActive(lesson)">
-									<div class="size-3.5 rounded-full border-2 border-surface-blue-5 flex items-center justify-center">
+									<div class="size-3.5 rounded-full border-2 border-outline-blue-2 flex items-center justify-center">
 										<div class="size-1.5 rounded-full bg-surface-blue-5" />
 									</div>
 								</template>
@@ -563,9 +563,3 @@ function onLessonClick(lesson: LessonItem) {
 	}
 }
 </script>
-
-<style scoped>
-.lesson-outline-tab {
-	direction: inherit;
-}
-</style>

@@ -43,7 +43,7 @@
 					class="px-2.5 py-1 rounded-full font-medium transition-colors cursor-pointer shrink-0 inline-flex items-center gap-1"
 					:class="
 						activeFilter === filter.id
-							? 'bg-surface-gray-8 text-white font-semibold'
+							? 'bg-surface-gray-8 text-ink-gray-2 font-semibold'
 							: 'bg-surface-gray-2 text-ink-gray-7 hover:bg-surface-gray-3'
 					"
 				>
@@ -52,7 +52,7 @@
 					<span
 						v-if="filterCounts[filter.id] > 0"
 						class="ms-0.5 px-1 py-0.2 rounded-full text-[9px] font-bold"
-						:class="activeFilter === filter.id ? 'bg-white/20 text-white' : 'bg-surface-gray-3 text-ink-gray-6'"
+						:class="activeFilter === filter.id ? 'bg-surface-gray-9 text-ink-gray-2' : 'bg-surface-gray-3 text-ink-gray-6'"
 					>
 						{{ filterCounts[filter.id] }}
 					</span>
@@ -457,17 +457,17 @@ function getFormatBadgeClasses(ext: string): string {
 	switch (ext?.toUpperCase()) {
 		case 'DWG':
 		case 'DXF':
-			return 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800'
+			return 'bg-surface-blue-2 text-ink-blue-5 border-outline-blue-2'
 		case 'XLSX':
 		case 'XLS':
 		case 'CSV':
-			return 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800'
+			return 'bg-surface-green-2 text-ink-green-8 border-outline-green-2'
 		case 'PDF':
-			return 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800'
+			return 'bg-surface-red-2 text-ink-red-5 border-outline-red-2'
 		case 'ZIP':
 		case 'RAR':
 		case '7Z':
-			return 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800'
+			return 'bg-surface-amber-2 text-ink-amber-5 border-outline-amber-2'
 		default:
 			return 'bg-surface-gray-2 text-ink-gray-7 border-outline-gray-2'
 	}

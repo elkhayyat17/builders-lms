@@ -197,10 +197,8 @@
 					<!-- Video Timestamp Anchor (Task 4 Brief Requirement) -->
 					<div class="p-3 rounded-6 border border-outline-blue-2 bg-surface-blue-1/50 transition-all">
 						<label class="flex items-center gap-2.5 cursor-pointer">
-							<input
-								type="checkbox"
+							<Checkbox
 								v-model="linkToTimestamp"
-								class="size-4 rounded text-surface-blue-5 focus:ring-outline-blue-2 border-outline-gray-3 cursor-pointer"
 							/>
 							<div class="flex-1 min-w-0">
 								<div class="flex items-center gap-1.5 text-xs font-bold text-ink-gray-9">
@@ -323,7 +321,7 @@
 							type="button"
 							@click="activeFilter = 'all'"
 							class="px-2.5 py-1 rounded-full font-medium transition-colors cursor-pointer shrink-0"
-							:class="activeFilter === 'all' ? 'bg-surface-gray-7 text-white font-semibold' : 'bg-surface-gray-2 text-ink-gray-7 hover:bg-surface-gray-3'"
+							:class="activeFilter === 'all' ? 'bg-surface-gray-8 text-ink-gray-2 font-semibold' : 'bg-surface-gray-2 text-ink-gray-7 hover:bg-surface-gray-3'"
 						>
 							{{ __('الكل / All') }}
 						</button>
@@ -331,7 +329,7 @@
 							type="button"
 							@click="activeFilter = 'timestamps'"
 							class="px-2.5 py-1 rounded-full font-medium inline-flex items-center gap-1 transition-colors cursor-pointer shrink-0"
-							:class="activeFilter === 'timestamps' ? 'bg-surface-blue-5 text-white font-semibold' : 'bg-surface-blue-1 text-ink-blue-5 hover:bg-surface-blue-2 border border-outline-blue-2'"
+							:class="activeFilter === 'timestamps' ? 'bg-surface-blue-2 text-ink-blue-5 font-semibold border border-outline-blue-2' : 'bg-surface-gray-2 text-ink-gray-7 hover:bg-surface-gray-3'"
 						>
 							<Clock class="size-3" />
 							<span>{{ __('مرتبطة بالفيديو') }}</span>
@@ -458,7 +456,7 @@
 
 <script setup lang="ts">
 import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue'
-import { Button, call, createResource, toast } from 'frappe-ui'
+import { Button, Checkbox, call, createResource, toast } from 'frappe-ui'
 import {
 	ArrowLeft,
 	Clock,
