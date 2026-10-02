@@ -82,7 +82,7 @@
 					{{ __('لم يتم العثور على نتائج للبحث') }}
 				</h4>
 				<p class="text-xs text-ink-gray-5 mb-3">
-					{{ __('No lessons matching "{0}"').replace('{0}', searchQuery) }}
+					{{ `${__('No lessons matching')} "${searchQuery}"` }}
 				</p>
 				<button
 					type="button"

@@ -78,7 +78,7 @@
 					{{ __('لم يتم العثور على ملفات مطابقة') }}
 				</h4>
 				<p class="text-xs text-ink-gray-5 mb-3">
-					{{ __('No files found matching "{0}"').replace('{0}', searchQuery) }}
+					{{ `${__('No files found matching')} "${searchQuery}"` }}
 				</p>
 				<button
 					type="button"
@@ -512,7 +512,7 @@ function downloadResource(item: ResourceItem) {
 	a.click()
 	document.body.removeChild(a)
 
-	toast.success(__('بدء تحميل {0}').replace('{0}', item.file_name))
+	toast.success(`${__('بدء تحميل')} ${item.file_name}`)
 }
 
 function copyResourceLink(item: ResourceItem) {

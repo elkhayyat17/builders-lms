@@ -111,49 +111,53 @@
 		<!-- Tab Content Container -->
 		<div
 			v-if="!isCollapsed"
-			class="flex-1 min-h-0 overflow-hidden bg-surface-base"
+			class="flex-1 min-h-0 overflow-hidden bg-surface-base relative"
 		>
 			<!-- TAB 1: Course Outline -->
-			<LessonOutlineTab
-				v-show="activeTab === 'outline'"
-				:courseName="courseName"
-				:courseTitle="courseTitle"
-				:currentLesson="currentLesson"
-				:currentLessonNumber="currentLessonNumber"
-				:selectedLessonNumber="currentLessonNumber"
-				:completedLesson="completedLesson"
-				:progress="progress"
-				@switchLesson="onSwitchLesson"
-				@select-lesson="(payload) => emit('select-lesson', payload)"
-			/>
+			<div v-show="activeTab === 'outline'" class="h-full overflow-y-auto">
+				<LessonOutlineTab
+					:courseName="courseName"
+					:courseTitle="courseTitle"
+					:currentLesson="currentLesson"
+					:currentLessonNumber="currentLessonNumber"
+					:selectedLessonNumber="currentLessonNumber"
+					:completedLesson="completedLesson"
+					:progress="progress"
+					@switchLesson="onSwitchLesson"
+					@select-lesson="(payload) => emit('select-lesson', payload)"
+				/>
+			</div>
 
 			<!-- TAB 2: Timestamped Smart Notes (Task 3 Component) -->
-			<TimestampedNotes
-				v-show="activeTab === 'notes'"
-				:lesson="currentLesson"
-				:course="courseName"
-				:videoPlayer="videoPlayer"
-				@seek="onSeek"
-				@updateNotes="emit('updateNotes')"
-			/>
+			<div v-show="activeTab === 'notes'" class="h-full overflow-y-auto p-3">
+				<TimestampedNotes
+					:lesson="currentLesson"
+					:course="courseName"
+					:videoPlayer="videoPlayer"
+					@seek="onSeek"
+					@updateNotes="emit('updateNotes')"
+				/>
+			</div>
 
 			<!-- TAB 3: Q&A Discussions with Timestamp Capture -->
-			<LessonQATab
-				v-show="activeTab === 'qa'"
-				:courseName="courseName"
-				:currentLesson="currentLesson"
-				:videoPlayer="videoPlayer"
-				:allowDiscussions="allowDiscussions"
-				@seek="onSeek"
-			/>
+			<div v-show="activeTab === 'qa'" class="h-full overflow-y-auto p-3">
+				<LessonQATab
+					:courseName="courseName"
+					:currentLesson="currentLesson"
+					:videoPlayer="videoPlayer"
+					:allowDiscussions="allowDiscussions"
+					@seek="onSeek"
+				/>
+			</div>
 
 			<!-- TAB 4: Downloadable Civil Engineering Resources -->
-			<LessonResourcesTab
-				v-show="activeTab === 'resources'"
-				:courseName="courseName"
-				:currentLesson="currentLesson"
-				:lessonTitle="currentLessonTitle"
-			/>
+			<div v-show="activeTab === 'resources'" class="h-full overflow-y-auto p-3">
+				<LessonResourcesTab
+					:courseName="courseName"
+					:currentLesson="currentLesson"
+					:lessonTitle="currentLessonTitle"
+				/>
+			</div>
 		</div>
 	</aside>
 </template>

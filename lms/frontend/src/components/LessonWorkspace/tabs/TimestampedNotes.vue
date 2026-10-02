@@ -64,7 +64,7 @@
 					<span class="text-sm font-medium">
 						{{
 							videoPlayer
-								? __('Add note at {0}').replace('{0}', formatSeconds(currentVideoTime))
+								? `${__('Add note at')} ${formatSeconds(currentVideoTime)}`
 								: __('Add a note')
 						}}
 					</span>

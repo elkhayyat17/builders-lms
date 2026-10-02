@@ -597,9 +597,6 @@ const isTheaterMode = ref(false)
 const videoPlayerRef = ref<any>(null)
 
 const ActiveSidebar = computed(() => {
-	if ((StudentLessonSidebar as any)?.name === 'StudentLessonSidebar') {
-		return StudentLessonSidebar
-	}
 	return LessonSidebar
 })
 

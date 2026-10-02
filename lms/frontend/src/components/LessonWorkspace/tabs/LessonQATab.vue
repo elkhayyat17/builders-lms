@@ -355,7 +355,7 @@
 							{{ __('لم يتم العثور على أسئلة مطابقة') }}
 						</h4>
 						<p class="text-xs text-ink-gray-5 mb-3">
-							{{ __('No questions found matching "{0}"').replace('{0}', searchQuery) }}
+							{{ `${__('No questions found matching')} "${searchQuery}"` }}
 						</p>
 						<button
 							type="button"
