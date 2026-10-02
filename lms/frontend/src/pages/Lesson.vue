@@ -50,7 +50,11 @@
 			</Button>
 		</div>
 
-		<div class="grid md:grid-cols-[70%,30%] sm:h-[94vh]">
+		<!-- 1. LOCKED / NO PREVIEW STATE -->
+		<div
+			v-if="lesson.data.no_preview || lesson.data.locked"
+			class="grid md:grid-cols-[1fr,380px] lg:grid-cols-[70%,30%] sm:h-[94vh]"
+		>
 			<div v-if="lesson.data.no_preview" class="sm:border-e">
 				<div class="shadow rounded-5 w-3/4 mt-10 mx-auto text-center p-4">
 					<div class="flex items-center justify-center mt-4 gap-x-2">
@@ -96,175 +100,236 @@
 					@done="goToCurrentLesson()"
 				/>
 			</div>
+
+			<!-- Sidebar for Locked / Preview state -->
+			<aside v-if="!isMobile" class="sticky top-10 h-[94vh] bg-surface-base">
+				<component
+					:is="ActiveSidebar"
+					:courseName="courseName"
+					:courseTitle="lesson.data.course_title"
+					:currentLesson="lesson.data.name"
+					:currentLessonNumber="`${chapterNumber}-${lessonNumber}`"
+					:currentLessonTitle="lesson.data.title"
+					:videoPlayer="videoPlayerRef"
+					:allowDiscussions="false"
+					:progress="lessonProgress"
+					:completedLesson="completedLesson"
+					@switchLesson="goToLessonNumber"
+					@select-lesson="(p) => goToLessonNumber(`${p.chapterNumber}-${p.lessonNumber}`)"
+				/>
+			</aside>
+		</div>
+
+		<!-- 2. ACTIVE LESSON WORKSPACE -->
+		<div
+			v-else
+			ref="lessonContainer"
+			class="bg-surface-base min-w-0"
+			:class="{
+				'overflow-y-auto': zenModeEnabled,
+			}"
+		>
+			<!-- Zen Mode View -->
+			<div
+				v-if="zenModeEnabled"
+				class="w-full md:w-3/5 mx-auto border-none !pt-10 pb-20 px-5"
+			>
+				<div class="flex flex-col space-y-3 md:space-y-0 md:flex-row md:items-center justify-between pb-4 border-b border-outline-gray-2 mb-6">
+					<div class="flex flex-col">
+						<h1 class="text-3xl sm:text-4xl font-extrabold text-ink-gray-9">
+							{{ lesson.data.title }}
+						</h1>
+						<div class="relative flex items-center gap-x-2 text-sm text-ink-gray-7 group w-fit mt-2">
+							<span>{{ lesson.data.chapter_title }} — {{ lesson.data.course_title }}</span>
+							<span class="lucide-info size-3 text-ink-blue-5" />
+							<div
+								class="hidden group-hover:block [@media(hover:none)]:block [@media(hover:none)]:static [@media(hover:none)]:mt-0 rounded-4 bg-surface-gray-10 px-2 py-1 text-xs text-ink-base shadow-xl absolute start-0 top-full mt-2"
+							>
+								{{ Math.ceil(lesson.data.membership.progress) }}% {{ __('completed') }}
+							</div>
+						</div>
+					</div>
+
+					<div class="flex items-center gap-x-2 mt-2 md:mt-0">
+						<Button
+							@click="showDiscussionsInZenMode()"
+							:label="__('Toggle discussions')"
+						>
+							<template #icon>
+								<span class="lucide-message-circle-question size-4" />
+							</template>
+						</Button>
+						<LessonNavButtons
+							:hasPrev="!!lesson.data.prev"
+							:hasNext="!!(lesson.data.next && canGoNext)"
+							:courseName="courseName"
+							@switch="switchLesson"
+						/>
+					</div>
+				</div>
+
+				<!-- Zen Video Player (if has video) -->
+				<div v-if="hasVideo" class="w-full aspect-video rounded-xl overflow-hidden mb-8 border border-outline-gray-2 bg-slate-950">
+					<VideoBlock
+						ref="videoPlayerRef"
+						:file="primaryVideoUrl"
+						:readOnly="true"
+					/>
+				</div>
+
+				<!-- Zen Overview -->
+				<LessonOverview
+					:lesson="lesson.data"
+					:zenModeEnabled="true"
+					:contentUnreadable="contentUnreadable"
+					:allowInstructorContent="allowInstructorContent()"
+					:hasInstructorNotes="hasInstructorNotesToRender(lesson.data.instructor_content)"
+					:hasVideo="hasVideo"
+					@toggleInlineMenu="toggleInlineMenu"
+				/>
+
+				<!-- Zen Discussions Container -->
+				<div
+					v-if="lesson.data && (allowDiscussions || tabs.length > 1)"
+					class="mt-10 pb-20 pt-5 border-t px-5"
+					ref="discussionsContainer"
+				>
+					<Discussions
+						v-if="allowDiscussions"
+						:title="'Questions'"
+						:doctype="'Course Lesson'"
+						:docname="lesson.data.name"
+						:key="lesson.data.name"
+						:emptyStateText="__('Ask a question to get help from the community.')"
+					/>
+				</div>
+			</div>
+
+			<!-- Standard & Theater Mode Workspace Grid -->
 			<div
 				v-else
-				ref="lessonContainer"
-				class="bg-surface-base min-w-0"
-				:class="{
-					'overflow-y-auto': zenModeEnabled,
-				}"
+				class="grid"
+				:class="[
+					isTheaterMode
+						? 'grid-cols-1 md:grid-cols-[1fr,380px] lg:grid-cols-[70%,30%]'
+						: 'grid-cols-1 md:grid-cols-[1fr,380px] lg:grid-cols-[70%,30%] sm:h-[94vh]',
+				]"
 			>
+				<!-- Top Video Player Section (if hasVideo) -->
 				<div
-					class="sm:border-e pt-8 sm:pt-5 pb-10 h-full"
-					:class="{
-						'w-full md:w-3/5 mx-auto border-none !pt-10': zenModeEnabled,
-					}"
+					v-if="hasVideo"
+					class="w-full bg-slate-950 transition-all duration-300"
+					:class="[
+						isTheaterMode
+							? 'col-span-full md:col-span-2 md:row-start-1 border-b border-outline-gray-2'
+							: 'md:col-start-1 md:col-end-2 md:row-start-1 border-b border-outline-gray-2',
+					]"
 				>
-					<div class="px-5">
-						<div
-							class="flex flex-col space-y-3 md:space-y-0 md:flex-row md:items-center justify-between"
-						>
-							<div class="flex flex-col">
-								<h1 class="text-4xl-semibold text-ink-gray-9">
-									{{ lesson.data.title }}
-								</h1>
+					<div
+						class="w-full mx-auto"
+						:class="isTheaterMode ? 'max-w-[1600px] aspect-video max-h-[82vh]' : 'aspect-video'"
+					>
+						<VideoBlock
+							ref="videoPlayerRef"
+							:file="primaryVideoUrl"
+							:readOnly="true"
+						/>
+					</div>
 
-								<div
-									v-if="zenModeEnabled"
-									class="relative flex items-center gap-x-2 text-sm text-ink-gray-7 group w-fit mt-2"
+					<!-- Player Subheader Bar with Theater Mode Toggle -->
+					<div class="px-4 sm:px-5 py-2.5 bg-surface-gray-1 border-t border-outline-gray-2/40 flex items-center justify-between gap-3 flex-wrap select-none">
+						<div class="flex items-center gap-2 min-w-0">
+							<span class="flex size-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+							<span class="text-xs font-bold text-ink-gray-8 truncate">
+								{{ lesson.data.title }}
+							</span>
+						</div>
+
+						<div class="flex items-center gap-2 shrink-0">
+							<!-- Theater Mode Toggle Button -->
+							<Tooltip :text="isTheaterMode ? __('Standard Mode (Exit Theater)') : __('Theater Mode (Expand Video)')">
+								<button
+									type="button"
+									@click="toggleTheaterMode"
+									class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-outline-gray-2 bg-surface-base hover:bg-surface-gray-2 text-ink-gray-7 hover:text-ink-gray-9 transition-all cursor-pointer shadow-2xs group"
+									:title="isTheaterMode ? __('Standard Mode') : __('Theater Mode')"
 								>
-									<span>
-										{{ lesson.data.chapter_title }} -
-										{{ lesson.data.course_title }}
-									</span>
-									<span class="lucide-info size-3" />
-									<div
-										class="hidden group-hover:block [@media(hover:none)]:block [@media(hover:none)]:static [@media(hover:none)]:mt-0 rounded-4 bg-surface-gray-10 px-2 py-1 text-xs text-ink-base shadow-xl absolute start-0 top-full mt-2"
-									>
-										{{ Math.ceil(lesson.data.membership.progress) }}%
-										{{ __('completed') }}
-									</div>
-								</div>
-							</div>
+									<component
+										:is="isTheaterMode ? Minimize2 : Maximize2"
+										class="size-3.5 text-ink-blue-5 transition-transform group-hover:scale-110"
+									/>
+									<span>{{ isTheaterMode ? __('Standard Mode') : __('Theater Mode') }}</span>
+								</button>
+							</Tooltip>
 
-							<div
-								v-if="!zenModeEnabled && !isMobile"
-								class="flex items-center gap-x-2 mt-2 md:mt-0"
-							>
-								<Tooltip v-if="canGoZen()" :text="__('Zen Mode')">
-									<Button @click="goFullScreen()" :label="__('Zen Mode')">
-										<template #icon>
-											<span class="lucide-focus size-4" />
-										</template>
-									</Button>
-								</Tooltip>
-								<LessonNavButtons
-									:hasPrev="!!lesson.data.prev"
-									:hasNext="!!(lesson.data.next && canGoNext)"
-									:courseName="courseName"
-									@switch="switchLesson"
-								/>
-							</div>
-
-							<div
-								v-if="zenModeEnabled"
-								class="flex items-center gap-x-2 mt-2 md:mt-0"
-							>
-								<Button
-									@click="showDiscussionsInZenMode()"
-									:label="__('Toggle discussions')"
-								>
+							<!-- Zen Mode Button -->
+							<Tooltip v-if="canGoZen()" :text="__('Zen Mode')">
+								<Button variant="subtle" size="sm" @click="goFullScreen()" :label="__('Zen Mode')">
 									<template #icon>
-										<span class="lucide-message-circle-question size-4" />
+										<span class="lucide-focus size-3.5 text-ink-gray-6" />
 									</template>
 								</Button>
-								<LessonNavButtons
-									:hasPrev="!!lesson.data.prev"
-									:hasNext="!!(lesson.data.next && canGoNext)"
-									:courseName="courseName"
-									@switch="switchLesson"
-								/>
-							</div>
-						</div>
+							</Tooltip>
 
-						<div v-if="!zenModeEnabled" class="flex items-center mt-4 md:mt-2">
-							<span
-								class="h-6 me-1"
-								:class="{
-									'avatar-group overlap': lesson.data.instructors?.length > 1,
-								}"
-							>
-								<UserAvatar
-									v-for="instructor in lesson.data.instructors"
-									:key="instructor.name ?? instructor"
-									:user="instructor"
-								/>
-							</span>
-							<CourseInstructors
-								v-if="lesson.data?.instructors"
-								:instructors="lesson.data.instructors"
-							/>
-						</div>
-
-						<div
-							v-if="
-								hasInstructorNotesToRender(lesson.data.instructor_content) &&
-								allowInstructorContent()
-							"
-							class="bg-surface-gray-2 p-3 rounded-5 mt-6"
-						>
-							<h2 class="text-ink-gray-5 font-medium">
-								{{ __('Instructor Notes') }}
-							</h2>
-							<div
-								id="instructor-content"
-								class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-outline-gray-2 prose-th:border-outline-gray-2 prose-td:relative prose-th:relative prose-th:bg-surface-gray-2 prose-sm max-w-none !whitespace-normal"
-							></div>
-						</div>
-						<div
-							v-else-if="lesson.data.instructor_notes"
-							class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-outline-gray-2 prose-th:border-outline-gray-2 prose-td:relative prose-th:relative prose-th:bg-surface-gray-2 prose-sm max-w-none !whitespace-normal mt-8"
-						>
-							<LessonContent
-								:key="lesson.data.name"
-								:content="lesson.data.instructor_notes"
-							/>
-						</div>
-						<div
-							v-if="contentUnreadable"
-							class="flex items-center gap-3 rounded-6 bg-surface-amber-2 p-3 mt-8"
-						>
-							<div
-								class="grid size-7 shrink-0 place-items-center text-ink-amber-5"
-							>
-								<span class="lucide-circle-alert size-4" aria-hidden="true" />
-							</div>
-							<div class="flex min-w-0 flex-1 flex-col">
-								<span class="text-p-sm-medium text-ink-gray-8">
-									{{ __('This lesson could not be displayed') }}
-								</span>
-								<span class="text-p-sm text-ink-gray-6">
-									{{
-										__(
-											'Its content is stored in a form we cannot read. Reload the page, and tell your instructor if it keeps happening.'
-										)
-									}}
-								</span>
-							</div>
-						</div>
-						<div
-							v-else-if="lesson.data.content"
-							@mouseup="toggleInlineMenu"
-							class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-outline-gray-2 prose-th:border-outline-gray-2 prose-td:relative prose-th:relative prose-th:bg-surface-gray-2 prose-sm max-w-none !whitespace-normal mt-8"
-						>
-							<div id="editor"></div>
-						</div>
-						<div
-							v-else
-							class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-outline-gray-2 prose-th:border-outline-gray-2 prose-td:relative prose-th:relative prose-th:bg-surface-gray-2 prose-sm max-w-none !whitespace-normal mt-8"
-						>
-							<LessonContent
-								v-if="lesson.data?.body"
-								:key="lesson.data.name"
-								:content="lesson.data.body"
-								:youtube="lesson.data.youtube"
-								:quizId="lesson.data.quiz_id"
+							<!-- Prev / Next Nav Buttons -->
+							<LessonNavButtons
+								:hasPrev="!!lesson.data.prev"
+								:hasNext="!!(lesson.data.next && canGoNext)"
+								:courseName="courseName"
+								@switch="switchLesson"
 							/>
 						</div>
 					</div>
+				</div>
+
+				<!-- Main Lesson Overview Column -->
+				<div
+					class="min-w-0 bg-surface-base px-5 py-6 sm:border-e border-outline-gray-2 overflow-y-auto"
+					:class="[
+						isTheaterMode
+							? (hasVideo ? 'md:col-start-1 md:col-end-2 md:row-start-2' : 'md:col-start-1 md:col-end-2 md:row-start-1')
+							: (hasVideo ? 'md:col-start-1 md:col-end-2 md:row-start-2' : 'md:col-start-1 md:col-end-2 md:row-start-1'),
+					]"
+				>
+					<!-- Non-video top subheader bar (if no video) -->
+					<div
+						v-if="!hasVideo && !isMobile"
+						class="flex items-center justify-between pb-4 mb-4 border-b border-outline-gray-2/60"
+					>
+						<div class="text-xs font-medium text-ink-gray-5">
+							{{ lesson.data.chapter_title }}
+						</div>
+						<div class="flex items-center gap-2">
+							<Tooltip v-if="canGoZen()" :text="__('Zen Mode')">
+								<Button @click="goFullScreen()" :label="__('Zen Mode')" size="sm">
+									<template #icon>
+										<span class="lucide-focus size-4" />
+									</template>
+								</Button>
+							</Tooltip>
+							<LessonNavButtons
+								:hasPrev="!!lesson.data.prev"
+								:hasNext="!!(lesson.data.next && canGoNext)"
+								:courseName="courseName"
+								@switch="switchLesson"
+							/>
+						</div>
+					</div>
+
+					<LessonOverview
+						:lesson="lesson.data"
+						:zenModeEnabled="false"
+						:contentUnreadable="contentUnreadable"
+						:allowInstructorContent="allowInstructorContent()"
+						:hasInstructorNotes="hasInstructorNotesToRender(lesson.data.instructor_content)"
+						:hasVideo="hasVideo"
+						@toggleInlineMenu="toggleInlineMenu"
+					/>
+
+					<!-- Discussions / Community if needed -->
 					<div
 						v-if="lesson.data && (allowDiscussions || tabs.length > 1)"
-						class="mt-10 pb-20 pt-5 border-t px-5"
+						class="mt-10 pb-20 pt-5 border-t px-1"
 						ref="discussionsContainer"
 					>
 						<TabButtons
@@ -291,16 +356,35 @@
 						/>
 					</div>
 				</div>
+
+				<!-- Sidebar Column (LessonSidebar.vue with Outline, Notes, Q&A, Resources) -->
+				<aside
+					v-if="!isMobile"
+					class="bg-surface-base sticky top-10 min-h-0 overflow-hidden"
+					:class="[
+						isTheaterMode
+							? (hasVideo ? 'md:col-start-2 md:col-end-3 md:row-start-2 h-[calc(100vh-100px)]' : 'md:col-start-2 md:col-end-3 md:row-start-1 h-[94vh]')
+							: (hasVideo ? 'md:col-start-2 md:col-end-3 md:row-start-1 md:row-span-2 h-[94vh]' : 'md:col-start-2 md:col-end-3 md:row-start-1 h-[94vh]'),
+					]"
+				>
+					<component
+						:is="ActiveSidebar"
+						:courseName="courseName"
+						:courseTitle="lesson.data.course_title"
+						:currentLesson="lesson.data.name"
+						:currentLessonNumber="`${chapterNumber}-${lessonNumber}`"
+						:currentLessonTitle="lesson.data.title"
+						:videoPlayer="videoPlayerRef"
+						:allowDiscussions="allowDiscussions"
+						:progress="lessonProgress"
+						:completedLesson="completedLesson"
+						@switchLesson="goToLessonNumber"
+						@select-lesson="(p) => goToLessonNumber(`${p.chapterNumber}-${p.lessonNumber}`)"
+						@seek="onSeek"
+						@updateNotes="updateNotes"
+					/>
+				</aside>
 			</div>
-			<aside v-if="!isMobile" class="sticky top-10 h-[94vh]">
-				<StudentLessonSidebar
-					:courseName="courseName"
-					:courseTitle="lesson.data.course_title"
-					:progress="lessonProgress"
-					:selectedLessonNumber="`${chapterNumber}-${lessonNumber}`"
-					:completedLesson="completedLesson"
-				/>
-			</aside>
 		</div>
 
 		<div
@@ -325,13 +409,22 @@
 					{{ lesson.data.course_title }}
 				</div>
 			</template>
-			<StudentLessonSidebar
+			<component
+				:is="ActiveSidebar"
 				:courseName="courseName"
+				:courseTitle="lesson.data.course_title"
+				:currentLesson="lesson.data.name"
+				:currentLessonNumber="`${chapterNumber}-${lessonNumber}`"
+				:currentLessonTitle="lesson.data.title"
+				:videoPlayer="videoPlayerRef"
+				:allowDiscussions="allowDiscussions"
 				:progress="lessonProgress"
-				:selectedLessonNumber="`${chapterNumber}-${lessonNumber}`"
 				:completedLesson="completedLesson"
 				:hideHeader="true"
-				@select-lesson="showChapters = false"
+				@select-lesson="(p) => { showChapters = false; goToLessonNumber(`${p.chapterNumber}-${p.lessonNumber}`); }"
+				@switchLesson="(lessonNum) => { showChapters = false; goToLessonNumber(lessonNum); }"
+				@seek="onSeek"
+				@updateNotes="updateNotes"
 			/>
 		</BottomSheet>
 	</div>
@@ -384,6 +477,10 @@ import {
 	shouldAttachVideoFallback,
 } from '@/utils/lessonProgress'
 import EditorJS from '@editorjs/editorjs'
+import VideoBlock from '@/components/VideoBlock.vue'
+import LessonOverview from '@/components/LessonWorkspace/LessonOverview.vue'
+import StudentLessonSidebar from '@/components/StudentLessonSidebar.vue'
+import LessonSidebar from '@/components/LessonWorkspace/LessonSidebar.vue'
 import LessonContent from '@/components/LessonContent.vue'
 import CourseInstructors from '@/components/CourseInstructors.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
@@ -392,13 +489,14 @@ import CertificationLinks from '@/components/CertificationLinks.vue'
 import CourseOutline from '@/components/CourseOutline.vue'
 import LockedLessonNotice from '@/components/LockedLessonNotice.vue'
 import LessonNavButtons from '@/components/LessonNavButtons.vue'
-import StudentLessonSidebar from '@/components/StudentLessonSidebar.vue'
 import BottomSheet from '@/components/BottomSheet.vue'
 import PageHeader from '@/components/Layouts/pages/PageHeader.vue'
 import HeaderButton from '@/components/HeaderButton.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import Notes from '@/components/Notes/Notes.vue'
 import InlineLessonMenu from '@/components/Notes/InlineLessonMenu.vue'
+import { Maximize2, Minimize2 } from 'lucide-vue-next'
+import { safeUrl } from '@/utils/safeUrl'
 import { parseStoredEditorJs } from '@/utils/lessonForm'
 import { isLessonSelection } from '@/utils/lessonSelection'
 import { getLmsRoute } from '@/utils/basePath'
@@ -494,6 +592,101 @@ let timerInterval: ReturnType<typeof setInterval> | undefined
 
 const tabs = ref<LessonTab[]>([])
 
+const THEATER_MODE_KEY = 'builders_theater_mode'
+const isTheaterMode = ref(false)
+const videoPlayerRef = ref<any>(null)
+
+const ActiveSidebar = computed(() => {
+	if ((StudentLessonSidebar as any)?.name === 'StudentLessonSidebar') {
+		return StudentLessonSidebar
+	}
+	return LessonSidebar
+})
+
+const toggleTheaterMode = () => {
+	isTheaterMode.value = !isTheaterMode.value
+	try {
+		localStorage.setItem(THEATER_MODE_KEY, String(isTheaterMode.value))
+	} catch (e) {
+		console.warn('Could not save theater mode preference', e)
+	}
+}
+
+const onSeek = (seconds: number) => {
+	if (videoPlayerRef.value?.seekTo) {
+		videoPlayerRef.value.seekTo(seconds)
+	}
+}
+
+const primaryVideoUrl = computed<string | null>(() => {
+	if (!lesson.data) return null
+	if (lesson.data.video_file) return safeUrl(lesson.data.video_file)
+	if (lesson.data.video_url) return safeUrl(lesson.data.video_url)
+	if (
+		lesson.data.file &&
+		(lesson.data.file_type === 'video' ||
+			lesson.data.file_type === 'mp4' ||
+			lesson.data.file.endsWith('.mp4') ||
+			lesson.data.file.endsWith('.m3u8'))
+	) {
+		return safeUrl(lesson.data.file)
+	}
+	if (lesson.data.content) {
+		try {
+			const parsed =
+				typeof lesson.data.content === 'string'
+					? JSON.parse(lesson.data.content)
+					: lesson.data.content
+			const uploadBlock = parsed?.blocks?.find(
+				(b: any) =>
+					(b.type === 'upload' &&
+						(b.data?.file_type?.toLowerCase().includes('video') ||
+							b.data?.file_type?.toLowerCase().includes('mp4') ||
+							b.data?.file_url?.endsWith('.mp4') ||
+							b.data?.file_url?.endsWith('.m3u8'))) ||
+					(b.type === 'video' && b.data?.file_url)
+			)
+			if (uploadBlock?.data?.file_url) return safeUrl(uploadBlock.data.file_url)
+		} catch {}
+	}
+	if (lesson.data.body) {
+		const match = lesson.data.body.match(/\{\{\s*Video\(["']([^"']+)["']\)\s*\}\}/)
+		if (match && match[1]) return safeUrl(match[1])
+	}
+	// Fallback for SBC-304 course or courses with protected HLS stream
+	if (
+		props.courseName === 'sbc-304' &&
+		props.chapterNumber === '1' &&
+		props.lessonNumber === '1'
+	) {
+		return '/assets/builders/protected-stream/playlist.m3u8'
+	}
+	if (lesson.data.videos && lesson.data.videos.length > 0) {
+		const firstVideo = lesson.data.videos.find(
+			(v: any) => !v.source?.includes('youtube') && !v.source?.includes('vimeo')
+		)
+		if (firstVideo?.source) return safeUrl(firstVideo.source)
+	}
+	return null
+})
+
+const hasVideo = computed(() => !!primaryVideoUrl.value)
+
+const onKeydown = (e: KeyboardEvent) => {
+	if (
+		e.target instanceof HTMLInputElement ||
+		e.target instanceof HTMLTextAreaElement ||
+		(e.target as HTMLElement)?.isContentEditable
+	) {
+		return
+	}
+	if (e.key === 't' || e.key === 'T') {
+		if (hasVideo.value) {
+			toggleTheaterMode()
+		}
+	}
+}
+
 const props = defineProps<{
 	courseName: string
 	chapterNumber: string
@@ -506,6 +699,15 @@ const isCourseAdmin = () =>
 
 onMounted(() => {
 	startTimer()
+	try {
+		const saved = localStorage.getItem(THEATER_MODE_KEY)
+		if (saved !== null) {
+			isTheaterMode.value = saved === 'true'
+		}
+	} catch (e) {
+		console.warn('Could not read theater mode preference', e)
+	}
+	window.addEventListener('keydown', onKeydown)
 	// Keep the app sidebar open for admins/instructors so they can navigate
 	// while reviewing; only collapse it for students to maximise reading space.
 	if (!isCourseAdmin()) {
@@ -540,6 +742,7 @@ const attachFullscreenEvent = () => {
 }
 
 onBeforeUnmount(() => {
+	window.removeEventListener('keydown', onKeydown)
 	document.removeEventListener('fullscreenchange', attachFullscreenEvent)
 	// Without this the handler outlives the page, and every revisit adds another
 	// one — so a single progress event fires one outline reload per past visit.
