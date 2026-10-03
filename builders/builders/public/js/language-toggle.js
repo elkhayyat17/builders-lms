@@ -46,6 +46,16 @@
     toggleBtn.addEventListener('click', function () {
       const newLang = currentLang === 'ar' ? 'en' : 'ar';
 
+      function applyAndReload() {
+        document.cookie =
+          'preferred_language=' +
+          newLang +
+          ';path=/;max-age=31536000;SameSite=Lax';
+        document.documentElement.lang = newLang;
+        document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+        window.location.reload();
+      }
+
       // Check if user is logged in
       if (window.__session && window.__session.user && window.__session.user !== 'Guest') {
         // For logged-in users — update their user profile
@@ -62,15 +72,12 @@
             value: newLang,
           }),
         }).then(function () {
-          window.location.reload();
+          applyAndReload();
+        }).catch(function () {
+          applyAndReload();
         });
       } else {
-        // For guest users — set a cookie
-        document.cookie =
-          'preferred_language=' +
-          newLang +
-          ';path=/;max-age=31536000;SameSite=Lax';
-        window.location.reload();
+        applyAndReload();
       }
     });
 

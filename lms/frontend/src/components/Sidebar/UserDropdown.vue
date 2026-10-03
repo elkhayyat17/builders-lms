@@ -55,6 +55,13 @@ const currentLanguage = computed(() => {
 })
 
 const setAppLanguage = (lang) => {
+	const applyLanguageAndReload = () => {
+		document.cookie = `preferred_language=${lang};path=/;max-age=31536000;SameSite=Lax`
+		document.documentElement.lang = lang
+		document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'
+		window.location.reload()
+	}
+
 	if (isLoggedIn.value && userResource.data?.name) {
 		call('frappe.client.set_value', {
 			doctype: 'User',
@@ -62,12 +69,10 @@ const setAppLanguage = (lang) => {
 			fieldname: 'language',
 			value: lang,
 		}).then(() => {
-			document.cookie = `preferred_language=${lang};path=/;max-age=31536000;SameSite=Lax`
-			window.location.reload()
+			applyLanguageAndReload()
 		})
 	} else {
-		document.cookie = `preferred_language=${lang};path=/;max-age=31536000;SameSite=Lax`
-		window.location.reload()
+		applyLanguageAndReload()
 	}
 }
 
@@ -174,16 +179,16 @@ const userDropdownOptions = computed(() => {
 				},
 				{
 					icon: 'lucide-globe',
-					label: __('Language / اللغة'),
+					label: __('Language'),
 					submenu: [
 						{
-							label: 'العربية (Arabic)',
+							label: __('Arabic'),
 							selected: currentLanguage.value === 'ar',
 							slots: themeCheck,
 							onClick: () => setAppLanguage('ar'),
 						},
 						{
-							label: 'English (الإنجليزية)',
+							label: __('English'),
 							selected: currentLanguage.value === 'en',
 							slots: themeCheck,
 							onClick: () => setAppLanguage('en'),
