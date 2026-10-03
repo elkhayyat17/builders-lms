@@ -77,6 +77,33 @@ def main():
 	print(f"Missing Arabic: {len(missing)}")
 	print(f"Arabic-only keys (break English UI): {len(arabic_keys)}")
 	print(f"Bilingual 'ar / en' keys: {len(bilingual)}")
+
+	WORKSPACE_PATTERNS = (
+		"components/LessonWorkspace",
+		"pages/Lesson.vue",
+		"components/VideoBlock.vue",
+		"components/Sidebar/UserDropdown.vue",
+	)
+	ws_missing = [
+		item for item in missing
+		if any(any(wp in f for wp in WORKSPACE_PATTERNS) for f in item[1])
+	]
+	ws_total = len([
+		k for k, files in keys.items()
+		if re.search(r"[A-Za-z]", k) and not ARABIC.search(k) and any(
+			any(wp in f for wp in WORKSPACE_PATTERNS) for f in files
+		)
+	])
+	ws_translated = ws_total - len(ws_missing)
+	print("-" * 50)
+	print(f"Workspace English keys: {ws_total}")
+	print(f"Workspace translated to Arabic: {ws_translated}  ({(ws_translated * 100 / max(ws_total, 1)):.1f}%)")
+	print(f"Workspace missing Arabic: {len(ws_missing)}")
+	if ws_missing:
+		print("Missing workspace keys:")
+		for k, files in ws_missing:
+			print(f"  - {k} ({files})")
+	print("-" * 50)
 	if out:
 		with open(out, "w", encoding="utf-8") as fh:
 			json.dump(
