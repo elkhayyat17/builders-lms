@@ -53,7 +53,7 @@
 		<!-- 1. LOCKED / NO PREVIEW STATE -->
 		<div
 			v-if="lesson.data.no_preview || lesson.data.locked"
-			class="grid md:grid-cols-[1fr,380px] lg:grid-cols-[70%,30%] sm:h-[94vh]"
+			class="grid md:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_420px] min-h-[calc(100vh-3rem)]"
 		>
 			<div v-if="lesson.data.no_preview" class="sm:border-e">
 				<div class="shadow rounded-5 w-3/4 mt-10 mx-auto text-center p-4">
@@ -102,7 +102,7 @@
 			</div>
 
 			<!-- Sidebar for Locked / Preview state -->
-			<aside v-if="!isMobile" class="sticky top-10 h-[94vh] bg-surface-base">
+			<aside v-if="!isMobile" class="sticky top-12 h-[calc(100vh-3rem)] bg-surface-base">
 				<component
 					:is="ActiveSidebar"
 					:courseName="courseName"
@@ -205,14 +205,14 @@
 				</div>
 			</div>
 
-			<!-- Standard & Theater Mode Workspace Grid -->
+			<!-- Standard & Theater Mode Workspace Grid (UI/UX Pro Max Architecture) -->
 			<div
 				v-else
-				class="grid"
+				class="grid min-h-[calc(100vh-3rem)] bg-surface-base"
 				:class="[
 					isTheaterMode
-						? 'grid-cols-1 md:grid-cols-[1fr,380px] lg:grid-cols-[70%,30%]'
-						: 'grid-cols-1 md:grid-cols-[1fr,380px] lg:grid-cols-[70%,30%] sm:h-[94vh]',
+						? 'grid-cols-1 md:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_420px]'
+						: 'grid-cols-1 md:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_420px]',
 				]"
 			>
 				<!-- Top Video Player Section (if hasVideo) -->
@@ -221,23 +221,27 @@
 					class="w-full bg-slate-950 transition-all duration-300"
 					:class="[
 						isTheaterMode
-							? 'col-span-full md:col-span-2 md:row-start-1 border-b border-outline-gray-2'
+							? 'col-span-full border-b border-outline-gray-2'
 							: 'md:col-start-1 md:col-end-2 md:row-start-1 border-b border-outline-gray-2',
 					]"
 				>
 					<div
-						class="w-full mx-auto"
-						:class="isTheaterMode ? 'max-w-[1600px] aspect-video max-h-[82vh]' : 'aspect-video'"
+						class="w-full mx-auto flex items-center justify-center overflow-hidden bg-slate-950"
+						:class="isTheaterMode ? 'w-full max-w-[calc(78vh*16/9)] aspect-video max-h-[78vh]' : 'aspect-video'"
 					>
 						<VideoBlock
 							ref="videoPlayerRef"
 							:file="primaryVideoUrl"
 							:readOnly="true"
+							class="w-full h-full"
 						/>
 					</div>
 
 					<!-- Player Subheader Bar with Theater Mode Toggle -->
-					<div class="px-4 sm:px-5 py-2.5 bg-surface-gray-1 border-t border-outline-gray-2/40 flex items-center justify-between gap-3 flex-wrap select-none">
+					<div
+						class="px-4 sm:px-6 py-2.5 bg-surface-gray-1 border-t border-outline-gray-2/40 flex items-center justify-between gap-3 flex-wrap select-none"
+						:class="isTheaterMode ? 'max-w-[1600px] mx-auto' : ''"
+					>
 						<div class="flex items-center gap-2 min-w-0">
 							<span class="flex size-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
 							<span class="text-xs font-bold text-ink-gray-8 truncate">
@@ -282,12 +286,12 @@
 					</div>
 				</div>
 
-				<!-- Main Lesson Overview Column -->
+				<!-- Main Lesson Overview Column (Natural Height & Clean Scrolling) -->
 				<div
-					class="min-w-0 bg-surface-base px-5 py-6 sm:border-e border-outline-gray-2 overflow-y-auto"
+					class="min-w-0 bg-surface-base px-5 sm:px-8 py-6 sm:border-e border-outline-gray-2"
 					:class="[
 						isTheaterMode
-							? (hasVideo ? 'md:col-start-1 md:col-end-2 md:row-start-2' : 'md:col-start-1 md:col-end-2 md:row-start-1')
+							? 'md:col-start-1 md:col-end-2 md:row-start-2'
 							: (hasVideo ? 'md:col-start-1 md:col-end-2 md:row-start-2' : 'md:col-start-1 md:col-end-2 md:row-start-1'),
 					]"
 				>
@@ -357,14 +361,14 @@
 					</div>
 				</div>
 
-				<!-- Sidebar Column (LessonSidebar.vue with Outline, Notes, Q&A, Resources) -->
+				<!-- Sidebar Column (Sticky and Independent) -->
 				<aside
 					v-if="!isMobile"
-					class="bg-surface-base sticky top-10 min-h-0 overflow-hidden"
+					class="bg-surface-base sticky top-12 self-start h-[calc(100vh-3rem)] overflow-hidden z-10"
 					:class="[
 						isTheaterMode
-							? (hasVideo ? 'md:col-start-2 md:col-end-3 md:row-start-2 h-[calc(100vh-100px)]' : 'md:col-start-2 md:col-end-3 md:row-start-1 h-[94vh]')
-							: (hasVideo ? 'md:col-start-2 md:col-end-3 md:row-start-1 md:row-span-2 h-[94vh]' : 'md:col-start-2 md:col-end-3 md:row-start-1 h-[94vh]'),
+							? 'md:col-start-2 md:col-end-3 md:row-start-2'
+							: (hasVideo ? 'md:col-start-2 md:col-end-3 md:row-start-1 md:row-span-2' : 'md:col-start-2 md:col-end-3 md:row-start-1'),
 					]"
 				>
 					<component

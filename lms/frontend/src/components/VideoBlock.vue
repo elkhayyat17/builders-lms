@@ -1,5 +1,5 @@
 <template>
-	<div class="ht-video-wrapper">
+	<div class="ht-video-wrapper w-full h-full flex flex-col justify-center">
 		<div v-if="quizzes.length && !showQuiz && readOnly" class="leading-6 mb-2">
 			{{
 				__('This video contains {0} {1}:').format(
@@ -23,7 +23,7 @@
 		<div
 			v-if="!showQuiz"
 			ref="videoContainer"
-			class="video-block relative group overflow-hidden rounded-7 border border-outline-gray-2 bg-slate-950"
+			class="video-block relative group overflow-hidden rounded-7 border border-outline-gray-2 bg-slate-950 w-full h-full flex items-center justify-center"
 			oncontextmenu="return false"
 		>
 			<!-- NATIVE / HLS VIDEO ELEMENT -->

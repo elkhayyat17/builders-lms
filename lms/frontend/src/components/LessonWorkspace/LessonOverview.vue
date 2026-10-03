@@ -91,74 +91,105 @@
 				</span>
 			</div>
 
-			<!-- Formatted LaTeX Equations Grid -->
+			<!-- Formatted LaTeX Equations Grid (UI/UX Pro Max Engineering Typography) -->
 			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
 				<!-- Equation 1: U = 1.2D + 1.6L (Required verbatim) -->
-				<div class="p-3 rounded-lg bg-surface-base border border-sky-100 dark:border-sky-900/50 shadow-2xs flex flex-col justify-between group hover:border-sky-300 transition-colors">
-					<div class="flex items-center justify-between gap-1 mb-1.5">
-						<span class="text-[11px] text-ink-gray-6 font-medium">
+				<div class="p-3.5 rounded-xl bg-surface-base border border-sky-200/80 dark:border-sky-900/60 shadow-xs flex flex-col justify-between group hover:border-sky-400 dark:hover:border-sky-700 transition-all">
+					<div class="flex items-center justify-between gap-1 mb-2">
+						<span class="text-[11px] text-ink-gray-6 font-semibold">
 							{{ __('Ultimate Load Combination:') }}
 						</span>
 						<button
 							type="button"
 							@click="copyFormula('$U = 1.2D + 1.6L$')"
-							class="text-[10px] text-sky-600 hover:text-sky-800 dark:text-sky-400 font-mono opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+							class="text-[10px] text-sky-600 hover:text-sky-800 dark:text-sky-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer px-1.5 py-0.5 rounded bg-sky-50 dark:bg-sky-950/60"
 							:title="__('Copy equation')"
 						>
 							{{ __('Copy') }}
 						</button>
 					</div>
-					<div class="font-mono text-center py-2 px-2.5 bg-surface-gray-2 rounded-md text-ink-blue-5 font-bold text-sm tracking-wide border border-outline-blue-2/30 select-all dir-ltr" dir="ltr">
-						$U = 1.2D + 1.6L$
+					<div
+						class="engineering-formula py-2.5 px-3 bg-surface-gray-2/70 dark:bg-slate-900/80 rounded-lg text-center border border-outline-blue-2/30 select-all dir-ltr"
+						dir="ltr"
+						:title="'$U = 1.2D + 1.6L$'"
+					>
+						<span class="font-serif italic font-bold text-lg text-ink-blue-5">U</span>
+						<span class="mx-1.5 text-ink-gray-5 font-semibold">=</span>
+						<span class="font-bold text-ink-gray-9 text-base">1.2</span><span class="font-serif italic font-bold text-lg text-ink-blue-5">D</span>
+						<span class="mx-1.5 text-ink-gray-5 font-semibold">+</span>
+						<span class="font-bold text-ink-gray-9 text-base">1.6</span><span class="font-serif italic font-bold text-lg text-ink-blue-5">L</span>
+						<span class="sr-only">$U = 1.2D + 1.6L$</span>
 					</div>
-					<span class="text-[10px] text-ink-gray-5 mt-1.5 text-center font-mono">
+					<span class="text-[10px] text-ink-gray-5 mt-2 text-center font-mono font-medium">
 						<span>{{ __('SBC 304 - Sec. 5.3.1 (Load Combo)') }}</span>
 					</span>
 				</div>
 
 				<!-- Equation 2: Nominal Flexural Strength: phi Mn >= Mu -->
-				<div class="p-3 rounded-lg bg-surface-base border border-sky-100 dark:border-sky-900/50 shadow-2xs flex flex-col justify-between group hover:border-sky-300 transition-colors">
-					<div class="flex items-center justify-between gap-1 mb-1.5">
-						<span class="text-[11px] text-ink-gray-6 font-medium">
+				<div class="p-3.5 rounded-xl bg-surface-base border border-sky-200/80 dark:border-sky-900/60 shadow-xs flex flex-col justify-between group hover:border-sky-400 dark:hover:border-sky-700 transition-all">
+					<div class="flex items-center justify-between gap-1 mb-2">
+						<span class="text-[11px] text-ink-gray-6 font-semibold">
 							{{ __('Flexural Design Strength:') }}
 						</span>
 						<button
 							type="button"
 							@click="copyFormula('$\\phi M_n \\ge M_u$')"
-							class="text-[10px] text-sky-600 hover:text-sky-800 dark:text-sky-400 font-mono opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+							class="text-[10px] text-sky-600 hover:text-sky-800 dark:text-sky-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer px-1.5 py-0.5 rounded bg-sky-50 dark:bg-sky-950/60"
 							:title="__('Copy equation')"
 						>
 							{{ __('Copy') }}
 						</button>
 					</div>
-					<div class="font-mono text-center py-2 px-2.5 bg-surface-gray-2 rounded-md text-ink-blue-5 font-bold text-sm tracking-wide border border-outline-blue-2/30 select-all dir-ltr" dir="ltr">
-						$\phi M_n \ge M_u$
+					<div
+						class="engineering-formula py-2.5 px-3 bg-surface-gray-2/70 dark:bg-slate-900/80 rounded-lg text-center border border-outline-blue-2/30 select-all dir-ltr"
+						dir="ltr"
+						:title="'$\\phi M_n \\ge M_u$'"
+					>
+						<span class="font-serif font-bold text-xl text-ink-blue-5">ϕ</span>
+						<span class="font-serif italic font-bold text-lg text-ink-blue-5">M</span><sub class="text-xs font-bold text-ink-blue-5">n</sub>
+						<span class="mx-2 text-base text-ink-gray-6 font-bold">≥</span>
+						<span class="font-serif italic font-bold text-lg text-ink-blue-5">M</span><sub class="text-xs font-bold text-ink-blue-5">u</sub>
+						<span class="sr-only">$\phi M_n \ge M_u$</span>
 					</div>
-					<span class="text-[10px] text-ink-gray-5 mt-1.5 text-center font-mono">
-						$\phi = 0.90$ ({{ __('Tension-controlled') }})
+					<span class="text-[10px] text-ink-gray-5 mt-2 text-center font-mono font-medium">
+						ϕ = 0.90 ({{ __('Tension-controlled') }})
 					</span>
 				</div>
 
 				<!-- Equation 3: Reinforcement Ratio: rho = As / (b * d) -->
-				<div class="p-3 rounded-lg bg-surface-base border border-sky-100 dark:border-sky-900/50 shadow-2xs flex flex-col justify-between group hover:border-sky-300 transition-colors">
-					<div class="flex items-center justify-between gap-1 mb-1.5">
-						<span class="text-[11px] text-ink-gray-6 font-medium">
+				<div class="p-3.5 rounded-xl bg-surface-base border border-sky-200/80 dark:border-sky-900/60 shadow-xs flex flex-col justify-between group hover:border-sky-400 dark:hover:border-sky-700 transition-all">
+					<div class="flex items-center justify-between gap-1 mb-2">
+						<span class="text-[11px] text-ink-gray-6 font-semibold">
 							{{ __('Reinforcement Ratio:') }}
 						</span>
 						<button
 							type="button"
 							@click="copyFormula('$\\rho = \\frac{A_s}{b \\cdot d}$')"
-							class="text-[10px] text-sky-600 hover:text-sky-800 dark:text-sky-400 font-mono opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+							class="text-[10px] text-sky-600 hover:text-sky-800 dark:text-sky-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer px-1.5 py-0.5 rounded bg-sky-50 dark:bg-sky-950/60"
 							:title="__('Copy equation')"
 						>
 							{{ __('Copy') }}
 						</button>
 					</div>
-					<div class="font-mono text-center py-2 px-2.5 bg-surface-gray-2 rounded-md text-ink-blue-5 font-bold text-sm tracking-wide border border-outline-blue-2/30 select-all dir-ltr" dir="ltr">
-						$\rho = \frac{A_s}{b \cdot d}$
+					<div
+						class="engineering-formula py-2 px-3 bg-surface-gray-2/70 dark:bg-slate-900/80 rounded-lg flex items-center justify-center border border-outline-blue-2/30 select-all dir-ltr gap-1.5"
+						dir="ltr"
+						:title="'$\\rho = \\frac{A_s}{b \\cdot d}$'"
+					>
+						<span class="font-serif font-bold text-xl text-ink-blue-5">ρ</span>
+						<span class="mx-1 text-ink-gray-5 font-semibold">=</span>
+						<div class="inline-flex flex-col items-center justify-center text-xs leading-none">
+							<span class="font-serif italic font-bold text-ink-blue-5 pb-0.5 border-b border-ink-gray-4 dark:border-ink-gray-6 px-1.5">
+								A<sub class="text-[10px]">s</sub>
+							</span>
+							<span class="font-serif italic font-medium text-ink-gray-8 dark:text-ink-gray-2 pt-0.5 px-1.5">
+								b · d
+							</span>
+						</div>
+						<span class="sr-only">$\rho = \frac{A_s}{b \cdot d}$</span>
 					</div>
-					<span class="text-[10px] text-ink-gray-5 mt-1.5 text-center font-mono">
-						$\rho_{min} \le \rho \le \rho_{max}$
+					<span class="text-[10px] text-ink-gray-5 mt-2 text-center font-mono font-medium">
+						ρ<sub>min</sub> ≤ ρ ≤ ρ<sub>max</sub>
 					</span>
 				</div>
 			</div>
