@@ -4,7 +4,7 @@
 			{{
 				__('This video contains {0} {1}:').format(
 					quizzes.length,
-					quizzes.length == 1 ? 'quiz' : 'quizzes'
+					quizzes.length === 1 ? __('quiz') : __('quizzes')
 				)
 			}}
 
@@ -215,7 +215,7 @@
 				</span>
 
 				<Dropdown :options="dropdownOptions">
-					<Button>{{ playbackSpeedLabel }}</Button>
+					<Button :title="__('Playback Speed')">{{ playbackSpeedLabel }}</Button>
 				</Dropdown>
 
 				<Dropdown v-if="qualityLevels.length > 1" :options="qualityDropdownOptions">
@@ -277,7 +277,7 @@
 						{{
 							__(
 								'Complete the upcoming quiz to continue watching the video. The quiz will open in {0} {1}.'
-							).format(quizLoadTimer, quizLoadTimer === 1 ? 'second' : 'seconds')
+							).format(quizLoadTimer, quizLoadTimer === 1 ? __('second') : __('seconds'))
 						}}
 					</span>
 				</div>
@@ -505,7 +505,7 @@ const playbackSpeeds = [
 // Quality / Adaptive Bitrate (ABR) States
 const qualityLevels = ref([])
 const currentQuality = ref(-1) // -1 is Auto ABR mode
-const currentQualityLabel = ref('Auto')
+const currentQualityLabel = ref(__('Auto'))
 const activeQualityResolution = ref('')
 
 const setQualityLevel = (levelIndex, label) => {
@@ -517,11 +517,14 @@ const setQualityLevel = (levelIndex, label) => {
 }
 
 const qualityDropdownOptions = computed(() => {
+	const autoLabel = activeQualityResolution.value
+		? `${__('Auto')} (${activeQualityResolution.value})`
+		: __('Auto')
 	const options = [
 		{
-			label: currentQuality.value === -1 ? (activeQualityResolution.value ? `Auto (${activeQualityResolution.value})` : 'Auto (تلقائي)') : 'Auto (تلقائي)',
+			label: currentQuality.value === -1 ? autoLabel : __('Auto'),
 			selected: currentQuality.value === -1,
-			onClick: () => setQualityLevel(-1, 'Auto'),
+			onClick: () => setQualityLevel(-1, autoLabel),
 		},
 	]
 	qualityLevels.value.forEach((lvl, idx) => {
@@ -689,7 +692,7 @@ const initHlsPlayer = async () => {
 				const active = qualityLevels.value[data.level]
 				activeQualityResolution.value = `${active.height}p`
 				if (currentQuality.value === -1) {
-					currentQualityLabel.value = `Auto (${active.height}p)`
+					currentQualityLabel.value = `${__('Auto')} (${active.height}p)`
 				}
 			}
 		})

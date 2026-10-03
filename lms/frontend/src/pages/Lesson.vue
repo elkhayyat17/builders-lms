@@ -196,7 +196,7 @@
 				>
 					<Discussions
 						v-if="allowDiscussions"
-						:title="'Questions'"
+						:title="__('Questions')"
 						:doctype="'Course Lesson'"
 						:docname="lesson.data.name"
 						:key="lesson.data.name"
@@ -247,7 +247,7 @@
 
 						<div class="flex items-center gap-2 shrink-0">
 							<!-- Theater Mode Toggle Button -->
-							<Tooltip :text="isTheaterMode ? __('Standard Mode (Exit Theater)') : __('Theater Mode (Expand Video)')">
+							<Tooltip :text="isTheaterMode ? __('Standard Mode') : __('Theater Mode')">
 								<button
 									type="button"
 									@click="toggleTheaterMode"
@@ -346,7 +346,7 @@
 						/>
 						<Discussions
 							v-else-if="allowDiscussions"
-							:title="'Questions'"
+							:title="__('Questions')"
 							:doctype="'Course Lesson'"
 							:docname="lesson.data.name"
 							:key="lesson.data.name"
