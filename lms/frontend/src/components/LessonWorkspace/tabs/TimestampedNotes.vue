@@ -749,7 +749,7 @@ const confirmDelete = async () => {
 			doctype: 'LMS Lesson Note',
 			name: noteToDelete.value.name,
 		})
-		toast.success(__('Note deleted'))
+		toast.success(__('Note deleted successfully'))
 		showDeleteDialog.value = false
 		noteToDelete.value = null
 		notesResource.reload()

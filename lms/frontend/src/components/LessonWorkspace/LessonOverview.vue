@@ -34,7 +34,7 @@
 					v-if="lesson?.membership?.progress !== undefined"
 					class="hidden group-hover:block [@media(hover:none)]:block [@media(hover:none)]:static [@media(hover:none)]:mt-0 rounded-4 bg-surface-gray-10 px-2 py-1 text-xs text-ink-base shadow-xl absolute start-0 top-full mt-1.5 z-20"
 				>
-					{{ Math.ceil(lesson.membership.progress) }}% {{ __('مكتمل') }}
+					{{ Math.ceil(lesson.membership.progress) }}% {{ __('Completed') }}
 				</div>
 			</div>
 		</div>
@@ -64,7 +64,7 @@
 			<!-- Civil Engineering Verified Tag -->
 			<div class="ms-auto flex items-center gap-1.5 text-[11px] font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
 				<span class="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-				<span>{{ __('محتوى هندسي معتمد • SBC Compliant') }}</span>
+				<span>{{ __('Certified Engineering Content') }} • {{ __('SBC Compliant') }}</span>
 			</div>
 		</div>
 
@@ -79,15 +79,15 @@
 					</span>
 					<div>
 						<h3 class="text-xs sm:text-sm font-bold text-sky-950 dark:text-sky-200">
-							{{ __('المعادلات التصميمية المعتمدة • Design Equations (SBC 304 / ACI 318)') }}
+							{{ __('Design Equations (SBC 304 / ACI 318)') }}
 						</h3>
 						<p class="text-[11px] text-sky-800/80 dark:text-sky-400/80 mt-0.5">
-							{{ __('معادلات تراكيب الأحمال ومتطلبات المقاومة الإنشائية القصوى') }}
+							{{ __('Load combination equations and ultimate flexural strength requirements') }}
 						</p>
 					</div>
 				</div>
 				<span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sky-100 dark:bg-sky-900/60 text-sky-700 dark:text-sky-300 font-semibold shrink-0">
-					LaTeX Math
+					<span>{{ __('LaTeX Math') }}</span>
 				</span>
 			</div>
 
@@ -97,22 +97,22 @@
 				<div class="p-3 rounded-lg bg-surface-base border border-sky-100 dark:border-sky-900/50 shadow-2xs flex flex-col justify-between group hover:border-sky-300 transition-colors">
 					<div class="flex items-center justify-between gap-1 mb-1.5">
 						<span class="text-[11px] text-ink-gray-6 font-medium">
-							{{ __('تركيب الحمل الأقصى:') }}
+							{{ __('Ultimate Load Combination:') }}
 						</span>
 						<button
 							type="button"
 							@click="copyFormula('$U = 1.2D + 1.6L$')"
 							class="text-[10px] text-sky-600 hover:text-sky-800 dark:text-sky-400 font-mono opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-							:title="__('نسخ المعادلة')"
+							:title="__('Copy equation')"
 						>
-							{{ __('نسخ') }}
+							{{ __('Copy') }}
 						</button>
 					</div>
 					<div class="font-mono text-center py-2 px-2.5 bg-surface-gray-2 rounded-md text-ink-blue-5 font-bold text-sm tracking-wide border border-outline-blue-2/30 select-all dir-ltr" dir="ltr">
 						$U = 1.2D + 1.6L$
 					</div>
 					<span class="text-[10px] text-ink-gray-5 mt-1.5 text-center font-mono">
-						SBC 304 - Sec. 5.3.1 (Load Combo)
+						<span>{{ __('SBC 304 - Sec. 5.3.1 (Load Combo)') }}</span>
 					</span>
 				</div>
 
@@ -120,22 +120,22 @@
 				<div class="p-3 rounded-lg bg-surface-base border border-sky-100 dark:border-sky-900/50 shadow-2xs flex flex-col justify-between group hover:border-sky-300 transition-colors">
 					<div class="flex items-center justify-between gap-1 mb-1.5">
 						<span class="text-[11px] text-ink-gray-6 font-medium">
-							{{ __('مقاومة عزم الانحناء:') }}
+							{{ __('Flexural Design Strength:') }}
 						</span>
 						<button
 							type="button"
 							@click="copyFormula('$\\phi M_n \\ge M_u$')"
 							class="text-[10px] text-sky-600 hover:text-sky-800 dark:text-sky-400 font-mono opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-							:title="__('نسخ المعادلة')"
+							:title="__('Copy equation')"
 						>
-							{{ __('نسخ') }}
+							{{ __('Copy') }}
 						</button>
 					</div>
 					<div class="font-mono text-center py-2 px-2.5 bg-surface-gray-2 rounded-md text-ink-blue-5 font-bold text-sm tracking-wide border border-outline-blue-2/30 select-all dir-ltr" dir="ltr">
 						$\phi M_n \ge M_u$
 					</div>
 					<span class="text-[10px] text-ink-gray-5 mt-1.5 text-center font-mono">
-						$\phi = 0.90$ (Tension-controlled)
+						$\phi = 0.90$ ({{ __('Tension-controlled') }})
 					</span>
 				</div>
 
@@ -143,15 +143,15 @@
 				<div class="p-3 rounded-lg bg-surface-base border border-sky-100 dark:border-sky-900/50 shadow-2xs flex flex-col justify-between group hover:border-sky-300 transition-colors">
 					<div class="flex items-center justify-between gap-1 mb-1.5">
 						<span class="text-[11px] text-ink-gray-6 font-medium">
-							{{ __('نسبة حديد التسليح:') }}
+							{{ __('Reinforcement Ratio:') }}
 						</span>
 						<button
 							type="button"
 							@click="copyFormula('$\\rho = \\frac{A_s}{b \\cdot d}$')"
 							class="text-[10px] text-sky-600 hover:text-sky-800 dark:text-sky-400 font-mono opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-							:title="__('نسخ المعادلة')"
+							:title="__('Copy equation')"
 						>
-							{{ __('نسخ') }}
+							{{ __('Copy') }}
 						</button>
 					</div>
 					<div class="font-mono text-center py-2 px-2.5 bg-surface-gray-2 rounded-md text-ink-blue-5 font-bold text-sm tracking-wide border border-outline-blue-2/30 select-all dir-ltr" dir="ltr">
@@ -311,7 +311,7 @@ const sanitizedBody = computed(() => {
 const copyFormula = (formula: string) => {
 	if (navigator.clipboard) {
 		navigator.clipboard.writeText(formula).then(() => {
-			toast.success(__('تم نسخ المعادلة إلى الحافظة'))
+			toast.success(__('Equation copied to clipboard'))
 		}).catch(() => {})
 	}
 }
