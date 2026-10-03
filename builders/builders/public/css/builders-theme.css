@@ -52,21 +52,167 @@
 }
 
 /* --------------------------------------------------------------------------
-   Typography
+   Typography & Direction
    -------------------------------------------------------------------------- */
+
+:root {
+  --font-arabic: 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-latin: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
 
 body,
 .frappe-control,
 .form-control {
-  font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-arabic);
+}
+
+/* RTL Typography */
+[dir='rtl'] {
+  text-align: right;
+  line-height: 1.6;
+}
+
+[dir='rtl'] body,
+[dir='rtl'] .frappe-control,
+[dir='rtl'] .form-control {
+  font-family: var(--font-arabic);
+  text-align: right;
+}
+
+[dir='rtl'] button,
+[dir='rtl'] input,
+[dir='rtl'] select,
+[dir='rtl'] textarea {
+  font-family: var(--font-arabic);
+  text-align: right;
+}
+
+[dir='rtl'] p,
+[dir='rtl'] .prose,
+[dir='rtl'] .lesson-content,
+[dir='rtl'] .course-description {
+  line-height: 1.6;
+}
+
+/* LTR Typography */
+[dir='ltr'] {
+  text-align: left;
+  line-height: 1.5;
 }
 
 [dir='ltr'] body,
 [dir='ltr'] .frappe-control,
 [dir='ltr'] .form-control {
-  font-family: 'IBM Plex Sans', 'IBM Plex Sans Arabic', -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-latin);
+  text-align: left;
+}
+
+[dir='ltr'] button,
+[dir='ltr'] input,
+[dir='ltr'] select,
+[dir='ltr'] textarea {
+  font-family: var(--font-latin);
+  text-align: left;
+}
+
+[dir='ltr'] p,
+[dir='ltr'] .prose,
+[dir='ltr'] .lesson-content,
+[dir='ltr'] .course-description {
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   Directional Icon & Element Mirroring
+   -------------------------------------------------------------------------- */
+[dir='rtl'] .breadcrumb-separator svg,
+[dir='rtl'] .lucide-chevron-right,
+[dir='rtl'] .lucide-chevrons-right {
+  transform: scaleX(-1);
+}
+
+[dir='ltr'] .breadcrumb-separator svg,
+[dir='ltr'] .lucide-chevron-right,
+[dir='ltr'] .lucide-chevrons-right {
+  transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   Strict LTR Immunity for Engineering Formulas, Code & Timestamps
+   -------------------------------------------------------------------------- */
+pre,
+code,
+.code-block,
+.codemirror,
+.katex,
+.katex-display,
+.katex-html,
+.engineering-formula,
+.timestamp-pill,
+.time-display {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: isolate !important;
+}
+
+[dir='rtl'] pre,
+[dir='rtl'] code,
+[dir='rtl'] .code-block,
+[dir='rtl'] .codemirror,
+[dir='rtl'] .katex,
+[dir='rtl'] .katex-display,
+[dir='rtl'] .katex-html,
+[dir='rtl'] [dir='ltr'],
+[dir='rtl'] .engineering-formula,
+[dir='rtl'] .timestamp-pill,
+[dir='rtl'] .time-display {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: isolate !important;
+}
+
+/* --------------------------------------------------------------------------
+   Logical Layout Utilities & Borders
+   -------------------------------------------------------------------------- */
+.reply-indent {
+  margin-inline-start: 1.5rem;
+  margin-inline-end: 0;
+  border-inline-start: 2px solid #E5E7EB;
+  border-inline-end: none;
+  padding-inline-start: 0.75rem;
+  padding-inline-end: 0;
+}
+
+[dir='rtl'] .reply-indent {
+  margin-right: 1.5rem;
+  margin-left: 0;
+  border-right: 2px solid #E5E7EB;
+  border-left: none;
+  padding-right: 0.75rem;
+  padding-left: 0;
+}
+
+[dir='ltr'] .reply-indent {
+  margin-left: 1.5rem;
+  margin-right: 0;
+  border-left: 2px solid #E5E7EB;
+  border-right: none;
+  padding-left: 0.75rem;
+  padding-right: 0;
+}
+
+.card-accent-strip {
+  border-inline-start: 4px solid var(--builders-primary);
+}
+
+[dir='rtl'] .card-accent-strip {
+  border-right: 4px solid var(--builders-primary);
+  border-left: none;
+}
+
+[dir='ltr'] .card-accent-strip {
+  border-left: 4px solid var(--builders-primary);
+  border-right: none;
 }
 
 /* --------------------------------------------------------------------------

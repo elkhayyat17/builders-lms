@@ -1,172 +1,1135 @@
 # Builders LMS — Arabic Translations
-# Copyright (C) 2024 Builders Team
+# Copyright (C) 2026 Builders Team
 # This file is distributed under the MIT license.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: builders 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-01 00:00+0000\n"
-"PO-Revision-Date: 2024-01-01 00:00+0000\n"
+"POT-Creation-Date: 2026-10-03 12:00+0000\n"
+"PO-Revision-Date: 2026-10-03 12:00+0000\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
 
-#: Category names
-msgid "Structural Engineering"
-msgstr "الهندسة الإنشائية"
+msgid "About Instructor"
+msgstr "نبذة عن المدرب"
 
-msgid "Construction Management"
-msgstr "إدارة المشاريع"
+msgid "Action"
+msgstr "إجراء"
 
-msgid "Codes & Standards"
-msgstr "الأكواد والمعايير"
+msgid "Actions"
+msgstr "الإجراءات"
 
-msgid "Software Training"
-msgstr "التدريب على البرمجيات"
+msgid "Active"
+msgstr "نشط حالياً"
 
-msgid "Quantity Surveying"
-msgstr "حصر الكميات"
+msgid "Add a note"
+msgstr "إضافة ملاحظة"
 
-#: Difficulty levels
-msgid "Beginner"
-msgstr "مبتدئ"
+msgid "Add note at"
+msgstr "إضافة ملاحظة عند"
 
-msgid "Intermediate"
-msgstr "متوسط"
+msgid "Add note at {0}"
+msgstr "إضافة ملاحظة عند {0}"
 
 msgid "Advanced"
 msgstr "متقدم"
 
-#: Course languages
-msgid "Arabic"
-msgstr "عربي"
-
-msgid "English"
-msgstr "إنجليزي"
-
-msgid "Bilingual"
-msgstr "ثنائي اللغة"
-
-#: Landing page
-msgid "Build Your Civil Engineering Career"
-msgstr "ابنِ مسيرتك المهنية في الهندسة المدنية"
-
-msgid "Browse Courses"
-msgstr "تصفح الدورات"
-
-msgid "Featured Courses"
-msgstr "الدورات المميزة"
+msgid "All"
+msgstr "الكل"
 
 msgid "All Categories"
 msgstr "جميع التخصصات"
 
-msgid "View All Courses"
-msgstr "عرض جميع الدورات"
+msgid "Announcement"
+msgstr "إعلان هام"
 
-#: Course detail
-msgid "Prerequisites"
-msgstr "المتطلبات المسبقة"
+msgid "Announcements"
+msgstr "الإعلانات والتحديثات"
 
-msgid "Target Audience"
-msgstr "الفئة المستهدفة"
+msgid "Approved"
+msgstr "معتمد ومقبول"
 
-msgid "Difficulty Level"
-msgstr "مستوى الصعوبة"
+msgid "Apps"
+msgstr "التطبيقات"
 
-msgid "Course Language"
-msgstr "لغة الدورة"
+msgid "Arabic"
+msgstr "العربية"
 
-msgid "Enroll Now"
-msgstr "سجل الآن"
+msgid "Are you sure you want to clear the demo data? This would delete the course \"A guide  to Frappe Learning\" along with all its associated data. This action cannot be undone."
+msgstr "هل أنت متأكد من رغبتك في مسح البيانات التجريبية؟ سيؤدي ذلك إلى حذف دورة \"دليل التعلم\" مع كافة بياناتها المرتبطة. لا يمكن التراجع عن هذا الإجراء."
 
-msgid "Preview"
-msgstr "معاينة"
+msgid "Are you sure you want to delete this note? This action cannot be undone."
+msgstr "هل أنت متأكد من رغبتك في حذف هذه الملاحظة؟ لا يمكن التراجع عن هذا الإجراء."
 
-msgid "Course Outline"
-msgstr "المنهج الدراسي"
+msgid "Are you sure you want to login to your Frappe Cloud dashboard?"
+msgstr "هل أنت متأكد من رغبتك في تسجيل الدخول إلى لوحة تحكم Frappe Cloud؟"
 
-msgid "About Instructor"
-msgstr "عن المدرب"
+msgid "Ask a Question"
+msgstr "طرح استفسار جديد"
 
-#: Navigation
-msgid "Home"
-msgstr "الرئيسية"
+msgid "Ask a question"
+msgstr "طرح سؤال"
 
-msgid "Courses"
-msgstr "الدورات"
+msgid "Ask a question to get help from the community."
+msgstr "اطرح سؤالاً للحصول على مساعدة من المجتمع الهندسي."
+
+msgid "Assessment"
+msgstr "تقييم مستوى"
+
+msgid "Assessments"
+msgstr "التقييمات الدورية"
+
+msgid "Assignment"
+msgstr "تكليف هندسي"
+
+msgid "Assignments"
+msgstr "التكليفات والمشاريع"
+
+msgid "Attachment"
+msgstr "ملف مرفق"
+
+msgid "Attempts"
+msgstr "المحاولات المتاحة"
+
+msgid "Auto"
+msgstr "تلقائي"
+
+msgid "AutoCAD (DWG), Excel (XLSX), and engineering notes will appear here when added by the instructor."
+msgstr "ستظهر ملفات أوتوكاد (DWG) وإكسل (XLSX) والملاحظات الهندسية هنا عند إضافتها من قبل المدرب."
+
+msgid "Back"
+msgstr "رجوع"
+
+msgid "Back to Course"
+msgstr "العودة إلى صفحة الدورة"
+
+msgid "Back to Lesson"
+msgstr "العودة إلى الدرس"
+
+msgid "Back to Questions"
+msgstr "العودة للأسئلة"
+
+msgid "Batch"
+msgstr "الدفعة التدريبية"
+
+msgid "Batches"
+msgstr "الدفعات التدريبية"
+
+msgid "Beginner"
+msgstr "مبتدئ"
+
+msgid "Bilingual"
+msgstr "ثنائي اللغة"
+
+msgid "Blue"
+msgstr "أزرق"
+
+msgid "Browse Courses"
+msgstr "تصفح الدورات التدريبية"
+
+msgid "Build Your Civil Engineering Career"
+msgstr "ابنِ مسيرتك المهنية في الهندسة المدنية"
+
+msgid "Builders LMS Engineering Course Watching & Smart Notes"
+msgstr "منصة بيلدرز التعليمية - متابعة المحاضرات الهندسية والملاحظات الذكية"
+
+msgid "CAD / DWG"
+msgstr "أوتوكاد / CAD"
+
+msgid "CAD Drawing"
+msgstr "مخطط أوتوكاد إنشائي"
+
+msgid "Calculation Sheet"
+msgstr "شيت حسابات وتصميم"
+
+msgid "Cancel"
+msgstr "إلغاء"
+
+msgid "Capture key formulas, diagrams, or questions synchronized with video timestamps. Press \"N\" anytime while watching to pause and take a note."
+msgstr "سجّل المعادلات والمخططات والأسئلة متزامنة مع توقيت الفيديو بدقة. اضغط \"N\" في أي وقت أثناء المشاهدة لإيقاف الفيديو وتدوين الملاحظة."
+
+msgid "Captured time:"
+msgstr "الوقت المسجل:"
+
+msgid "Certificate"
+msgstr "شهادة إتمام"
+
+msgid "Certificates"
+msgstr "الشهادات المعتمدة"
+
+msgid "Certified Engineering Content"
+msgstr "محتوى هندسي معتمد"
+
+msgid "Chapter completed"
+msgstr "الفصل مكتمل بالكامل"
+
+msgid "Chapters"
+msgstr "الفصول"
+
+msgid "Checkout"
+msgstr "إتمام عملية الشراء"
+
+msgid "Civil Engineering Courses"
+msgstr "دورات الهندسة المدنية"
+
+msgid "Clear Demo Data"
+msgstr "مسح البيانات التجريبية"
+
+msgid "Clear search"
+msgstr "مسح البحث"
+
+msgid "Close"
+msgstr "إغلاق"
+
+msgid "Codes & Standards"
+msgstr "الأكواد والمعايير الهندسية"
+
+msgid "Collapse all chapters"
+msgstr "طي جميع الفصول"
+
+msgid "Collapse sidebar"
+msgstr "طي الشريط الجانبي"
+
+msgid "Community"
+msgstr "المجتمع"
+
+msgid "Complete the upcoming quiz to continue watching the video. The quiz will open in {0} {1}."
+msgstr "أكمل الاختبار القصير القادم لمواصلة مشاهدة الفيديو. سيفتح الاختبار بعد {0} {1}."
+
+msgid "Completed"
+msgstr "تم إكمال هذا الدرس"
+
+msgid "Configuration"
+msgstr "التهيئة"
+
+msgid "Confirm"
+msgstr "تأكيد"
+
+msgid "Confirm clearing demo data?"
+msgstr "تأكيد مسح البيانات التجريبية؟"
+
+msgid "Congratulations!"
+msgstr "تهانينا وألف مبروك!"
+
+msgid "Construction Management"
+msgstr "إدارة المشاريع الإنشائية"
 
 msgid "Contact Us"
 msgstr "تواصل معنا"
 
-msgid "My Dashboard"
-msgstr "لوحة التحكم"
+msgid "Contact the Administrator to enroll for this course."
+msgstr "تواصل مع إدارة المنصة للتسجيل في هذه الدورة."
 
 msgid "Continue Learning"
-msgstr "متابعة التعلم"
+msgstr "متابعة مسار التعلم"
 
-msgid "My Courses"
-msgstr "دوراتي"
+msgid "Copied!"
+msgstr "تم النسخ!"
 
-#: Quiz
-msgid "Start Quiz"
-msgstr "ابدأ الاختبار"
+msgid "Copy"
+msgstr "نسخ"
 
-msgid "Submit Answers"
-msgstr "إرسال الإجابات"
+msgid "Copy Link"
+msgstr "نسخ الرابط"
 
-msgid "Your Score"
-msgstr "درجتك"
+msgid "Copy equation"
+msgstr "نسخ المعادلة"
+
+msgid "Copy file link"
+msgstr "نسخ رابط الملف"
+
+msgid "Copy link"
+msgstr "نسخ الرابط"
 
 msgid "Correct"
-msgstr "صحيح"
+msgstr "إجابة صحيحة"
 
-msgid "Incorrect"
-msgstr "خطأ"
+msgid "Coupon"
+msgstr "كود الخصم"
 
-msgid "Try Again"
-msgstr "حاول مرة أخرى"
+msgid "Coupons"
+msgstr "أكواد الخصم"
 
-#: Live class
-msgid "Upcoming Live Classes"
-msgstr "الحصص المباشرة القادمة"
+msgid "Course Completed"
+msgstr "تم إكمال الدورة بنجاح"
 
-msgid "Join Class"
-msgstr "انضم للحصة"
+msgid "Course Content"
+msgstr "محتويات الدورة التدريبية"
 
-#: Discussion
+msgid "Course Language"
+msgstr "لغة الدورة"
+
+msgid "Course Outline"
+msgstr "المنهج الدراسي المعتمد"
+
+msgid "Course Progress"
+msgstr "نسبة إنجاز الدورة"
+
+msgid "Course reference"
+msgstr "مرجع الدورة"
+
+msgid "Courses"
+msgstr "الدورات"
+
+msgid "Create"
+msgstr "إنشاء جديد"
+
+msgid "Create first note"
+msgstr "إنشاء أول ملاحظة"
+
+msgid "Currency"
+msgstr "العملة"
+
+msgid "Current"
+msgstr "الحالي"
+
+msgid "Curriculum"
+msgstr "الخطة الدراسية"
+
+msgid "Dark"
+msgstr "داكن"
+
+msgid "Dashboard"
+msgstr "لوحة المؤشرات"
+
+msgid "Date"
+msgstr "التاريخ"
+
+msgid "Delete"
+msgstr "حذف"
+
+msgid "Delete Note"
+msgstr "حذف الملاحظة"
+
+msgid "Delete note"
+msgstr "حذف الملاحظة"
+
+msgid "Demo data cleared successfully"
+msgstr "تم مسح البيانات التجريبية بنجاح"
+
+msgid "Description"
+msgstr "الوصف التفصيلي"
+
+msgid "Design Equations (SBC 304 / ACI 318)"
+msgstr "المعادلات التصميمية المعتمدة (SBC 304 / ACI 318)"
+
+msgid "Desk"
+msgstr "لوحة التحكم (Desk)"
+
+msgid "Details"
+msgstr "التفاصيل"
+
+msgid "Difficulty Level"
+msgstr "مستوى الصعوبة"
+
+msgid "Discount"
+msgstr "نسبة الخصم"
+
 msgid "Discussion"
-msgstr "مناقشة"
+msgstr "منتدى النقاش"
 
-msgid "Ask a Question"
-msgstr "اطرح سؤالاً"
+msgid "Discussions are currently disabled by the instructor for this course."
+msgstr "المناقشات معطلة حالياً من قبل المدرب لهذه الدورة."
 
-msgid "Reply"
-msgstr "رد"
+msgid "Discussions are disabled for this course"
+msgstr "المناقشات معطلة لهذه الدورة"
 
-msgid "Post"
-msgstr "نشر"
+msgid "Done"
+msgstr "تم بنجاح"
 
-#: General
-msgid "Search"
-msgstr "بحث"
+msgid "Download"
+msgstr "تحميل"
+
+msgid "Download All"
+msgstr "تحميل كافة المرفقات"
+
+msgid "Download Certificate"
+msgstr "تحميل الشهادة المعتمدة"
+
+msgid "Downloading"
+msgstr "جاري التحميل"
+
+msgid "Duration"
+msgstr "المدة الزمنية"
+
+msgid "Edit"
+msgstr "تعديل"
+
+msgid "Edit note"
+msgstr "تعديل الملاحظة"
+
+msgid "Editor View"
+msgstr "عرض المحرر"
+
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+msgid "Engineering Code"
+msgstr "كود ومواصفات هندسية"
+
+msgid "English"
+msgstr "الإنجليزية"
+
+msgid "Enroll Now"
+msgstr "سجل في الدورة الآن"
+
+msgid "Enroll in Course"
+msgstr "التسجيل في هذه الدورة"
+
+msgid "Enrollment"
+msgstr "التسجيل"
+
+msgid "Enrollments"
+msgstr "سجلات التسجيل"
+
+msgid "Equation copied to clipboard"
+msgstr "تم نسخ المعادلة إلى الحافظة بنجاح"
+
+msgid "Error"
+msgstr "حدث خطأ"
+
+msgid "Excel / XLSX"
+msgstr "إكسل / XLSX"
+
+msgid "Expand all chapters"
+msgstr "توسيع جميع الفصول"
+
+msgid "Expand sidebar"
+msgstr "توسيع الشريط الجانبي"
+
+msgid "Explain your question or formula in detail..."
+msgstr "اشرح سؤالك أو المعادلة الهندسية بالتفصيل..."
+
+msgid "Export"
+msgstr "تصدير الملاحظات"
+
+msgid "Export formatted printable notes"
+msgstr "تصدير الملاحظات بصيغة قابلة للطباعة"
+
+msgid "Failed to delete note"
+msgstr "تعذر حذف الملاحظة"
+
+msgid "Failed to post question"
+msgstr "تعذر نشر السؤال"
+
+msgid "Failed to post reply"
+msgstr "تعذر نشر الرد"
+
+msgid "Failed to save note"
+msgstr "تعذر حفظ الملاحظة"
+
+msgid "Failed to update note"
+msgstr "تعذر تحديث الملاحظة"
+
+msgid "Featured Courses"
+msgstr "الدورات المميزة"
+
+msgid "File link copied to clipboard"
+msgstr "تم نسخ رابط الملف إلى الحافظة"
 
 msgid "Filter"
 msgstr "تصفية"
 
+msgid "Finish"
+msgstr "إنهاء"
+
+msgid "Flexural Design Strength:"
+msgstr "مقاومة الانحناء التصميمية (ΦMn):"
+
+msgid "Free"
+msgstr "مجاني"
+
+msgid "General"
+msgstr "إعدادات عامة"
+
+msgid "Generated"
+msgstr "تاريخ الاستخراج"
+
+msgid "Green"
+msgstr "أخضر"
+
+msgid "Gulf & MENA Regional Standards • Saudi Building Code • FIDIC • PMP • BIM & Structural Design"
+msgstr "معايير الخليج والشرق الأوسط • كود البناء السعودي • فيديك • إدارة المشاريع • نمذجة معلومات البناء والتصميم الإنشائي"
+
+msgid "Home"
+msgstr "الرئيسية"
+
+msgid "Import"
+msgstr "استيراد"
+
+msgid "Inactive"
+msgstr "غير نشط"
+
+msgid "Incorrect"
+msgstr "إجابة خاطئة"
+
+msgid "Info"
+msgstr "معلومات إضافية"
+
+msgid "Insert current video timestamp into reply"
+msgstr "إدراج التوقيت الحالي للفيديو في الرد"
+
+msgid "Instructor"
+msgstr "المدرب"
+
+msgid "Instructor Notes"
+msgstr "ملاحظات المدرب"
+
+msgid "Instructors"
+msgstr "هيئة التدريب"
+
+msgid "Intermediate"
+msgstr "متوسط"
+
+msgid "Invoice"
+msgstr "فاتورة ضريبية"
+
+msgid "Invoices"
+msgstr "الفواتير الضريبية"
+
+msgid "Its content is stored in a form we cannot read. Reload the page, and tell your instructor if it keeps happening."
+msgstr "المحتوى محفوظ بصيغة غير قابلة للعرض حالياً. حدّث الصفحة وأبلغ المدرب في حال استمرار المشكلة."
+
+msgid "Job"
+msgstr "فرصة عمل"
+
+msgid "Jobs"
+msgstr "فرص العمل الهندسية"
+
+msgid "Join Class"
+msgstr "انضم للمحاضرة"
+
+msgid "Jump video to this timestamp"
+msgstr "الانتقال بالفيديو إلى هذا التوقيت"
+
+msgid "Jump video to timestamp"
+msgstr "الانتقال بالفيديو إلى التوقيت"
+
+msgid "Keyboard shortcut"
+msgstr "اختصار لوحة المفاتيح"
+
+msgid "LaTeX Math"
+msgstr "معادلات رياضية (LaTeX)"
+
+msgid "Language"
+msgstr "اللغة"
+
+msgid "Learner"
+msgstr "المتدرب"
+
+msgid "Lesson"
+msgstr "درس"
+
+msgid "Lesson attachment"
+msgstr "مرفق الدرس"
+
+msgid "Lesson workspace tabs"
+msgstr "تبويبات مساحة عمل الدرس"
+
+msgid "Lessons"
+msgstr "دروس"
+
+msgid "Light"
+msgstr "فاتح"
+
+msgid "Link to current video timestamp"
+msgstr "ربط السؤال بتوقيت الفيديو الحالي"
+
+msgid "Live Class"
+msgstr "محاضرة مباشرة"
+
+msgid "Live Classes"
+msgstr "المحاضرات التفاعلية المباشرة"
+
+msgid "Load combination equations and ultimate flexural strength requirements"
+msgstr "معادلات تراكيب الأحمال واشتراطات مقاومة الانحناء القصوى"
+
 msgid "Loading"
 msgstr "جاري التحميل"
 
-msgid "No results found"
-msgstr "لا توجد نتائج"
+msgid "Loading curriculum..."
+msgstr "جاري تحميل المنهج الدراسي..."
 
-msgid "lessons"
-msgstr "دروس"
+msgid "Loading notes..."
+msgstr "جاري تحميل الملاحظات..."
+
+msgid "Loading questions..."
+msgstr "جاري تحميل الأسئلة والردود..."
+
+msgid "Loading replies..."
+msgstr "جاري تحميل الردود..."
+
+msgid "Loading resources..."
+msgstr "جاري تحميل المرفقات الهندسية..."
+
+msgid "Locked"
+msgstr "مغلق - أكمل الدروس السابقة"
+
+msgid "Log in"
+msgstr "تسجيل الدخول"
+
+msgid "Log out"
+msgstr "تسجيل الخروج"
+
+msgid "Login"
+msgstr "تسجيل الدخول"
+
+msgid "Login to Frappe Cloud"
+msgstr "تسجيل الدخول إلى Frappe Cloud"
+
+msgid "Login to Frappe Cloud?"
+msgstr "تسجيل الدخول إلى Frappe Cloud؟"
+
+msgid "Mark as Completed"
+msgstr "تحديد الدرس كمكتمل"
+
+msgid "Member"
+msgstr "مشترك"
+
+msgid "Members"
+msgstr "المشتركون"
+
+msgid "Mute"
+msgstr "كتم الصوت"
+
+msgid "My Courses"
+msgstr "دوراتي المسجلة"
+
+msgid "My Dashboard"
+msgstr "لوحة التحكم التعليمية"
+
+msgid "My Profile"
+msgstr "ملفي الشخصي"
+
+msgid "Name"
+msgstr "الاسم الكامل"
+
+msgid "Next"
+msgstr "التالي"
+
+msgid "Next Lesson"
+msgstr "الانتقال للدرس التالي"
+
+msgid "Next Question"
+msgstr "السؤال التالي"
+
+msgid "Next lesson"
+msgstr "الدرس التالي"
+
+msgid "No"
+msgstr "لا"
+
+msgid "No answers yet. Be the first to help!"
+msgstr "لا توجد إجابات بعد. كن أول من يشارك بالحل!"
+
+msgid "No attachments for this lesson"
+msgstr "لا توجد مرفقات لهذا الدرس"
+
+msgid "No curriculum available"
+msgstr "لا يتوفر منهج دراسي"
+
+msgid "No curriculum outline available for this course yet."
+msgstr "لا يتوفر مخطط للمنهج الدراسي لهذه الدورة بعد."
+
+msgid "No downloadable resources or attachments for this lesson."
+msgstr "لا توجد ملفات أو مخططات مرفقة لهذا الدرس."
+
+msgid "No files found matching"
+msgstr "لم يتم العثور على ملفات مطابقة"
+
+msgid "No lessons found"
+msgstr "لم يتم العثور على دروس"
+
+msgid "No lessons matching"
+msgstr "لا توجد دروس مطابقة للبحث"
+
+msgid "No matching files found"
+msgstr "لم يتم العثور على ملفات مطابقة"
+
+msgid "No matching questions found"
+msgstr "لم يتم العثور على أسئلة مطابقة للبحث"
+
+msgid "No notes available to export"
+msgstr "لا توجد ملاحظات مسجلة للتصدير"
+
+msgid "No notes in this lesson yet"
+msgstr "لا توجد ملاحظات مدونة في هذا الدرس بعد"
+
+msgid "No notes match your filter"
+msgstr "لا توجد ملاحظات مطابقة لمعايير التصفية"
+
+msgid "No questions found matching"
+msgstr "لا توجد أسئلة مطابقة"
+
+msgid "No questions yet"
+msgstr "لا توجد أسئلة بعد"
+
+msgid "No questions yet for this lesson. Have a question about this lecture? Ask below!"
+msgstr "لا توجد أسئلة بعد لهذا الدرس. هل لديك استفسار حول هذه المحاضرة؟ اطرحه الآن!"
+
+msgid "No results found"
+msgstr "لا توجد نتائج مطابقة"
+
+msgid "Note deleted successfully"
+msgstr "تم حذف الملاحظة بنجاح"
+
+msgid "Note saved successfully"
+msgstr "تم حفظ الملاحظة بنجاح"
+
+msgid "Note updated successfully"
+msgstr "تم تحديث الملاحظة بنجاح"
+
+msgid "Notes"
+msgstr "الملاحظات"
+
+msgid "Notifications"
+msgstr "الإشعارات"
+
+msgid "Order"
+msgstr "طلب الشراء"
+
+msgid "Orders"
+msgstr "طلبات الشراء"
+
+msgid "Outline"
+msgstr "المحتوى"
+
+msgid "Overview"
+msgstr "نظرة عامة"
+
+msgid "PDF"
+msgstr "ملف PDF"
+
+msgid "Paid"
+msgstr "مدفوع"
+
+msgid "Passing Score"
+msgstr "درجة النجاح المطلوبة"
+
+msgid "Password"
+msgstr "كلمة المرور"
+
+msgid "Pause"
+msgstr "إيقاف مؤقت"
+
+msgid "Payment"
+msgstr "السداد والدفع"
+
+msgid "Payments"
+msgstr "عمليات الدفع"
+
+msgid "Pending"
+msgstr "قيد المراجعة"
+
+msgid "Pin note"
+msgstr "تثبيت الملاحظة"
+
+msgid "Pin note to top"
+msgstr "تثبيت الملاحظة في الأعلى"
+
+msgid "Pin to top"
+msgstr "تثبيت في الأعلى"
+
+msgid "Pinned"
+msgstr "ملاحظات مثبتة"
+
+msgid "Pinned Notes"
+msgstr "الملاحظات المثبتة"
+
+msgid "Play"
+msgstr "تشغيل"
+
+msgid "Play video"
+msgstr "تشغيل الفيديو"
+
+msgid "Playback Speed"
+msgstr "سرعة التشغيل"
+
+msgid "Post"
+msgstr "نشر"
+
+msgid "Post Answer"
+msgstr "إرسال الرد"
+
+msgid "Post Question"
+msgstr "نشر السؤال"
+
+msgid "Prerequisites"
+msgstr "المتطلبات المسبقة"
+
+msgid "Preview"
+msgstr "معاينة مجانية"
+
+msgid "Previous"
+msgstr "السابق"
+
+msgid "Previous Lesson"
+msgstr "الانتقال للدرس السابق"
+
+msgid "Previous Question"
+msgstr "السؤال السابق"
+
+msgid "Previous lesson"
+msgstr "الدرس السابق"
+
+msgid "Price"
+msgstr "السعر"
+
+msgid "Profile"
+msgstr "الملف الشخصي"
+
+msgid "Program"
+msgstr "برنامج مهني"
+
+msgid "Programs"
+msgstr "البرامج والدبلومات المهنية"
+
+msgid "Progress"
+msgstr "نسبة التقدم"
+
+msgid "Project Bundle"
+msgstr "حزمة ملفات المشروع"
+
+msgid "Purple"
+msgstr "بنفسجي"
+
+msgid "Q&A"
+msgstr "الأسئلة"
+
+msgid "Quantity Surveying"
+msgstr "حصر الكميات والمواصفات"
+
+msgid "Question"
+msgstr "سؤال"
+
+msgid "Question Details"
+msgstr "تفاصيل السؤال"
+
+msgid "Question Title"
+msgstr "عنوان السؤال"
+
+msgid "Question posted successfully"
+msgstr "تم نشر السؤال بنجاح"
+
+msgid "Questions"
+msgstr "الأسئلة والواجبات"
+
+msgid "Questions Count"
+msgstr "عدد الأسئلة"
+
+msgid "Quiz"
+msgstr "اختبار تقييمي"
+
+msgid "Quizzes"
+msgstr "الاختبارات التقييمية"
+
+msgid "Red"
+msgstr "أحمر"
+
+msgid "Refresh replies"
+msgstr "تحديث الردود"
+
+msgid "Refresh resources"
+msgstr "تحديث المرفقات"
+
+msgid "Reinforcement Ratio:"
+msgstr "نسبة التسليح (ρ):"
+
+msgid "Rejected"
+msgstr "مرفوض"
+
+msgid "Remove"
+msgstr "إزالة"
+
+msgid "Replies"
+msgstr "الردود"
+
+msgid "Reply"
+msgstr "رد"
+
+msgid "Reply posted successfully"
+msgstr "تم نشر الرد بنجاح"
+
+msgid "Reset filters"
+msgstr "إعادة ضبط التصفية"
+
+msgid "Resources"
+msgstr "المرفقات"
+
+msgid "Resources & Downloads"
+msgstr "المرفقات والتحميلات الهندسية"
+
+msgid "Resume Course"
+msgstr "استئناف دراسة الدورة"
+
+msgid "Review Answers"
+msgstr "مراجعة الإجابات قبل الإرسال"
+
+msgid "Reviews"
+msgstr "التقييمات والآراء"
+
+msgid "Role"
+msgstr "الصلاحية / الدور"
+
+msgid "Roles"
+msgstr "الأدوار والصلاحيات"
+
+msgid "SAR"
+msgstr "ريال سعودي"
+
+msgid "SBC 304 - Sec. 5.3.1 (Load Combo)"
+msgstr "كود SBC 304 - بند 5.3.1 (تركيبات الأحمال)"
+
+msgid "SBC Compliant"
+msgstr "مطابق لكود البناء السعودي"
+
+msgid "Save"
+msgstr "حفظ"
+
+msgid "Save note"
+msgstr "حفظ الملاحظة"
+
+msgid "Score"
+msgstr "الدرجة المستحقة"
+
+msgid "Search"
+msgstr "بحث"
+
+msgid "Search Q&A"
+msgstr "ابحث في أسئلة الدرس..."
+
+msgid "Search files..."
+msgstr "ابحث في المرفقات..."
+
+msgid "Search lessons..."
+msgstr "ابحث في الفصول والدروس..."
+
+msgid "Search notes..."
+msgstr "ابحث في ملاحظاتك..."
+
+msgid "Seek"
+msgstr "تقديم / تأخير"
+
+msgid "Settings"
+msgstr "الإعدادات"
+
+msgid "Share"
+msgstr "مشاركة"
+
+msgid "Share on LinkedIn"
+msgstr "مشاركة على لينكد إن"
+
+msgid "Show all notes"
+msgstr "عرض جميع الملاحظات"
+
+msgid "Show pinned notes only"
+msgstr "عرض الملاحظات المثبتة فقط"
+
+msgid "Software Training"
+msgstr "التدريب الاحترافي على البرمجيات"
+
+msgid "Standard Mode"
+msgstr "الوضع القياسي"
+
+msgid "Start Course"
+msgstr "بدء دراسة الدورة"
+
+msgid "Start Learning"
+msgstr "ابدأ التعلم الآن"
+
+msgid "Start Quiz"
+msgstr "ابدأ الاختبار"
+
+msgid "Status"
+msgstr "الحالة"
+
+msgid "Structural Engineering"
+msgstr "الهندسة الإنشائية"
+
+msgid "Student"
+msgstr "متدرب"
+
+msgid "Submit"
+msgstr "إرسال"
+
+msgid "Submit Answers"
+msgstr "إرسال الإجابات"
+
+msgid "Submitted"
+msgstr "تم الإرسال"
+
+msgid "Subtotal"
+msgstr "المجموع الفرعي"
+
+msgid "Success"
+msgstr "تمت العملية بنجاح"
+
+msgid "Summary"
+msgstr "الملخص التنفيذي"
+
+msgid "System"
+msgstr "النظام"
+
+msgid "Target Audience"
+msgstr "الفئة المستهدفة"
+
+msgid "Tax"
+msgstr "ضريبة القيمة المضافة"
+
+msgid "Tension-controlled"
+msgstr "قطاع محكوم بالشد"
+
+msgid "Theater Mode"
+msgstr "الوضع المسرحي"
+
+msgid "Theme"
+msgstr "المظهر"
+
+msgid "This lesson could not be displayed"
+msgstr "تعذر عرض محتوى هذا الدرس"
+
+msgid "This lesson is locked"
+msgstr "هذا الدرس مغلق حالياً"
+
+msgid "This lesson is not available for preview. Please enroll in the course to access it."
+msgstr "هذا الدرس غير متاح للمعاينة المجانية. يُرجى التسجيل في الدورة للوصول إلى كافة المحاضرات."
+
+msgid "This video contains {0} {1}:"
+msgstr "يحتوي هذا الفيديو على {0} {1}:"
+
+msgid "Time"
+msgstr "الوقت"
+
+msgid "Time Limit"
+msgstr "الوقت المحدد للاختبار"
+
+msgid "Time for a Quiz"
+msgstr "حان وقت الاختبار السريع"
+
+msgid "Title"
+msgstr "العنوان الرئيسي"
+
+msgid "Toggle discussions"
+msgstr "إظهار / إخفاء المناقشات"
+
+msgid "Toggle fullscreen"
+msgstr "ملء الشاشة"
+
+msgid "Total"
+msgstr "الإجمالي النهائي"
+
+msgid "Total Notes"
+msgstr "إجمالي الملاحظات"
+
+msgid "Try Again"
+msgstr "إعادة المحاولة"
+
+msgid "Try clearing your search query or pin filter."
+msgstr "جرّب مسح نص البحث أو إلغاء فلتر التثبيت."
+
+msgid "USD"
+msgstr "دولار أمريكي"
+
+msgid "Ultimate Load Combination:"
+msgstr "تراكيب الأحمال القصوى التصميمية:"
+
+msgid "Unfortunately, you did not pass."
+msgstr "للأسف، لم تحقق درجة النجاح المطلوبة في هذه المحاولة."
+
+msgid "Unmute"
+msgstr "تشغيل الصوت"
+
+msgid "Unpin note"
+msgstr "إلغاء تثبيت الملاحظة"
+
+msgid "Upcoming Live Classes"
+msgstr "المحاضرات المباشرة القادمة"
+
+msgid "Update"
+msgstr "تحديث"
+
+msgid "Update timestamp to current video position"
+msgstr "تحديث التوقيت إلى موقع الفيديو الحالي"
+
+msgid "Verify Certificate"
+msgstr "التحقق من صحة الشهادة"
+
+msgid "Video failed to load. This lesson will still be marked complete after you spend some time on it."
+msgstr "تعذر تحميل الفيديو. سيتم احتساب إكمال الدرس بعد قضاء الوقت المحدد."
+
+msgid "Video paused"
+msgstr "تم إيقاف الفيديو مؤقتاً"
+
+msgid "View"
+msgstr "عرض التفاصيل"
+
+msgid "View All Courses"
+msgstr "عرض جميع الدورات"
+
+msgid "View discussion"
+msgstr "عرض المناقشة"
+
+msgid "Warning"
+msgstr "تنبيه هام"
+
+msgid "With Timestamps"
+msgstr "مرتبطة بالفيديو"
+
+msgid "Write an answer..."
+msgstr "اكتب إجابتك هنا..."
+
+msgid "Write your note here... (Press Ctrl+Enter to save)"
+msgstr "اكتب ملاحظتك هنا... (اضغط Ctrl+Enter للحفظ)"
+
+msgid "Write your note..."
+msgstr "اكتب ملاحظتك هنا..."
+
+msgid "Yellow"
+msgstr "أصفر"
+
+msgid "Yes"
+msgstr "نعم"
+
+msgid "You have passed the quiz."
+msgstr "لقد اجتزت هذا الاختبار بنجاح وتم تسجيل النتيجة."
+
+msgid "Your Score"
+msgstr "الدرجة النهائية"
+
+msgid "ZIP / Archive"
+msgstr "أرشيف ملفات مضغوطة / ZIP"
+
+msgid "Zen Mode"
+msgstr "وضع التركيز (Zen)"
+
+msgid "at {0} minutes"
+msgstr "عند الدقيقة {0}"
 
 msgid "chapters"
 msgstr "فصول"
 
+msgid "completed"
+msgstr "مكتمل"
+
+msgid "e.g. Question about shear reinforcement in beams..."
+msgstr "مثال: سؤال حول تسليح القص في الكمرات الخرسانية..."
+
+msgid "quiz"
+msgstr "اختبار"
+
+msgid "quizzes"
+msgstr "اختبارات"
+
+msgid "second"
+msgstr "ثانية"
+
+msgid "seconds"
+msgstr "ثواني"
+
 msgid "students"
-msgstr "طلاب"
+msgstr "متدربين"
+

@@ -7,7 +7,7 @@
 				<div class="flex items-center justify-between text-xs font-medium text-ink-gray-7 mb-1.5">
 					<span class="inline-flex items-center gap-1.5">
 						<GraduationCap class="size-3.5 text-ink-blue-5" />
-						<span>{{ __('مسار الدورة') }} • {{ __('Course Progress') }}</span>
+						<span>{{ __('Course Progress') }}</span>
 					</span>
 					<span class="font-bold tabular-nums text-ink-gray-9">{{ displayedProgress }}%</span>
 				</div>
@@ -26,7 +26,7 @@
 					<input
 						type="text"
 						v-model="searchQuery"
-						:placeholder="__('ابحث في الفصول والدروس... / Search lessons...')"
+						:placeholder="__('Search lessons...')"
 						class="w-full ps-8 pe-7 py-1.5 rounded-6 border border-outline-gray-2 bg-surface-gray-1 text-xs text-ink-gray-9 placeholder:text-ink-gray-4 focus:bg-surface-base focus:outline-none focus:ring-2 focus:ring-outline-blue-2 transition-all"
 					/>
 					<button
@@ -54,12 +54,11 @@
 			<!-- Chapter / Lesson Quick Summary -->
 			<div class="flex items-center justify-between text-xs text-ink-gray-5 mt-2">
 				<span>
-					{{ totalLessonsCount }} {{ totalLessonsCount === 1 ? __('درس') : __('دروس') }}
-					({{ totalLessonsCount }} {{ totalLessonsCount === 1 ? 'lesson' : 'lessons' }})
+					{{ totalLessonsCount }} {{ totalLessonsCount === 1 ? __('Lesson') : __('Lessons') }}
 				</span>
 				<span v-if="completedCount > 0" class="inline-flex items-center gap-1 text-ink-green-8">
 					<CheckCircle2 class="size-3" />
-					{{ completedCount }} {{ __('مكتمل') }}
+					{{ completedCount }} {{ __('Completed') }}
 				</span>
 			</div>
 		</div>
@@ -69,7 +68,7 @@
 			<!-- Loading State -->
 			<div v-if="outline.loading" class="py-12 flex flex-col items-center justify-center gap-2 text-ink-gray-5">
 				<Loader2 class="size-6 animate-spin text-ink-blue-5" />
-				<span class="text-xs">{{ __('جاري تحميل الفصول والدروس...') }}</span>
+				<span class="text-xs">{{ __('Loading curriculum...') }}</span>
 			</div>
 
 			<!-- Empty Search State -->
@@ -79,7 +78,7 @@
 			>
 				<SearchX class="size-8 text-ink-gray-4 mx-auto mb-2" />
 				<h4 class="text-xs font-semibold text-ink-gray-9 mb-1">
-					{{ __('لم يتم العثور على نتائج للبحث') }}
+					{{ __('No lessons found') }}
 				</h4>
 				<p class="text-xs text-ink-gray-5 mb-3">
 					{{ `${__('No lessons matching')} "${searchQuery}"` }}
@@ -89,7 +88,7 @@
 					@click="searchQuery = ''"
 					class="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium rounded-6 bg-surface-gray-2 hover:bg-surface-gray-3 text-ink-gray-8 transition-colors cursor-pointer"
 				>
-					{{ __('مسح البحث / Clear search') }}
+					{{ __('Clear search') }}
 				</button>
 			</div>
 
@@ -100,7 +99,7 @@
 			>
 				<BookOpen class="size-8 text-ink-gray-4 mx-auto mb-2" />
 				<h4 class="text-xs font-semibold text-ink-gray-9 mb-1">
-					{{ __('لا توجد فصول دراسية متاحة حالياً') }}
+					{{ __('No curriculum available') }}
 				</h4>
 				<p class="text-xs text-ink-gray-5">
 					{{ __('No curriculum outline available for this course yet.') }}
@@ -133,10 +132,10 @@
 								</div>
 								<div class="flex items-center gap-2 text-[11px] text-ink-gray-5 mt-0.5">
 									<span>
-										{{ chapter.lessons?.length || 0 }} {{ __('دروس / lessons') }}
+										{{ chapter.lessons?.length || 0 }} {{ __('Lessons') }}
 									</span>
 									<span v-if="getChapterCompletedCount(chapter) > 0" class="text-ink-green-8 font-medium">
-										• {{ getChapterCompletedCount(chapter) }}/{{ chapter.lessons?.length || 0 }} {{ __('مكتمل') }}
+										• {{ getChapterCompletedCount(chapter) }}/{{ chapter.lessons?.length || 0 }} {{ __('Completed') }}
 									</span>
 								</div>
 							</div>
@@ -147,7 +146,7 @@
 							<div
 								v-if="isChapterFullyComplete(chapter)"
 								class="size-5 rounded-full bg-surface-green-3/20 flex items-center justify-center text-ink-green-8"
-								:title="__('الفصل مكتمل بالكامل / Chapter completed')"
+								:title="__('Chapter completed')"
 							>
 								<CheckCircle2 class="size-3.5 fill-current" />
 							</div>
@@ -193,7 +192,7 @@
 								<template v-if="lesson.locked">
 									<LockKeyhole
 										class="size-3.5 text-ink-gray-4"
-										:title="__('مغلق - أكمل الدروس السابقة لفتحه / Locked')"
+										:title="__('Locked')"
 									/>
 								</template>
 
@@ -201,7 +200,7 @@
 								<template v-else-if="lesson.is_complete">
 									<CheckCircle2
 										class="size-3.5 text-ink-green-8 fill-surface-green-3/30"
-										:title="__('تم إكمال هذا الدرس / Completed')"
+										:title="__('Completed')"
 									/>
 								</template>
 
@@ -251,7 +250,7 @@
 									v-if="isLessonActive(lesson)"
 									class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-surface-blue-3 text-ink-blue-5"
 								>
-									{{ __('الآن') }}
+									{{ __('Current') }}
 								</span>
 								<LockKeyhole v-else-if="lesson.locked" class="size-3 text-ink-gray-4" />
 							</div>

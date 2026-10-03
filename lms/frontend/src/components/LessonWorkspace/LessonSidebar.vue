@@ -20,11 +20,11 @@
 				</div>
 				<div class="flex items-center gap-2 text-[11px] text-ink-gray-5 mt-0.5">
 					<span v-if="currentLessonNumber" class="font-mono text-ink-blue-5 font-bold">
-						{{ __('درس') }} {{ currentLessonNumber }}
+						{{ __('Lesson') }} {{ currentLessonNumber }}
 					</span>
 					<span v-if="currentLessonNumber && progress !== undefined">•</span>
 					<span v-if="progress !== undefined" class="tabular-nums font-medium">
-						{{ Math.ceil(progress) }}% {{ __('مكتمل') }}
+						{{ Math.ceil(progress) }}% {{ __('Completed') }}
 					</span>
 				</div>
 			</div>
@@ -45,7 +45,7 @@
 			v-if="!isCollapsed"
 			class="px-2 pt-2 pb-1 shrink-0 border-b border-outline-gray-2 bg-surface-base"
 			role="tablist"
-			aria-label="Lesson workspace tabs"
+			:aria-label="__('Lesson workspace tabs')"
 		>
 			<div class="grid grid-cols-4 gap-1 p-0.5 rounded-7 bg-surface-gray-2">
 				<button
@@ -62,7 +62,7 @@
 							? 'bg-surface-base text-ink-blue-5 font-bold shadow-xs'
 							: 'text-ink-gray-6 hover:text-ink-gray-9 hover:bg-surface-base/50 font-medium'
 					"
-					:title="`${tab.labelAr} - ${tab.labelEn}`"
+					:title="__(tab.label)"
 				>
 					<div class="flex items-center gap-1">
 						<component
@@ -70,7 +70,7 @@
 							class="size-3.5 transition-transform group-hover:scale-105"
 							:class="activeTab === tab.id ? 'text-ink-blue-5' : 'text-ink-gray-5'"
 						/>
-						<span class="truncate text-[11px]">{{ tab.labelAr }}</span>
+						<span class="truncate text-[11px]">{{ __(tab.label) }}</span>
 					</div>
 
 					<!-- Active Underline Indicator (UI/UX Pro Max Tokens) -->
@@ -98,7 +98,7 @@
 						? 'bg-surface-blue-2 text-ink-blue-5 font-bold shadow-xs'
 						: 'text-ink-gray-6 hover:text-ink-gray-9 hover:bg-surface-gray-2'
 				"
-				:title="`${tab.labelAr} • ${tab.labelEn}`"
+				:title="__(tab.label)"
 			>
 				<component :is="tab.icon" class="size-4.5" />
 				<div
@@ -239,31 +239,17 @@ watch(
 	}
 )
 
-const tabDefinitions = [
-	{
-		id: 'outline' as TabKey,
-		labelAr: __('المحتوى'),
-		labelEn: 'Outline',
-		icon: ListTree,
-	},
-	{
-		id: 'notes' as TabKey,
-		labelAr: __('الملاحظات'),
-		labelEn: 'Notes',
-		icon: NotebookPen,
-	},
-	{
-		id: 'qa' as TabKey,
-		labelAr: __('الأسئلة'),
-		labelEn: 'Q&A',
-		icon: MessageCircleQuestion,
-	},
-	{
-		id: 'resources' as TabKey,
-		labelAr: __('المرفقات'),
-		labelEn: 'Resources',
-		icon: FolderDown,
-	},
+interface TabDefinition {
+	id: TabKey
+	label: string
+	icon: any
+}
+
+const tabDefinitions: TabDefinition[] = [
+	{ id: 'outline', label: 'Outline', icon: ListTree },
+	{ id: 'notes', label: 'Notes', icon: NotebookPen },
+	{ id: 'qa', label: 'Q&A', icon: MessageCircleQuestion },
+	{ id: 'resources', label: 'Resources', icon: FolderDown },
 ]
 
 function toggleCollapsed() {

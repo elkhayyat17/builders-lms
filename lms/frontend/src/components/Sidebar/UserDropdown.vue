@@ -55,6 +55,13 @@ const currentLanguage = computed(() => {
 })
 
 const setAppLanguage = (lang) => {
+	const applyLanguageAndReload = () => {
+		document.cookie = `preferred_language=${lang};path=/;max-age=31536000;SameSite=Lax`
+		document.documentElement.lang = lang
+		document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'
+		window.location.reload()
+	}
+
 	if (isLoggedIn.value && userResource.data?.name) {
 		call('frappe.client.set_value', {
 			doctype: 'User',
@@ -62,12 +69,10 @@ const setAppLanguage = (lang) => {
 			fieldname: 'language',
 			value: lang,
 		}).then(() => {
-			document.cookie = `preferred_language=${lang};path=/;max-age=31536000;SameSite=Lax`
-			window.location.reload()
+			applyLanguageAndReload()
 		})
 	} else {
-		document.cookie = `preferred_language=${lang};path=/;max-age=31536000;SameSite=Lax`
-		window.location.reload()
+		applyLanguageAndReload()
 	}
 }
 
@@ -137,7 +142,7 @@ const userDropdownOptions = computed(() => {
 			options: [
 				{
 					icon: 'lucide-user',
-					label: 'My Profile',
+					label: __('My Profile'),
 					onClick: () => {
 						router.push(`/user/${userResource.data?.username}`)
 					},
@@ -174,16 +179,16 @@ const userDropdownOptions = computed(() => {
 				},
 				{
 					icon: 'lucide-globe',
-					label: __('Language / اللغة'),
+					label: __('Language'),
 					submenu: [
 						{
-							label: 'العربية (Arabic)',
+							label: __('Arabic'),
 							selected: currentLanguage.value === 'ar',
 							slots: themeCheck,
 							onClick: () => setAppLanguage('ar'),
 						},
 						{
-							label: 'English (الإنجليزية)',
+							label: __('English'),
 							selected: currentLanguage.value === 'en',
 							slots: themeCheck,
 							onClick: () => setAppLanguage('en'),
@@ -205,7 +210,7 @@ const userDropdownOptions = computed(() => {
 				},
 				{
 					icon: 'lucide-settings',
-					label: 'Settings',
+					label: __('Settings'),
 					onClick: () => {
 						pushSettingsHash(router)
 					},
@@ -233,7 +238,7 @@ const userDropdownOptions = computed(() => {
 					},
 				},
 				{
-					label: 'Clear Demo Data',
+					label: __('Clear Demo Data'),
 					icon: 'lucide-trash-2',
 					onClick: () => {
 						clearDemoDataConfirmation()
@@ -247,7 +252,7 @@ const userDropdownOptions = computed(() => {
 				},
 				{
 					icon: FrappeCloudIcon,
-					label: 'Login to Frappe Cloud',
+					label: __('Login to Frappe Cloud'),
 					onClick: () => {
 						$dialog({
 							title: __('Login to Frappe Cloud?'),
@@ -275,7 +280,7 @@ const userDropdownOptions = computed(() => {
 				},
 				{
 					icon: 'lucide-log-out',
-					label: 'Log out',
+					label: __('Log out'),
 					onClick: () => {
 						logout.submit().then(() => {
 							isLoggedIn = false
@@ -287,7 +292,7 @@ const userDropdownOptions = computed(() => {
 				},
 				{
 					icon: 'lucide-log-in',
-					label: 'Log in',
+					label: __('Log in'),
 					onClick: () => {
 						window.location.href = '/login'
 					},

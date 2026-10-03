@@ -14,7 +14,7 @@
 		<template #name>
 			<div class="flex flex-col">
 				<span class="text-xl font-bold text-ink-gray-9">
-					{{ __('Civil Engineering Courses') }} | {{ __('دورات الهندسة المدنية') }}
+					{{ __('Civil Engineering Courses') }}
 				</span>
 				<span class="text-xs text-ink-gray-5 mt-0.5">
 					{{ __('Gulf & MENA Regional Standards • Saudi Building Code • FIDIC • PMP • BIM & Structural Design') }}

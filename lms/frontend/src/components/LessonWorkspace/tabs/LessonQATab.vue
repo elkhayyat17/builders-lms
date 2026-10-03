@@ -7,7 +7,7 @@
 		>
 			<MessageSquareOff class="size-8 text-ink-gray-4 mx-auto mb-2" />
 			<h4 class="text-xs font-bold text-ink-gray-9 mb-1">
-				{{ __('النقاشات والأسئلة غير مفعلة لهذا المساق') }}
+				{{ __('Discussions are disabled for this course') }}
 			</h4>
 			<p class="text-xs text-ink-gray-5">
 				{{ __('Discussions are currently disabled by the instructor for this course.') }}
@@ -26,7 +26,7 @@
 						class="inline-flex items-center gap-1.5 px-2 py-1 rounded-6 text-xs font-medium text-ink-gray-7 hover:text-ink-gray-9 hover:bg-surface-gray-2 transition-colors cursor-pointer"
 					>
 						<ArrowLeft class="size-3.5" />
-						<span>{{ __('العودة للأسئلة / All Questions') }}</span>
+						<span>{{ __('Back to Questions') }}</span>
 					</button>
 
 					<button
@@ -48,7 +48,7 @@
 								<UserAvatar :user="activeTopic.user" size="md" />
 								<div class="min-w-0">
 									<div class="text-xs font-bold text-ink-gray-9 truncate">
-										{{ activeTopic.user?.full_name || activeTopic.owner || __('طالب') }}
+										{{ activeTopic.user?.full_name || activeTopic.owner || __('Student') }}
 									</div>
 									<div class="text-[11px] text-ink-gray-5">
 										{{ timeAgo(activeTopic.creation) }}
@@ -77,13 +77,13 @@
 					<!-- Replies Divider -->
 					<div class="flex items-center gap-2 px-1 text-xs font-semibold text-ink-gray-6">
 						<MessageSquare class="size-3.5 text-ink-gray-5" />
-						<span>{{ __('الردود والمناقشات') }} ({{ repliesList.length }})</span>
+						<span>{{ __('Replies') }} ({{ repliesList.length }})</span>
 					</div>
 
 					<!-- Replies Loading -->
 					<div v-if="repliesResource.loading && repliesList.length === 0" class="py-6 text-center text-ink-gray-5 text-xs">
 						<Loader2 class="size-5 animate-spin mx-auto mb-1 text-ink-blue-5" />
-						<span>{{ __('جاري تحميل الردود...') }}</span>
+						<span>{{ __('Loading replies...') }}</span>
 					</div>
 
 					<!-- Empty Replies State -->
@@ -91,8 +91,7 @@
 						v-else-if="repliesList.length === 0"
 						class="rounded-6 border border-dashed border-outline-gray-2 p-5 text-center text-ink-gray-5"
 					>
-						<p class="text-xs">{{ __('لا توجد ردود بعد. كن أول من يجيب!') }}</p>
-						<p class="text-[11px] text-ink-gray-4 mt-0.5">No answers yet. Be the first to help!</p>
+						<p class="text-xs">{{ __('No answers yet. Be the first to help!') }}</p>
 					</div>
 
 					<!-- Replies List -->
@@ -142,7 +141,7 @@
 						<textarea
 							v-model="newReplyText"
 							rows="2"
-							:placeholder="__('اكتب ردك أو توضيحك الهندسي هنا... / Write an answer...')"
+							:placeholder="__('Write an answer...')"
 							class="w-full p-2 text-xs rounded-6 border border-outline-gray-2 bg-surface-gray-1 focus:bg-surface-base focus:outline-none focus:ring-2 focus:ring-outline-blue-2 text-ink-gray-9 placeholder:text-ink-gray-4 resize-none transition-all"
 						/>
 						<div class="flex items-center justify-between gap-2">
@@ -168,7 +167,7 @@
 								<template #prefix>
 									<Send class="size-3" />
 								</template>
-								{{ __('إرسال الرد / Post Answer') }}
+								{{ __('Post Answer') }}
 							</Button>
 						</div>
 					</div>
@@ -181,7 +180,7 @@
 				<div class="px-4 py-3 shrink-0 border-b border-outline-gray-2 bg-surface-base flex items-center justify-between">
 					<div class="flex items-center gap-2">
 						<HelpCircle class="size-4 text-ink-blue-5" />
-						<span class="text-xs font-bold text-ink-gray-9">{{ __('طرح استفسار جديد / Ask a Question') }}</span>
+						<span class="text-xs font-bold text-ink-gray-9">{{ __('Ask a Question') }}</span>
 					</div>
 					<button
 						type="button"
@@ -202,14 +201,11 @@
 							/>
 							<div class="flex-1 min-w-0">
 								<div class="flex items-center gap-1.5 text-xs font-bold text-ink-gray-9">
-									<span>{{ __('ربط بنقطة الفيديو الحالية') }}</span>
-									<span class="text-[11px] font-normal text-ink-gray-6">
-										[✓ Link to current video timestamp]
-									</span>
+									<span>{{ __('Link to current video timestamp') }}</span>
 								</div>
 								<div class="flex items-center gap-1 text-[11px] text-ink-blue-5 mt-0.5">
 									<Clock class="size-3" />
-									<span>{{ __('التوقيت المرصود:') }} {{ formatSeconds(capturedTime) }}</span>
+									<span>{{ __('Captured time:') }} {{ formatSeconds(capturedTime) }}</span>
 								</div>
 							</div>
 							<button
@@ -218,7 +214,7 @@
 								class="px-2 py-0.5 rounded-5 border border-outline-gray-2 bg-surface-base text-[10px] font-medium text-ink-gray-7 hover:bg-surface-gray-2"
 								:title="__('Update timestamp to current video position')"
 							>
-								{{ __('تحديث') }}
+								{{ __('Update') }}
 							</button>
 						</label>
 					</div>
@@ -226,12 +222,12 @@
 					<!-- Question Title -->
 					<div>
 						<label class="block text-xs font-bold text-ink-gray-8 mb-1">
-							{{ __('عنوان السؤال / Question Title') }} <span class="text-ink-red-5">*</span>
+							{{ __('Question Title') }} <span class="text-ink-red-5">*</span>
 						</label>
 						<input
 							type="text"
 							v-model="newQuestionTitle"
-							:placeholder="__('مثلاً: استفسار حول تسليح القص في الكمرات الخرسانية...')"
+							:placeholder="__('e.g. Question about shear reinforcement in beams...')"
 							class="w-full px-3 py-2 text-xs rounded-6 border border-outline-gray-2 bg-surface-base focus:outline-none focus:ring-2 focus:ring-outline-blue-2 text-ink-gray-9 placeholder:text-ink-gray-4 transition-all"
 						/>
 					</div>
@@ -239,12 +235,12 @@
 					<!-- Question Details -->
 					<div>
 						<label class="block text-xs font-bold text-ink-gray-8 mb-1">
-							{{ __('تفاصيل السؤال / Question Details') }} <span class="text-ink-red-5">*</span>
+							{{ __('Question Details') }} <span class="text-ink-red-5">*</span>
 						</label>
 						<textarea
 							v-model="newQuestionDetails"
 							rows="5"
-							:placeholder="__('اشرح نقطة عدم الوضوح أو المعادلة المطلوبة بالتفصيل ليتمكن المهندس أو المحاضر من إفادتك...')"
+							:placeholder="__('Explain your question or formula in detail...')"
 							class="w-full p-3 text-xs rounded-6 border border-outline-gray-2 bg-surface-base focus:outline-none focus:ring-2 focus:ring-outline-blue-2 text-ink-gray-9 placeholder:text-ink-gray-4 resize-none transition-all"
 						/>
 					</div>
@@ -257,7 +253,7 @@
 						size="sm"
 						@click="isCreatingQuestion = false"
 					>
-						{{ __('إلغاء / Cancel') }}
+						{{ __('Cancel') }}
 					</Button>
 					<Button
 						variant="solid"
@@ -270,7 +266,7 @@
 						<template #prefix>
 							<Send class="size-3" />
 						</template>
-						{{ __('نشر السؤال / Post Question') }}
+						{{ __('Post Question') }}
 					</Button>
 				</div>
 			</div>
@@ -286,7 +282,7 @@
 							<input
 								type="text"
 								v-model="searchQuery"
-								:placeholder="__('ابحث في أسئلة الدرس... / Search Q&A')"
+								:placeholder="__('Search Q&A')"
 								class="w-full ps-8 pe-7 py-1.5 rounded-6 border border-outline-gray-2 bg-surface-gray-1 text-xs text-ink-gray-9 placeholder:text-ink-gray-4 focus:bg-surface-base focus:outline-none focus:ring-2 focus:ring-outline-blue-2 transition-all"
 							/>
 							<button
@@ -311,7 +307,7 @@
 							<template #prefix>
 								<Plus class="size-3.5" />
 							</template>
-							{{ __('سؤال جديد') }}
+							{{ __('Ask a question') }}
 						</Button>
 					</div>
 
@@ -323,7 +319,7 @@
 							class="px-2.5 py-1 rounded-full font-medium transition-colors cursor-pointer shrink-0"
 							:class="activeFilter === 'all' ? 'bg-surface-gray-8 text-ink-gray-2 font-semibold' : 'bg-surface-gray-2 text-ink-gray-7 hover:bg-surface-gray-3'"
 						>
-							{{ __('الكل / All') }}
+							{{ __('All') }}
 						</button>
 						<button
 							type="button"
@@ -332,7 +328,7 @@
 							:class="activeFilter === 'timestamps' ? 'bg-surface-blue-2 text-ink-blue-5 font-semibold border border-outline-blue-2' : 'bg-surface-gray-2 text-ink-gray-7 hover:bg-surface-gray-3'"
 						>
 							<Clock class="size-3" />
-							<span>{{ __('مرتبطة بالفيديو') }}</span>
+							<span>{{ __('With Timestamps') }}</span>
 						</button>
 					</div>
 				</div>
@@ -342,7 +338,7 @@
 					<!-- Loading -->
 					<div v-if="topicsResource.loading" class="py-12 text-center text-ink-gray-5 text-xs">
 						<Loader2 class="size-6 animate-spin mx-auto mb-2 text-ink-blue-5" />
-						<span>{{ __('جاري تحميل الأسئلة...') }}</span>
+						<span>{{ __('Loading questions...') }}</span>
 					</div>
 
 					<!-- Empty Search State -->
@@ -352,7 +348,7 @@
 					>
 						<SearchX class="size-8 text-ink-gray-4 mx-auto mb-2" />
 						<h4 class="text-xs font-semibold text-ink-gray-9 mb-1">
-							{{ __('لم يتم العثور على أسئلة مطابقة') }}
+							{{ __('No matching questions found') }}
 						</h4>
 						<p class="text-xs text-ink-gray-5 mb-3">
 							{{ `${__('No questions found matching')} "${searchQuery}"` }}
@@ -362,11 +358,11 @@
 							@click="searchQuery = ''"
 							class="px-3 py-1 text-xs font-medium rounded-6 bg-surface-gray-2 hover:bg-surface-gray-3 text-ink-gray-8 cursor-pointer"
 						>
-							{{ __('مسح البحث') }}
+							{{ __('Clear search') }}
 						</button>
 					</div>
 
-					<!-- Empty Discussions State (Task 4 Brief Requirement: Clean friendly empty state in Arabic + English subtitle) -->
+					<!-- Empty Discussions State -->
 					<div
 						v-else-if="filteredTopics.length === 0"
 						class="rounded-7 border border-dashed border-outline-gray-2 p-8 text-center my-4"
@@ -375,7 +371,7 @@
 							<MessageCircleQuestion class="size-6" />
 						</div>
 						<h3 class="text-xs font-bold text-ink-gray-9 mb-1">
-							{{ __('لا توجد أسئلة أو استفسارات بعد') }}
+							{{ __('No questions yet') }}
 						</h3>
 						<p class="text-xs text-ink-gray-5 max-w-xs mx-auto leading-relaxed mb-4">
 							{{ __('No questions yet for this lesson. Have a question about this lecture? Ask below!') }}
@@ -389,7 +385,7 @@
 							<template #prefix>
 								<Plus class="size-3.5" />
 							</template>
-							{{ __('طرح أول سؤال / Ask a question') }}
+							{{ __('Ask a question') }}
 						</Button>
 					</div>
 
@@ -407,7 +403,7 @@
 									<UserAvatar :user="topic.user" size="sm" />
 									<div class="min-w-0">
 										<span class="text-xs font-semibold text-ink-gray-9 truncate block">
-											{{ topic.user?.full_name || topic.owner || __('طالب') }}
+											{{ topic.user?.full_name || topic.owner || __('Student') }}
 										</span>
 										<span class="text-[10px] text-ink-gray-5">
 											{{ timeAgo(topic.creation) }}
@@ -421,7 +417,7 @@
 									type="button"
 									@click.stop="seekTo(getTopicTimestamp(topic)!.seconds)"
 									class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-blue-2 text-ink-blue-5 border border-outline-blue-2 hover:bg-surface-blue-3 transition-colors cursor-pointer shrink-0"
-									:title="__('الانتقال للتوقيت في الفيديو')"
+									:title="__('Jump video to timestamp')"
 								>
 									<Play class="size-2.5 fill-current" />
 									<span>{{ getTopicTimestamp(topic)!.formatted }}</span>
@@ -438,11 +434,11 @@
 								<span class="inline-flex items-center gap-1">
 									<MessageSquare class="size-3 text-ink-gray-4" />
 									<span class="tabular-nums font-medium">
-										{{ topic.reply_count || 0 }} {{ topic.reply_count === 1 ? __('رد') : __('ردود') }}
+										{{ topic.reply_count || 0 }} {{ topic.reply_count === 1 ? __('Reply') : __('Replies') }}
 									</span>
 								</span>
 								<span class="text-ink-blue-5 font-medium group-hover:underline inline-flex items-center gap-0.5">
-									{{ __('عرض النقاش') }}
+									{{ __('View discussion') }}
 									<ChevronRight class="size-3" />
 								</span>
 							</div>
@@ -745,7 +741,7 @@ async function submitNewQuestion() {
 			},
 		})
 
-		toast.success(__('تم نشر السؤال بنجاح / Question posted'))
+		toast.success(__('Question posted successfully'))
 		isCreatingQuestion.value = false
 		newQuestionTitle.value = ''
 		newQuestionDetails.value = ''
@@ -758,7 +754,7 @@ async function submitNewQuestion() {
 		}
 	} catch (err: any) {
 		console.error('Failed to post discussion topic', err)
-		toast.error(err?.messages?.[0] || __('تعذر نشر السؤال، يرجى المحاولة ثانية'))
+		toast.error(err?.messages?.[0] || __('Failed to post question'))
 	} finally {
 		isSubmittingQuestion.value = false
 	}
@@ -777,13 +773,13 @@ async function postReply() {
 			},
 		})
 
-		toast.success(__('تم إضافة الرد بنجاح / Reply posted'))
+		toast.success(__('Reply posted successfully'))
 		newReplyText.value = ''
 		await repliesResource.reload()
 		topicsResource.refresh()
 	} catch (err: any) {
 		console.error('Failed to post reply', err)
-		toast.error(err?.messages?.[0] || __('تعذر إرسال الرد'))
+		toast.error(err?.messages?.[0] || __('Failed to post reply'))
 	} finally {
 		isSubmittingReply.value = false
 	}

@@ -9,7 +9,7 @@
 					<input
 						type="text"
 						v-model="searchQuery"
-						:placeholder="__('ابحث في المرفقات وشيتات الإكسيل... / Search files...')"
+						:placeholder="__('Search files...')"
 						class="w-full ps-8 pe-7 py-1.5 rounded-6 border border-outline-gray-2 bg-surface-gray-1 text-xs text-ink-gray-9 placeholder:text-ink-gray-4 focus:bg-surface-base focus:outline-none focus:ring-2 focus:ring-outline-blue-2 transition-all"
 					/>
 					<button
@@ -65,7 +65,7 @@
 			<!-- Loading State -->
 			<div v-if="isLoading" class="py-12 text-center text-ink-gray-5 text-xs">
 				<Loader2 class="size-6 animate-spin mx-auto mb-2 text-ink-blue-5" />
-				<span>{{ __('جاري تحميل المرفقات والملفات الهندسية...') }}</span>
+				<span>{{ __('Loading resources...') }}</span>
 			</div>
 
 			<!-- Empty Search State -->
@@ -75,7 +75,7 @@
 			>
 				<SearchX class="size-8 text-ink-gray-4 mx-auto mb-2" />
 				<h4 class="text-xs font-semibold text-ink-gray-9 mb-1">
-					{{ __('لم يتم العثور على ملفات مطابقة') }}
+					{{ __('No matching files found') }}
 				</h4>
 				<p class="text-xs text-ink-gray-5 mb-3">
 					{{ `${__('No files found matching')} "${searchQuery}"` }}
@@ -85,11 +85,11 @@
 					@click="searchQuery = ''"
 					class="px-3 py-1 text-xs font-medium rounded-6 bg-surface-gray-2 hover:bg-surface-gray-3 text-ink-gray-8 cursor-pointer"
 				>
-					{{ __('مسح البحث') }}
+					{{ __('Clear search') }}
 				</button>
 			</div>
 
-			<!-- Empty Resources State (Task 4 Brief Requirement: Clean friendly empty state in Arabic + English subtitle) -->
+			<!-- Empty Resources State -->
 			<div
 				v-else-if="filteredResources.length === 0"
 				class="rounded-7 border border-dashed border-outline-gray-2 p-8 text-center my-4"
@@ -98,13 +98,13 @@
 					<Paperclip class="size-6" />
 				</div>
 				<h3 class="text-xs font-bold text-ink-gray-9 mb-1">
-					{{ __('لا توجد ملفات مرفقة لهذا الدرس') }}
+					{{ __('No attachments for this lesson') }}
 				</h3>
 				<p class="text-xs text-ink-gray-5 max-w-xs mx-auto leading-relaxed mb-2">
 					{{ __('No downloadable resources or attachments for this lesson.') }}
 				</p>
 				<p class="text-[11px] text-ink-gray-4 max-w-xs mx-auto leading-relaxed">
-					{{ __('يتم إرفاق ملفات الأوتوكاد (DWG) وشيتات الإكسيل (XLSX) والمذكرات الهندسية تلقائياً عند إضافتها من المحاضر.') }}
+					{{ __('AutoCAD (DWG), Excel (XLSX), and engineering notes will appear here when added by the instructor.') }}
 				</p>
 			</div>
 
@@ -144,7 +144,7 @@
 											: 'bg-surface-gray-2 text-ink-gray-6'
 									"
 								>
-									{{ item.scope === 'lesson' ? __('مرفق الدرس') : __('مرجع المساق') }}
+									{{ item.scope === 'lesson' ? __('Lesson attachment') : __('Course reference') }}
 								</span>
 							</div>
 
@@ -173,10 +173,10 @@
 							type="button"
 							@click="copyResourceLink(item)"
 							class="inline-flex items-center gap-1 text-[11px] font-medium text-ink-gray-5 hover:text-ink-gray-8 transition-colors cursor-pointer"
-							:title="__('نسخ رابط الملف')"
+							:title="__('Copy file link')"
 						>
 							<Copy class="size-3" />
-							<span>{{ copiedId === item.id ? __('تم النسخ!') : __('نسخ الرابط') }}</span>
+							<span>{{ copiedId === item.id ? __('Copied!') : __('Copy link') }}</span>
 						</button>
 
 						<!-- Instant Download Button -->
@@ -186,7 +186,7 @@
 							class="inline-flex items-center gap-1.5 px-3 py-1 rounded-5 text-xs font-semibold bg-surface-gray-2 hover:bg-surface-blue-2 text-ink-gray-8 hover:text-ink-blue-5 border border-outline-gray-2 hover:border-outline-blue-2 transition-all cursor-pointer group/dl"
 						>
 							<Download class="size-3.5 group-hover/dl:-translate-y-0.5 transition-transform" />
-							<span>{{ __('تحميل / Download') }}</span>
+							<span>{{ __('Download') }}</span>
 						</button>
 					</div>
 				</div>
@@ -248,13 +248,13 @@ const isLoading = ref(false)
 const fetchedResources = ref<ResourceItem[]>([])
 const copiedId = ref<string | null>(null)
 
-const filterOptions = [
-	{ id: 'all', label: __('الكل / All'), icon: null },
-	{ id: 'dwg', label: 'CAD / DWG', icon: Layers },
-	{ id: 'xlsx', label: 'Excel / XLSX', icon: FileSpreadsheet },
-	{ id: 'pdf', label: 'PDF', icon: FileText },
-	{ id: 'zip', label: 'ZIP / Archive', icon: FolderArchive },
-]
+const filterOptions = computed(() => [
+	{ id: 'all', label: __('All'), icon: null },
+	{ id: 'dwg', label: __('CAD / DWG'), icon: Layers },
+	{ id: 'xlsx', label: __('Excel / XLSX'), icon: FileSpreadsheet },
+	{ id: 'pdf', label: __('PDF'), icon: FileText },
+	{ id: 'zip', label: __('ZIP / Archive'), icon: FolderArchive },
+])
 
 // Fetch attachments for current lesson & course
 async function fetchAttachments() {
@@ -350,19 +350,19 @@ function getCategoryForExtension(ext: string): string {
 	switch (ext.toUpperCase()) {
 		case 'DWG':
 		case 'DXF':
-			return __('مخطط أوتوكاد إنشائي / CAD Drawing')
+			return __('CAD Drawing')
 		case 'XLSX':
 		case 'XLS':
 		case 'CSV':
-			return __('شيت حسابات وتصميم / Calculation Sheet')
+			return __('Calculation Sheet')
 		case 'PDF':
-			return __('كود ومواصفات هندسية / Engineering Code')
+			return __('Engineering Code')
 		case 'ZIP':
 		case 'RAR':
 		case '7Z':
-			return __('حزمة ملفات المشروع / Project Bundle')
+			return __('Project Bundle')
 		default:
-			return __('ملف مرفق / Attachment')
+			return __('Attachment')
 	}
 }
 
@@ -512,14 +512,14 @@ function downloadResource(item: ResourceItem) {
 	a.click()
 	document.body.removeChild(a)
 
-	toast.success(`${__('بدء تحميل')} ${item.file_name}`)
+	toast.success(`${__('Downloading')} ${item.file_name}`)
 }
 
 function copyResourceLink(item: ResourceItem) {
 	const fullUrl = window.location.origin + item.file_url
 	navigator.clipboard.writeText(fullUrl).then(() => {
 		copiedId.value = item.id
-		toast.success(__('تم نسخ رابط الملف إلى الحافظة'))
+		toast.success(__('File link copied to clipboard'))
 		setTimeout(() => {
 			if (copiedId.value === item.id) {
 				copiedId.value = null
